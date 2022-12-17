@@ -60,3 +60,34 @@ fi
 echo
 }
 ###########################################################################
+
+
+
+
+
+###########################################################################
+# Print Help Information about the script to the terminal.                #
+###########################################################################
+Show_Help() {
+    echo "How to use the script: 'bash minecraft-server-service-installer.sh [options]'"
+    echo
+    echo "The following options are available:"
+    echo "     --allow-unsupported-os             :     Allow installation of the server on unsupported operating systems."
+    echo "                                              Make sure all required packages are already installed because the script won't check."
+    echo "     --auto-install                     :     Do not ask for installation permissions for required packages."
+    echo "     --check-os                         :     Check if your OS and OS Version are supported by the script."
+    echo "     --check-packages                   :     Check if packages are installed. This will also check OS Support (--check-os)"
+    echo "     --help                             :     Show this Help."
+    echo "     --skip-wait                        :     Skip the 6 seconds wait timer before starting the script."
+    echo "     --verbose                          :     Enable Verbose Logging during the execution of the script."
+    echo "     --version                          :     Show Version Information about the script."
+    echo "     --wait-after-step                  :     Ask for confirmation to continue after completing a step."
+    echo
+    echo "To Start/Stop/Enable/Disable the Minecraft Server Service:"
+    echo "Start the server                        :     systemctl start minecraft-server"
+    echo "Stop the server                         :     systemctl stop minecraft-server"
+    echo "Enable server at system boot            :     systemctl enable minecraft-server"
+    echo "Disable server at system boot           :     systemctl disable minecraft-server"
+    echo
+}
+###########################################################################
