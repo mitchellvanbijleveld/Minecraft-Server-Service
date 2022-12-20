@@ -569,3 +569,27 @@ echo_Verbose "Log directory is set to $LogDirectory..."
 
 echo_Verbose "Setting default arguments to false before checking passed arguments..."
 ###########################################################################
+
+
+
+
+
+###########################################################################
+###########################################################################
+###########################################################################
+###########################################################################
+###########################################################################
+# ACTUAL START OF THE SCRIPT!                                             #
+###########################################################################
+
+#Check if the script is ran by root
+SYSTEM_USER_NAME=$(id -u -n) # Used -u -n to make it compatible with macOS.
+if [ $SYSTEM_USER_NAME == "root" ]; then
+    # Just print an empty line.
+    echo -n
+else
+    echo -e "\x1B[1;31mYou are not running this script as root. Script will exit.\x1B[0m"
+    echo
+    exit
+fi
+Check_Script_Update
