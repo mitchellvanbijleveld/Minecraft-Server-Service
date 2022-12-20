@@ -798,3 +798,136 @@ fi
 
 ###########################################################################
 sleep 1
+
+
+
+
+
+###########################################################################
+##### Step 04 - Service Settings
+###########################################################################
+# Set Variables for this step.
+ServerStarted=false
+ConnectToScreenAfterExit=false
+
+echo "####################################################################################################"
+echo "Step 04 - Configuring Minecraft Server Service."
+echo
+
+echo "The Minecraft Server has successfully been installed as a system service."
+
+
+
+##### Enable Start @ Boot
+Enable_Server() {
+    systemctl enable minecraft-server
+    echo -e "\x1B[1;32mThe server has been enabled to start during boot.\x1B[0m"
+    echo
+}
+#####
+if $ArgumentAutoInstall; then
+Enable_Server
+else
+read -p "Do you want to start the server automatically during startup [yes/no] " yn
+case $yn in
+[Yy]*)
+Enable_Server;;
+*)
+    echo -e "\x1B[1;33mThe server has not been enabled to start during boot.\x1B[0m To do so in the future, run the command below:"
+    echo "systemctl enable minecraft-server"
+    echo
+    ;;
+esac
+fi
+
+
+
+
+
+##### Start Server
+Start_Server() {
+systemctl start minecraft-server
+    ServerStatus=$(systemctl status minecraft-server | grep Active)
+    echo_Verbose $ServerStatus
+if [[ $ServerStatus == *'Active: active (running)'* ]]; then
+        ServerStarted=true
+        echo -e "\x1B[1;32mThe server has been started in the background within a Screen session.\x1B[0m"
+    else
+        echo -e "\x1B[1;31mThe Minecraft Server Service failed to start.\x1B[0m"
+        exit
+    fi
+    echo
+}
+#####
+if $ArgumentAutoInstall; then
+    Start_Server
+else
+    read -p "Do you want to start the server now? [yes/no] " yn
+    case $yn in
+    [Yy]*)
+        Start_Server;;
+    *)
+    echo -e "\x1B[1;33mThe server will not be started right now.\x1B[0m To start the server, run the following command:"
+    echo "sudo systemctl start minecraft-server"
+    echo
+    ;;
+esac
+fi
+
+
+
+
+
+
+##### Connect To The Server
+Connect_To_Server(){
+        echo -e "\x1B[1;32mWill connect to Screen session after exit.\x1B[0m"
+        ConnectToScreenAfterExit=true
+        echo
+}
+#####
+if $ArgumentAutoInstall; then
+Connect_To_Server
+else
+if $ServerStarted; then
+    read -p "The server has been started. Do you want to connect to the Screen session to view the logs?? [yes/no] " yn
+    case $yn in
+    [Yy]*)
+     Connect_To_Server;;
+    *)
+        echo -e "\x1B[1;33mWill not connect to Screen session after exit.\x1B[0m"
+        echo
+        ;;
+    esac
+fi
+fi
+
+
+
+
+
+if $ArgumentWaitAfterStep; then # 8 #
+    Print_Next_Step_Confirmation_Question "Step 03"
+fi
+
+if $ConnectToScreenAfterExit; then
+    echo "Connecting to Screen session within 6 seconds..."
+    sleep 1
+    echo "Connecting to Screen in 5..."
+    sleep 1
+    echo "Connecting to Screen in 4..."
+    sleep 1
+    echo "Connecting to Screen in 3..."
+    sleep 1
+    echo "Connecting to Screen in 2..."
+    sleep 1
+    echo "Connecting to Screen in 1..."
+    sleep 1
+    echo "Connecting to Screen!"
+    echo
+    screen -r MinecraftServer
+fi
+echo "The Script Finished."
+echo
+
+###########################################################################
