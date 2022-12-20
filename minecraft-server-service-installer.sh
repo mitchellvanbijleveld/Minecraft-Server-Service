@@ -732,7 +732,7 @@ echo
 LogFileTimeStamp=$(date +"D%Y%m%dT%H%M")
 LogFileName="$LogFileTimeStamp.DownloadService.log"
 echo "Downloading Minecraft Server Service File..."
-curl --output /etc/systemd/system/minecraft-server.service https://github.mitchellvanbijleveld.dev/Minecraft-Server/minecraft-server.service --progress-bar
+curl --output /etc/systemd/system/minecraft-server.service https://github.mitchellvanbijleveld.dev/Minecraft-Server-Service/minecraft-server.service --progress-bar
 if [ -e /etc/systemd/system/minecraft-server.service ]; then
     echo -n # Print empty newline
 else
