@@ -624,3 +624,34 @@ fi
 # Clearing the terminal output before showing anything that is script related.
 clear
 ###########################################################################
+
+
+
+
+
+###########################################################################
+# Function that enables a check before contuing to the next step.         #
+###########################################################################
+Print_Next_Step_Confirmation_Question() {
+    while true; do
+        echo "     $1"
+        read -p "     Do you want to continue? [yes/no] " yn
+        case $yn in
+        [Yy]*)
+            echo
+            break
+            ;;
+        [Nn]*)
+            echo
+            exit
+            ;;
+        *)
+            echo
+            echo "Please answer the question."
+            ;;
+        esac
+    done
+}
+
+sleep 1
+###########################################################################
