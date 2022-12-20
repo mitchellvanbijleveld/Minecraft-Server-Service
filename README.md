@@ -79,3 +79,4 @@ screen -r MinecraftServer
 
 ## To DO
 - Add support for macOS
+- Add support for selecting the server version to be installed.
