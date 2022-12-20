@@ -680,3 +680,21 @@ fi
 
 ###########################################################################
 sleep 1
+
+
+
+
+
+###########################################################################
+##### Step 1 - Check OS Name and OS Version.                             #
+###########################################################################
+echo "####################################################################################################"
+echo "Step 1 - Check if your operating system and version are supported by the script."
+echo
+Check_OS_Support
+
+if $ArgumentWaitAfterStep; then # 8 #
+    Print_Next_Step_Confirmation_Question "Your OS and OS Version are supported."
+fi
+###########################################################################
+sleep 1
