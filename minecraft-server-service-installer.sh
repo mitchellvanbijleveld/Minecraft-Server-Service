@@ -655,3 +655,28 @@ Print_Next_Step_Confirmation_Question() {
 
 sleep 1
 ###########################################################################
+
+
+
+
+
+###########################################################################
+##### Step 00 - Check OS Name and OS Version.                             #
+###########################################################################
+echo "Initializing Script..."
+echo
+echo "####################################################################################################"
+Show_Version_Info
+echo "####################################################################################################"
+echo "Welcome to the Minecraft Server As A Service Installation Script."
+echo "This script will help you to install the Minecraft Server with an easy to follow step-by-step installation wizard."
+mkdir -p $LogDirectory
+
+echo
+
+if $ArgumentWaitAfterStep; then # 8 #
+    Print_Next_Step_Confirmation_Question "The script has been successfully initialized."
+fi
+
+###########################################################################
+sleep 1
