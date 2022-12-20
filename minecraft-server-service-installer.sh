@@ -698,3 +698,22 @@ if $ArgumentWaitAfterStep; then # 8 #
 fi
 ###########################################################################
 sleep 1
+
+
+
+
+
+###########################################################################
+##### Step 02 - Check for required packages.
+###########################################################################
+echo "####################################################################################################"
+echo "Step 2 - Checking if the required packages are installed and if not, install the packages."
+echo
+
+Check_Packages
+
+if $ArgumentWaitAfterStep; then # 8 #
+    Print_Next_Step_Confirmation_Question "Your system has the required packages installed."
+fi
+###########################################################################
+sleep 1
