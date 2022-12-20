@@ -428,3 +428,144 @@ almalinux | rocky | centos) # Check for the required packegs on Almalinux and Ro
 esac
 }
 echo
+
+
+
+
+
+###########################################################################
+# Check if the script is executed with options/arguments. Set Variables.  #
+###########################################################################
+##### Set Script Variables                                                #
+LogDirectory="/var/log/mitchellvanbijleveld/mc-server-installer/"         #
+PackagesDPKG="screen openjdk-17-jdk"                                      #
+PackagesRPM="epel-release screen java-17-openjdk"                         #
+###########################################################################
+##### Default Arguments to False.            #####
+ArgumentAllowUnsupportedOS=false             # 1 #
+ArgumentAutoInstall=false                    # 2 #
+ArgumentOnlyCheckOS=false                    # 3 #
+ArgumentOnlyCheckPackages=false              # 4 #
+ArgumentShowHelp=false                       # 5 #
+ArgumentShowVersionInfo=false                # 6 #
+ArgumentSkipWaitTimer=false                  # 7 #
+ArgumentVerboseLogging=false                 # 8 #
+ArgumentWaitAfterStep=false                  # 9 #
+##################################################
+
+# Check the arguments.
+ScriptArguments=" $@ "
+echo_Verbose ".$ScriptArguments."
+for ArgumentX in $@; do
+    case $ArgumentX in
+    "--allow-unsupported-os")
+        echo_Verbose "--allow-unsupported-os"
+        ArgumentAllowUnsupportedOS=true
+        ;;
+    "--auto-install")
+        echo_Verbose "--auto-install"
+        ArgumentAutoInstall=true
+        ;;
+    "--check-os")
+        echo_Verbose "--check-os"
+        ArgumentOnlyCheckOS=true
+        ;;
+    "--check-packages")
+        echo_Verbose "--check-packages"
+        ArgumentOnlyCheckPackages=true
+        ;;
+    "--help")
+        echo_Verbose "--help"
+        ArgumentShowHelp=true
+        ;;
+    "--version")
+        echo_Verbose "--version"
+        ArgumentShowVersionInfo=true
+        ;;
+    "--skip-wait")
+        echo_Verbose "--skip-wait"
+        ArgumentSkipWaitTimer=true
+        ;;
+    "--verbose")
+        echo_Verbose "--verbose"
+        ArgumentVerboseLogging=true
+        ;;
+    "--wait-after-step")
+        echo_Verbose "--wait-after-step"
+        ArgumentWaitAfterStep=true
+        ;;
+    *) # Wild Card.
+        echo "Invalid Command. Exiting..."
+        exit
+        ;;
+    esac
+done
+
+# Before checking all the arguments, make sure the script will continue if it does not need to exit after an argument (such as --help or --version).
+ExitScriptAfterCommand=false
+
+if $ArgumentAllowUnsupportedOS; then # 6 #
+    # Do nothing.
+    echo -n
+fi
+
+if $ArgumentAutoInstall; then # 1 #
+    # Do nothing.
+    echo -n
+fi
+
+if $ArgumentOnlyCheckOS; then # 2 #
+    Check_OS_Support
+    ExitScriptAfterCommand=true
+fi
+
+if $ArgumentOnlyCheckPackages; then #  #
+    Check_Packages
+    ExitScriptAfterCommand=true
+fi
+
+if $ArgumentShowHelp; then # 3 #
+    Show_Help
+    ExitScriptAfterCommand=true
+fi
+
+if $ArgumentShowVersionInfo; then # 4 #
+    Show_Version_Info
+    ExitScriptAfterCommand=true
+fi
+
+if $ArgumentSkipWaitTimer; then # 5 #
+    # Do nothing.
+    echo -n
+fi
+
+if $ArgumentVerboseLogging; then # 7 #
+    # Do nothing.
+    echo -n
+fi
+
+if $ArgumentWaitAfterStep; then # 8 #
+    # Do nothing.
+    echo -n
+fi
+
+if $ExitScriptAfterCommand; then
+    exit
+fi
+
+echo_Verbose "Arguments are set as follows:"
+echo_Verbose "ArgumentAllowUnsupportedOS      : $ArgumentAllowUnsupportedOS"
+echo_Verbose "ArgumentAutoInstall             : $ArgumentAutoInstall"
+echo_Verbose "ArgumentOnlyCheckOS             : $ArgumentOnlyCheckOS"
+echo_Verbose "ArgumentOnlyCheckPackages       : $ArgumentOnlyCheckPackages"
+echo_Verbose "ArgumentShowHelp                : $ArgumentShowHelp"
+echo_Verbose "ArgumentShowVersionInfo         : $ArgumentShowVersionInfo"
+echo_Verbose "ArgumentSkipWaitTimer           : $ArgumentSkipWaitTimer"
+echo_Verbose "ArgumentVerboseLogging.         : $ArgumentVerboseLogging"
+echo_Verbose "ArgumentWaitAfterStep=false     : $ArgumentWaitAfterStep"
+echo_Verbose
+
+echo_Verbose "Log directory is set to $LogDirectory..."
+
+echo_Verbose "Setting default arguments to false before checking passed arguments..."
+###########################################################################
