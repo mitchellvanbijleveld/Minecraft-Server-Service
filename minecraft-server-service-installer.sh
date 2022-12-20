@@ -392,3 +392,39 @@ Check_Required_Packages_RPM() {
 
 }
 ###########################################################################
+
+
+
+
+###########################################################################
+# Check Packages on detected Operating System                             #
+###########################################################################
+Check_Packages(){
+
+if $ArgumentOnlyCheckPackages; then
+    Check_OS_Support
+fi
+
+case $OS_ID in
+debian | ubuntu) # Check for the required packages on Debian and Ubuntu.
+    # Before checking, run apt-get update
+    LogFileTimeStamp=$(date +"D%Y%m%dT%H%M")
+    LogFileName="$LogFileTimeStamp.AptGetUpdate.log"
+    apt-get update >"$LogDirectory$LogFileName"
+    for ApplicationX in $PackagesDPKG; do
+        Check_Required_Packages_DPKG $ApplicationX
+    done
+    ;;
+
+almalinux | rocky | centos) # Check for the required packegs on Almalinux and Rocky.
+    for ApplicationX in $PackagesRPM; do
+        Check_Required_Packages_RPM $ApplicationX
+    done
+    ;;
+
+*)
+    echo "Unsupported OS."
+    ;;
+esac
+}
+echo
