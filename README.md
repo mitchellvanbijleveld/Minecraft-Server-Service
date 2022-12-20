@@ -78,5 +78,6 @@ screen -r MinecraftServer
 ```
 
 ## To DO
-- Add support for macOS
+- Add support for macOS.
 - Add support for selecting the server version to be installed.
+- Add support for changing the amount of RAM assigned to the server.
