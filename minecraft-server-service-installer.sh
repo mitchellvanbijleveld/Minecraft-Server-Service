@@ -593,3 +593,34 @@ else
     exit
 fi
 Check_Script_Update
+
+
+
+
+
+###########################################################################
+# Prepare the start of the script by clearing the terminal.               #
+###########################################################################
+# Before doing anything, clear the terminal.
+if $ArgumentSkipWaitTimer; then
+    # Do nothing if the skip wait timer is set to true.
+    echo -n
+else
+    echo "Waiting 6 seconds before the script starts... Cancel script by pressing 'Control + C' (^C)."
+    sleep 1
+    echo "Waiting 5 seconds..."
+    sleep 1
+    echo "Waiting 4 seconds..."
+    sleep 1
+    echo "Waiting 3 seconds..."
+    sleep 1
+    echo "Waiting 2 seconds..."
+    sleep 1
+    echo "Waiting 1 second..."
+    sleep 1
+    echo "Starting Script."
+fi
+
+# Clearing the terminal output before showing anything that is script related.
+clear
+###########################################################################
