@@ -717,3 +717,84 @@ if $ArgumentWaitAfterStep; then # 8 #
 fi
 ###########################################################################
 sleep 1
+
+
+
+
+
+###########################################################################
+##### Step 03 - Minecraft Server.
+###########################################################################
+echo "####################################################################################################"
+echo "Step 3 - Downloading service file and Minecraft Server ."
+echo
+
+LogFileTimeStamp=$(date +"D%Y%m%dT%H%M")
+LogFileName="$LogFileTimeStamp.DownloadService.log"
+echo "Downloading Minecraft Server Service File..."
+curl --output /etc/systemd/system/minecraft-server.service https://github.mitchellvanbijleveld.dev/Minecraft-Server/minecraft-server.service --progress-bar
+if [ -e /etc/systemd/system/minecraft-server.service ]; then
+    echo -n # Print empty newline
+else
+    echo -e "\x1B[1;31mCould not save service file. Exiting...\x1B[0m"
+    exit
+fi
+echo
+echo_Verbose "Creating directory '/etc/mitchellvanbijleveld/minecraft-server'..."
+mkdir -p /etc/mitchellvanbijleveld/minecraft-server
+LogFileTimeStamp=$(date +"D%Y%m%dT%H%M")
+LogFileName="$LogFileTimeStamp.DownloadServerJar.log"
+echo "Downloading Minecraft Server Jar File (Version $Online_JarVersion)..."
+curl --output /etc/mitchellvanbijleveld/minecraft-server/minecraft-server.jar $Online_JarURL --progress-bar
+if [ -e /etc/mitchellvanbijleveld/minecraft-server/minecraft-server.jar ]; then
+    echo -n # Print empty newline
+else
+    echo -e "\x1B[1;31mCould not save Java jar file. Exiting...\x1B[0m"
+    exit
+fi
+echo
+echo_Verbose "Running 'systemctl daemon-reload'..."
+systemctl daemon-reload
+
+
+
+
+
+##### Agree To Minecraft EULA
+Agree_To_EULA(){
+echo "eula=true" >/etc/mitchellvanbijleveld/minecraft-server/eula.txt
+        EulaText=$(cat /etc/mitchellvanbijleveld/minecraft-server/eula.txt)
+        if [ $EulaText == "eula=true" ]; then
+            echo -n # Print empty newline
+        else
+            echo -e "\x1B[1;31mCould not save eula file. Exiting...\x1B[0m"
+            exit
+        fi
+        echo -e "\x1B[1;32mAdded 'eula=true' to '/etc/mitchellvanbijleveld/minecraft-server/eula.txt'.\x1B[0m"
+        echo
+}
+#####
+if $ArgumentAutoInstall; then
+Agree_To_EULA
+else
+read -p "Do you agree to the Minecraft (Server) EULA? [yes/no] " yn
+    case $yn in
+    [Yy]*)
+        Agree_To_EULA;;
+    *)
+        echo -e "\x1B[1;33mPlease read the eula and add 'eula=true' to '/etc/mitchellvanbijleveld/minecraft-server/eula.txt'.\x1B[0m"
+        echo "     You can do so by executing the following command: 'eula=true >/etc/mitchellvanbijleveld/minecraft-server/eula.txt'."
+        ;;
+    esac
+fi
+
+
+
+
+if $ArgumentWaitAfterStep; then # 8 #
+    Print_Next_Step_Confirmation_Question "The script has prepared the server."
+fi
+
+
+###########################################################################
+sleep 1
