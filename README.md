@@ -1,4 +1,4 @@
-# Minecraft Server
+# Minecraft Server Service
 Minecraft Server as a service on your own Linux or macOS machine.
 
 Disclaimer: This version is in alpha. You may encouter issues.
