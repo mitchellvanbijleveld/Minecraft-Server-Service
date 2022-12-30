@@ -13,7 +13,7 @@ ScriptName="Mitchell's Minecraft Server Service Installation Script"
 ScriptDescription="Bash script that helps installing a Minecraft Server on Linux as a system service."
 ScriptDeveloper="Mitchell van Bijleveld"
 ScriptDeveloperWebsite="https://mitchellvanbijleveld.dev/"
-ScriptVersion="2022 12 30 22 56 - beta"
+ScriptVersion="2022 12 30 23 02 - beta"
 ScriptCopyright="© 2022"
 
 Show_Version_Info() {
@@ -102,7 +102,9 @@ Show_Help() {
 mkdir -p "/etc/mitchellvanbijleveld/.bash-functions/"
 curl --output "/etc/mitchellvanbijleveld/.bash-functions/echo_Verbose.sh" https://github.mitchellvanbijleveld.dev/Bash-Functions/echo_Verbose.sh --silent
 echo_Verbose () {
-  /usr/bin/bash /etc/mitchellvanbijleveld/.bash-functions/echo_Verbose.sh "$1"
+  if $ArgumentVerboseLogging; then
+    /usr/bin/bash /etc/mitchellvanbijleveld/.bash-functions/echo_Verbose.sh "$1"
+  fi
 }
 # echo_Verbose() {
 #   if $ArgumentVerboseLogging; then
