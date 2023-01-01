@@ -99,18 +99,7 @@ Show_Help() {
 ###########################################################################
 # Custom Log Message Function that takes LogLevel in consideration.       #
 ###########################################################################
-mkdir -p "/etc/mitchellvanbijleveld/.bash-functions/"
-curl --output "/etc/mitchellvanbijleveld/.bash-functions/echo_Verbose.sh" https://github.mitchellvanbijleveld.dev/Bash-Functions/echo_Verbose.sh --silent
-echo_Verbose () {
-  if $ArgumentVerboseLogging; then
-    /usr/bin/bash /etc/mitchellvanbijleveld/.bash-functions/echo_Verbose.sh "$1"
-  fi
-}
-# echo_Verbose() {
-#   if $ArgumentVerboseLogging; then
-#     echo "LOG $(date +"%Y-%m-%d %H:%M:%S") [DEBUG] : $1"
-#   fi
-# }
+source <(curl https://github.mitchellvanbijleveld.dev/Bash-Functions/echo_Verbose.sh --silent)
 ###########################################################################
 
 
