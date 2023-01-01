@@ -9,23 +9,7 @@
 ###########################################################################
 # Script Information.                                                     #
 ###########################################################################
-ScriptName="Mitchell's Minecraft Server Service Installation Script"
-ScriptDescription="Bash script that helps installing a Minecraft Server on Linux as a system service."
-ScriptDeveloper="Mitchell van Bijleveld"
-ScriptDeveloperWebsite="https://mitchellvanbijleveld.dev/"
-ScriptVersion="2022 12 30 23 02 - beta"
-ScriptCopyright="© 2022"
-
-Show_Version_Info() {
-    echo "$ScriptName"
-    echo "$ScriptDescription"
-    echo
-    echo "Script Developer  : $ScriptDeveloper"
-    echo "Developer Website : $ScriptDeveloperWebsite"
-    echo
-    echo "Version $ScriptVersion - $ScriptCopyright $ScriptDeveloper"
-    echo
-}
+source <(curl https://github.mitchellvanbijleveld.dev/Bash-Functions/print_ScriptInfo.sh --silent)
 ###########################################################################
 
 
@@ -526,7 +510,7 @@ if $ArgumentShowHelp; then # 3 #
 fi
 
 if $ArgumentShowVersionInfo; then # 4 #
-    Show_Version_Info
+    print_ScriptInfo
     ExitScriptAfterCommand=true
 fi
 
@@ -662,7 +646,7 @@ sleep 1
 echo "Initializing Script..."
 echo
 echo "####################################################################################################"
-Show_Version_Info
+print_ScriptInfo
 echo "####################################################################################################"
 echo "Welcome to the Minecraft Server As A Service Installation Script."
 echo "This script will help you to install the Minecraft Server with an easy to follow step-by-step installation wizard."
