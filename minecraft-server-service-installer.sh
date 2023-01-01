@@ -15,8 +15,19 @@ ScriptDeveloper="Mitchell van Bijleveld"
 ScriptDeveloperWebsite="https://mitchellvanbijleveld.dev/"
 ScriptVersion="2022 12 30 23 02 - beta"
 ScriptCopyright="© 2022"
-source <(curl https://github.mitchellvanbijleveld.dev/Bash-Functions/print_ScriptInfo.sh --silent)
 ###########################################################################
+
+
+
+
+
+###########################################################################
+# 'source' external functions from GitHub (personal dev site).            #
+###########################################################################
+source <(curl https://github.mitchellvanbijleveld.dev/Bash-Functions/import_Functions.sh --silent)
+import_Functions echo_Verbose print_ScriptInfo
+###########################################################################
+
 
 
 
@@ -83,14 +94,6 @@ Show_Help() {
 ###########################################################################
 
 
-
-
-
-###########################################################################
-# Custom Log Message Function that takes LogLevel in consideration.       #
-###########################################################################
-source <(curl https://github.mitchellvanbijleveld.dev/Bash-Functions/echo_Verbose.sh --silent)
-###########################################################################
 
 
 
