@@ -416,7 +416,6 @@ almalinux | rocky | centos) # Check for the required packegs on Almalinux and Ro
     ;;
 esac
 }
-echo
 
 
 
