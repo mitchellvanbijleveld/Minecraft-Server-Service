@@ -628,8 +628,6 @@ sleep 1
 ###########################################################################
 ##### Step 00 - Check OS Name and OS Version.                             #
 ###########################################################################
-echo "Initializing Script..."
-echo
 echo "####################################################################################################"
 print_ScriptInfo
 echo "####################################################################################################"
@@ -644,7 +642,7 @@ if $ArgumentWaitAfterStep; then # 8 #
 fi
 
 ###########################################################################
-sleep 1
+sleep 0.5
 
 
 
@@ -662,7 +660,7 @@ if $ArgumentWaitAfterStep; then # 8 #
     Print_Next_Step_Confirmation_Question "Your OS and OS Version are supported."
 fi
 ###########################################################################
-sleep 1
+sleep 0.5
 
 
 
@@ -681,7 +679,7 @@ if $ArgumentWaitAfterStep; then # 8 #
     Print_Next_Step_Confirmation_Question "Your system has the required packages installed."
 fi
 ###########################################################################
-sleep 1
+sleep 0.5
 
 
 
@@ -762,7 +760,7 @@ fi
 
 
 ###########################################################################
-sleep 1
+sleep 0.5
 
 
 
