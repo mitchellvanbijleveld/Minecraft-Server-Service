@@ -557,6 +557,7 @@ else
     echo
     exit
 fi
+clear
 Check_Script_Update
 
 
