@@ -30,7 +30,7 @@ URL_SCRIPT="https://github.mitchellvanbijleveld.dev/Minecraft-Server-Service/min
 # 'source' external functions from GitHub (personal dev site).            #
 ###########################################################################
 source <(curl https://github.mitchellvanbijleveld.dev/Bash-Functions/import_Functions.sh --silent)
-import_Functions echo_Verbose print_ScriptInfo script_Updater
+import_Functions echo_Replaced print_ScriptInfo script_Updater
 ###########################################################################
 
 
