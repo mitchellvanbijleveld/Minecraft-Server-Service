@@ -232,7 +232,7 @@ Check_Required_Packages_DPKG() {
         else
             while [ $ArgumentAutoInstall == false ]; do
                 echo -n "Do you want to install the required package '$1' now? "
-                read -p "Please answer [yes/no] :" yn
+                read -p "Please answer [yes/no]: " yn
                 case $yn in
                 [Yy]*)
                     echo "Installing the package '$1'"
@@ -308,7 +308,7 @@ Check_Required_Packages_RPM() {
         else
             while [ $ArgumentAutoInstall == false ]; do
                 echo -n "Do you want to install the required package '$1' now? "
-                read -p "Please answer [yes/no] :" yn
+                read -p "Please answer [yes/no]: " yn
                 case $yn in
                 [Yy]*)
                     echo "Installing the package '$1'"
