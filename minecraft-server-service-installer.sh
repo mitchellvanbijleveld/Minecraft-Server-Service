@@ -561,7 +561,7 @@ else
     exit
 fi
 clear
-Check_Script_Update
+Check_Script_Update $@
 
 
 
