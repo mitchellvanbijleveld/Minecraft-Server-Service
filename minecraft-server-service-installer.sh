@@ -13,7 +13,7 @@ ScriptName="Mitchell's Minecraft Server Service Installation Script"
 ScriptDescription="Bash script that helps installing a Minecraft Server on Linux as a system service."
 ScriptDeveloper="Mitchell van Bijleveld"
 ScriptDeveloperWebsite="https://mitchellvanbijleveld.dev/"
-ScriptVersion="2023 01 07 19 12 - beta"
+ScriptVersion="2023 01 08 01 17 - beta"
 ScriptCopyright="© 2023"
 ####################################################################################################
 # Mitchell van Bijleveld's Script Updater.        ##################################################
