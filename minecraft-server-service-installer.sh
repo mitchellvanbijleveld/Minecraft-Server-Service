@@ -13,7 +13,7 @@ ScriptName="Mitchell's Minecraft Server Service Installation Script"
 ScriptDescription="Bash script that helps installing a Minecraft Server on Linux as a system service."
 ScriptDeveloper="Mitchell van Bijleveld"
 ScriptDeveloperWebsite="https://mitchellvanbijleveld.dev/"
-ScriptVersion="2023 01 08 01 31 - beta"
+ScriptVersion="2023 01 08 02 18 - beta"
 ScriptCopyright="© 2023"
 ####################################################################################################
 # Mitchell van Bijleveld's Script Updater.        ##################################################
@@ -456,6 +456,7 @@ for ArgumentX in $@; do
     "--verbose")
         echo_Verbose "--verbose"
         ArgumentVerboseLogging=true
+        LogStyle=Verbose
         ;;
     "--wait-after-step")
         echo_Verbose "--wait-after-step"
