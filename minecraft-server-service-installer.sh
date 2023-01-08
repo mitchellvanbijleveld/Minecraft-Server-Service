@@ -255,7 +255,7 @@ Check_Required_Packages_DPKG() {
     esac
 
     if $InstallPackage; then
-        if $ArgumentVerboseLogging; then
+        if $LogExtraMessages; then
             apt-get install $1 -y
         else
             LogFileTimeStamp=$(date +"D%Y%m%dT%H%M")
@@ -335,7 +335,7 @@ Check_Required_Packages_RPM() {
     esac
 
     if $InstallPackage; then
-        if $ArgumentVerboseLogging; then
+        if $LogExtraMessages; then
             dnf install $1 -y
         else
             LogFileTimeStamp=$(date +"D%Y%m%dT%H%M")
@@ -416,7 +416,7 @@ ArgumentOnlyCheckPackages=false              # 4 #
 ArgumentShowHelp=false                       # 5 #
 ArgumentShowVersionInfo=false                # 6 #
 ArgumentSkipWaitTimer=false                  # 7 #
-ArgumentVerboseLogging=false                 # 8 #
+LogExtraMessages=false                       # 8 #
 ArgumentWaitAfterStep=false                  # 9 #
 ##################################################
 
@@ -455,7 +455,7 @@ for ArgumentX in $@; do
         ;;
     "--verbose")
         echo_Verbose "--verbose"
-        ArgumentVerboseLogging=true
+        LogExtraMessages=true
         LogStyle=Verbose
         ;;
     "--wait-after-step")
@@ -507,7 +507,7 @@ if $ArgumentSkipWaitTimer; then # 5 #
     echo -n
 fi
 
-if $ArgumentVerboseLogging; then # 7 #
+if $LogExtraMessages; then # 7 #
     # Do nothing.
     echo -n
 fi
@@ -529,7 +529,7 @@ echo_Verbose "ArgumentOnlyCheckPackages       : $ArgumentOnlyCheckPackages"
 echo_Verbose "ArgumentShowHelp                : $ArgumentShowHelp"
 echo_Verbose "ArgumentShowVersionInfo         : $ArgumentShowVersionInfo"
 echo_Verbose "ArgumentSkipWaitTimer           : $ArgumentSkipWaitTimer"
-echo_Verbose "ArgumentVerboseLogging.         : $ArgumentVerboseLogging"
+echo_Verbose "LogExtraMessages.               : $LogExtraMessages"
 echo_Verbose "ArgumentWaitAfterStep=false     : $ArgumentWaitAfterStep"
 echo_Verbose
 
