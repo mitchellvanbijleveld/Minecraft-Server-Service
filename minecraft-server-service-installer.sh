@@ -1,11 +1,5 @@
 #!/bin/bash
 
-##### Color Coding // Dev Comments
-# \x1B[1;32m     Green / OK
-# \x1B[0m        White / Clear / None
-# \x1B[1;31m     Red / ERROR
-# \x1B[1;33m     Orange / WARNING
-
 ####################################################################################################
 # Script Information.                             ##################################################
 ####################################################################################################
@@ -26,26 +20,20 @@ URL_SCRIPT="https://github.mitchellvanbijleveld.dev/Minecraft-Server-Service/min
 
 
 
-###########################################################################
-# 'source' external functions from GitHub (personal dev site).            #
-###########################################################################
+####################################################################################################
+# Download and run custom function importer.      ##################################################
+####################################################################################################
 eval "$(curl https://github.mitchellvanbijleveld.dev/Bash-Functions/import_Functions.sh --silent)"
 import_Functions echo_Replaced print_ScriptInfo script_Updater
-###########################################################################
+####################################################################################################
 
 
 
 
 
-
-
-
-
-
-
-###########################################################################
-# Print Help Information about the script to the terminal.                #
-###########################################################################
+####################################################################################################
+# Print Help Information to the terminal.         ##################################################
+####################################################################################################
 Show_Help() {
     echo "How to use the script: 'bash minecraft-server-service-installer.sh [options]'"
     echo
@@ -74,9 +62,9 @@ Show_Help() {
 
 
 
-###########################################################################
+####################################################################################################
 # Check the OS Name and OS Version. Return if the OS is supported.        #
-###########################################################################
+####################################################################################################
 Check_OS_Support() {
     # Set Supported OS to false.
     SupportedOS=false
@@ -192,7 +180,7 @@ Check_OS_Support() {
 
     echo_Verbose "Printing information about OS Support..."
     if $SupportedOS; then
-        echo "\x1B[1;32m  Your OS and Version are supported.\x1B[0m"
+        echo "\x1B[1;32mYour OS and Version are supported.\x1B[0m"
     else
         echo "\x1B[1;31m  Unfortunately, your OS is not supported.\x1B[0m"
         if $ArgumentAllowUnsupportedOS; then
