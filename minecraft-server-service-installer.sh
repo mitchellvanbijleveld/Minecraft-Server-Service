@@ -172,7 +172,7 @@ Check_OS_Support() {
             esac
             ;;
         *)
-            echo -e "\x1B[1;31mNo valid OS detected.\x1B[0m"
+            echo "\x1B[1;31mNo valid OS detected.\x1B[0m"
             ;;
         esac
         #####
@@ -192,13 +192,13 @@ Check_OS_Support() {
 
     echo_Verbose "Printing information about OS Support..."
     if $SupportedOS; then
-        echo -e "\x1B[1;32m  Your OS and Version are supported.\x1B[0m"
+        echo "\x1B[1;32m  Your OS and Version are supported.\x1B[0m"
     else
-        echo -e "\x1B[1;31m  Unfortunately, your OS is not supported.\x1B[0m"
+        echo "\x1B[1;31m  Unfortunately, your OS is not supported.\x1B[0m"
         if $ArgumentAllowUnsupportedOS; then
-            echo -e "\x1B[1;33m  Allowing installation on an unsupported OS, continuing...\x1B[0m"
+            echo "\x1B[1;33m  Allowing installation on an unsupported OS, continuing...\x1B[0m"
         else
-            echo -e "\x1B[1;31m  Please use this script on a supported OS or pass the '--allow-unsupported-os' option.\x1B[0m"
+            echo "\x1B[1;31m  Please use this script on a supported OS or pass the '--allow-unsupported-os' option.\x1B[0m"
             echo
             exit
         fi
@@ -222,10 +222,10 @@ Check_Required_Packages_DPKG() {
     # echo $PackageStatus
     case $PackageStatus in
     "ii  $1"*)
-        echo -e "\x1B[1;32mThe requested package '$1' is already installed, continuing...\x1B[0m"
+        echo "\x1B[1;32mThe requested package '$1' is already installed, continuing...\x1B[0m"
         ;;
     *)
-        echo -e "\x1B[1;33mThe requested package '$1' has not been installed yet.\x1B[0m"
+        echo "\x1B[1;33mThe requested package '$1' has not been installed yet.\x1B[0m"
         if $ArgumentAutoInstall; then
             echo "Automatically installing package '$1'..."
             InstallPackage=true
@@ -268,11 +268,11 @@ Check_Required_Packages_DPKG() {
     # echo $PackageStatus
     case $PackageStatus in
     "ii  $1"*)
-                echo -e "\x1B[1;32mThe requested package '$1' has successfully been installed\x1B[0m"
+                echo "\x1B[1;32mThe requested package '$1' has successfully been installed\x1B[0m"
                 ;;
             *)
                 echo
-                echo -e "\x1B[1;31mSomething went wrong and I need to end the script here.\x1B[0m"
+                echo "\x1B[1;31mSomething went wrong and I need to end the script here.\x1B[0m"
                 exit
                 ;;
             esac
@@ -298,10 +298,10 @@ Check_Required_Packages_RPM() {
     # echo $PackageStatus
     case $PackageStatus in
     "$1"*)
-        echo -e "\x1B[1;32mThe requested package '$1' is already installed, continuing...\x1B[0m"
+        echo "\x1B[1;32mThe requested package '$1' is already installed, continuing...\x1B[0m"
         ;;
     "package $1 is not installed")
-        echo -e "\x1B[1;33mThe requested package '$1' has not been installed yet.\x1B[0m"
+        echo "\x1B[1;33mThe requested package '$1' has not been installed yet.\x1B[0m"
         if $ArgumentAutoInstall; then
             echo "Automatically installing package '$1'..."
             InstallPackage=true
@@ -329,7 +329,7 @@ Check_Required_Packages_RPM() {
         fi
         ;;
     *)
-        echo -e "\x1B[1;31mCould not check for package status(ses).\x1B[0m"
+        echo "\x1B[1;31mCould not check for package status(ses).\x1B[0m"
         exit
         ;;
     esac
@@ -346,11 +346,11 @@ Check_Required_Packages_RPM() {
             # echo $PackageStatus
             case $PackageStatus in
             "$1"*)
-                echo -e "\x1B[1;32mThe requested package '$1' has successfully been installed\x1B[0m"
+                echo "\x1B[1;32mThe requested package '$1' has successfully been installed\x1B[0m"
                 ;;
             *)
                 echo
-                echo -e "\x1B[1;31mSomething went wrong and I need to end the script here.\x1B[0m"
+                echo "\x1B[1;31mSomething went wrong and I need to end the script here.\x1B[0m"
                 exit
                 ;;
             esac
@@ -555,7 +555,7 @@ if [ $SYSTEM_USER_NAME == "root" ]; then
     # Just print an empty line.
     echo -n
 else
-    echo -e "\x1B[1;31mYou are not running this script as root. Script will exit.\x1B[0m"
+    echo "\x1B[1;31mYou are not running this script as root. Script will exit.\x1B[0m"
     echo
     exit
 fi
@@ -702,7 +702,7 @@ curl --output /etc/systemd/system/minecraft-server.service https://github.mitche
 if [ -e /etc/systemd/system/minecraft-server.service ]; then
     echo -n # Print empty newline
 else
-    echo -e "\x1B[1;31mCould not save service file. Exiting...\x1B[0m"
+    echo "\x1B[1;31mCould not save service file. Exiting...\x1B[0m"
     exit
 fi
 echo
@@ -715,7 +715,7 @@ curl --output /etc/mitchellvanbijleveld/minecraft-server/minecraft-server.jar $O
 if [ -e /etc/mitchellvanbijleveld/minecraft-server/minecraft-server.jar ]; then
     echo -n # Print empty newline
 else
-    echo -e "\x1B[1;31mCould not save Java jar file. Exiting...\x1B[0m"
+    echo "\x1B[1;31mCould not save Java jar file. Exiting...\x1B[0m"
     exit
 fi
 echo
@@ -733,10 +733,10 @@ echo "eula=true" >/etc/mitchellvanbijleveld/minecraft-server/eula.txt
         if [ $EulaText == "eula=true" ]; then
             echo -n # Print empty newline
         else
-            echo -e "\x1B[1;31mCould not save eula file. Exiting...\x1B[0m"
+            echo "\x1B[1;31mCould not save eula file. Exiting...\x1B[0m"
             exit
         fi
-        echo -e "\x1B[1;32mAdded 'eula=true' to '/etc/mitchellvanbijleveld/minecraft-server/eula.txt'.\x1B[0m"
+        echo "\x1B[1;32mAdded 'eula=true' to '/etc/mitchellvanbijleveld/minecraft-server/eula.txt'.\x1B[0m"
         echo
 }
 #####
@@ -748,7 +748,7 @@ read -p "Do you agree to the Minecraft (Server) EULA? [yes/no] " yn
     [Yy]*)
         Agree_To_EULA;;
     *)
-        echo -e "\x1B[1;33mPlease read the eula and add 'eula=true' to '/etc/mitchellvanbijleveld/minecraft-server/eula.txt'.\x1B[0m"
+        echo "\x1B[1;33mPlease read the eula and add 'eula=true' to '/etc/mitchellvanbijleveld/minecraft-server/eula.txt'.\x1B[0m"
         echo "     You can do so by executing the following command: 'eula=true >/etc/mitchellvanbijleveld/minecraft-server/eula.txt'."
         ;;
     esac
@@ -787,7 +787,7 @@ echo "The Minecraft Server has successfully been installed as a system service."
 ##### Enable Start @ Boot
 Enable_Server() {
     systemctl enable minecraft-server
-    echo -e "\x1B[1;32mThe server has been enabled to start during boot.\x1B[0m"
+    echo "\x1B[1;32mThe server has been enabled to start during boot.\x1B[0m"
     echo
 }
 #####
@@ -799,7 +799,7 @@ case $yn in
 [Yy]*)
 Enable_Server;;
 *)
-    echo -e "\x1B[1;33mThe server has not been enabled to start during boot.\x1B[0m To do so in the future, run the command below:"
+    echo "\x1B[1;33mThe server has not been enabled to start during boot.\x1B[0m To do so in the future, run the command below:"
     echo "systemctl enable minecraft-server"
     echo
     ;;
@@ -817,9 +817,9 @@ systemctl start minecraft-server
     echo_Verbose $ServerStatus
 if [[ $ServerStatus == *'Active: active (running)'* ]]; then
         ServerStarted=true
-        echo -e "\x1B[1;32mThe server has been started in the background within a Screen session.\x1B[0m"
+        echo "\x1B[1;32mThe server has been started in the background within a Screen session.\x1B[0m"
     else
-        echo -e "\x1B[1;31mThe Minecraft Server Service failed to start.\x1B[0m"
+        echo "\x1B[1;31mThe Minecraft Server Service failed to start.\x1B[0m"
         exit
     fi
     echo
@@ -833,7 +833,7 @@ else
     [Yy]*)
         Start_Server;;
     *)
-    echo -e "\x1B[1;33mThe server will not be started right now.\x1B[0m To start the server, run the following command:"
+    echo "\x1B[1;33mThe server will not be started right now.\x1B[0m To start the server, run the following command:"
     echo "sudo systemctl start minecraft-server"
     echo
     ;;
@@ -847,7 +847,7 @@ fi
 
 ##### Connect To The Server
 Connect_To_Server(){
-        echo -e "\x1B[1;32mWill connect to Screen session after exit.\x1B[0m"
+        echo "\x1B[1;32mWill connect to Screen session after exit.\x1B[0m"
         ConnectToScreenAfterExit=true
         echo
 }
@@ -861,7 +861,7 @@ if $ServerStarted; then
     [Yy]*)
      Connect_To_Server;;
     *)
-        echo -e "\x1B[1;33mWill not connect to Screen session after exit.\x1B[0m"
+        echo "\x1B[1;33mWill not connect to Screen session after exit.\x1B[0m"
         echo
         ;;
     esac
