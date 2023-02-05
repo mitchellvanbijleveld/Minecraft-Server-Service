@@ -15,7 +15,7 @@ ScriptName="Mitchell's Minecraft Server Service Installation Script"
 ScriptDescription="Bash script that helps installing a Minecraft Server on Linux as a system service."
 ScriptDeveloper="Mitchell van Bijleveld"
 ScriptDeveloperWebsite="https://mitchellvanbijleveld.dev/"
-ScriptVersion="2023 02 05 14 38 - beta"
+ScriptVersion="2023 02 05 15 03 - beta"
 ScriptCopyright="© 2023"
 
 ####################################################################################################
@@ -221,7 +221,7 @@ Check_Required_Packages_DPKG() {
     *)
         echo "\x1B[1;33mThe requested package '$1' has not been installed yet.\x1B[0m"
         if $ArgumentOnlyCheckPackages; then
-            echo
+            echo -n ""
         else
         if $ArgumentAutoInstall; then
             echo "Automatically installing package '$1'..."
@@ -302,7 +302,7 @@ Check_Required_Packages_RPM() {
     "package $1 is not installed")
         echo "\x1B[1;33mThe requested package '$1' has not been installed yet.\x1B[0m"
                 if $ArgumentOnlyCheckPackages; then
-                echo
+                echo -n ""
                 else
         if $ArgumentAutoInstall; then
             echo "Automatically installing package '$1'..."
