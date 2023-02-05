@@ -15,7 +15,7 @@ ScriptName="Mitchell's Minecraft Server Service Installation Script"
 ScriptDescription="Bash script that helps installing a Minecraft Server on Linux as a system service."
 ScriptDeveloper="Mitchell van Bijleveld"
 ScriptDeveloperWebsite="https://mitchellvanbijleveld.dev/"
-ScriptVersion="2023 01 08 02 18 - beta"
+ScriptVersion="2023 02 05 14 38 - beta"
 ScriptCopyright="© 2023"
 
 ####################################################################################################
@@ -209,6 +209,9 @@ Check_Required_Packages_DPKG() {
 
     # Set InstallPackage to false.
     InstallPackage=false
+    
+    echo "Checking if package '$1' is installed..."
+    
     PackageStatus=$(dpkg-query --list | grep "ii  $1")
     # echo $PackageStatus
     case $PackageStatus in
@@ -283,7 +286,9 @@ Check_Required_Packages_DPKG() {
 Check_Required_Packages_RPM() {
     # Set InstallPackage to false.
     InstallPackage=false
-
+    
+    echo "Checking if package '$1' is installed..."
+    
     PackageStatus=$(rpm -q $1)
     # echo $PackageStatus
     case $PackageStatus in
