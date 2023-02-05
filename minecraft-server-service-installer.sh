@@ -210,7 +210,7 @@ Check_Required_Packages_DPKG() {
     # Set InstallPackage to false.
     InstallPackage=false
     
-    echo "Checking if package '$1' is installed..."
+    echo_Verbose "Checking if package '$1' is installed..."
     
     PackageStatus=$(dpkg-query --list | grep "ii  $1")
     # echo $PackageStatus
@@ -287,7 +287,7 @@ Check_Required_Packages_RPM() {
     # Set InstallPackage to false.
     InstallPackage=false
     
-    echo "Checking if package '$1' is installed..."
+    echo_Verbose "Checking if package '$1' is installed..."
     
     PackageStatus=$(rpm -q $1)
     # echo $PackageStatus
@@ -374,6 +374,7 @@ debian | ubuntu) # Check for the required packages on Debian and Ubuntu.
     LogFileName="$LogFileTimeStamp.AptGetUpdate.log"
     echo "Running 'apt-get update' to make sure all available packages are listed..."
     apt-get update >"$LogDirectory$LogFileName"
+    echo
     for ApplicationX in $PackagesDPKG; do
         Check_Required_Packages_DPKG $ApplicationX
     done
