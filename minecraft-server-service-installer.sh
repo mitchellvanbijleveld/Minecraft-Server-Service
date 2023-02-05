@@ -220,6 +220,9 @@ Check_Required_Packages_DPKG() {
         ;;
     *)
         echo "\x1B[1;33mThe requested package '$1' has not been installed yet.\x1B[0m"
+        if $ArgumentOnlyCheckPackages; then
+            echo
+        else
         if $ArgumentAutoInstall; then
             echo "Automatically installing package '$1'..."
             InstallPackage=true
@@ -244,6 +247,7 @@ Check_Required_Packages_DPKG() {
                     ;;
                 esac
             done
+        fi
         fi
         ;;
     esac
@@ -297,6 +301,9 @@ Check_Required_Packages_RPM() {
         ;;
     "package $1 is not installed")
         echo "\x1B[1;33mThe requested package '$1' has not been installed yet.\x1B[0m"
+                if $ArgumentOnlyCheckPackages; then
+                echo
+                else
         if $ArgumentAutoInstall; then
             echo "Automatically installing package '$1'..."
             InstallPackage=true
@@ -321,6 +328,7 @@ Check_Required_Packages_RPM() {
                     ;;
                 esac
             done
+        fi
         fi
         ;;
     *)
