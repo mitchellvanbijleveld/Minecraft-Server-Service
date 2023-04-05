@@ -188,7 +188,7 @@ Check_OS_Support() {
     else
         echo "\x1B[1;31m  Unfortunately, your OS is not supported.\x1B[0m"
         if $ArgumentAllowUnsupportedOS; then
-            echo "\x1B[1;33m  Allowing installation on an unsupported OS, continuing...\x1B[0m"
+            echo "\x1B[1;33m  Script is allowed to continue on an unsupported OS because the '--allow-unsupported-os' flag is passed. Continuing...\x1B[0m"
         else
             echo "\x1B[1;31m  Please use this script on a supported OS or pass the '--allow-unsupported-os' option.\x1B[0m"
             echo
@@ -395,7 +395,8 @@ almalinux | rocky | centos) # Check for the required packegs on Almalinux and Ro
     ;;
 
 *)
-    echo "Unsupported OS."
+    echo "Your OS is unsupported. Can't check for installed packages..."
+    echo
     ;;
 esac
 }
