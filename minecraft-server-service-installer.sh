@@ -378,10 +378,14 @@ fi
 case $OS_ID in
 debian | ubuntu) # Check for the required packages on Debian and Ubuntu.
     # Before checking, run apt-get update
-    LogFileTimeStamp=$(date +"D%Y%m%dT%H%M")
-    LogFileName="$LogFileTimeStamp.AptGetUpdate.log"
     echo "Running 'apt-get update' to make sure all available packages are listed..."
-    apt-get update >"$LogDirectory$LogFileName"
+    if $LogExtraMessages; then
+      apt-get update
+    else
+      LogFileTimeStamp=$(date +"D%Y%m%dT%H%M")
+      LogFileName="$LogFileTimeStamp.AptGetUpdate.log"
+      apt-get update >"$LogDirectory$LogFileName"
+    fi
     echo
     for ApplicationX in $PackagesDPKG; do
         Check_Required_Packages_DPKG $ApplicationX
