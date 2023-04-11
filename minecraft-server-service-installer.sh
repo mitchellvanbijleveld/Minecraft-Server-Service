@@ -733,7 +733,7 @@ download_ServerJAR () {
     versions=$(printf "%s" "$manifest" | jq -r '.versions | .[] | select(.type=="release") | .id' | head -n 10)
 
 
-    versions_formatted=$(echo $versions | tr '\n' ' ' | sed 's/ $/./;s/ /, /g')
+    versions_formatted=$(echo $versions | tr '\n' ' ' | sed 's/ $/./;s/ / \/ /g')
 
 
     # Print the versions to the terminal
@@ -741,7 +741,7 @@ download_ServerJAR () {
 
     
     
-    if ! echo "$CustomServerVersion" | grep -q "^$version$"; then
+    if ! echo "$CustomServerVersion" | grep -q "$version"; then
       echo "invalid server version"
       # Print the versions to the terminal
       echo "The 10 most recent release versions are:"
