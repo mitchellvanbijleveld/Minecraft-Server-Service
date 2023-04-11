@@ -735,7 +735,7 @@ download_ServerJAR () {
 
     versions_formatted=$(echo $versions | tr '\n' ' ' | sed 's/ $/./;s/ / \/ /g')
 
-if echo "versions_formatted" | grep -q '\<$CustomServerVersion\>'; then
+if echo "versions_formatted" | grep -q "\\<$CustomServerVersion\\>"; then
     echo "1.19 is in the string."
 else
     echo "1.19 is not in the string."
@@ -747,17 +747,8 @@ fi
     # Print the versions to the terminal
     echo "The 10 most recent release versions are: $versions_formatted"
 
-    
-    
-    if ! echo "$CustomServerVersion" | grep -q "$version"; then
-      echo "invalid server version"
-      # Print the versions to the terminal
-      echo "The 10 most recent release versions are:"
-      exit
-    fi
-
     # Get the URL of the version JSON file for the selected version
-    version_url=$(printf "%s" "$manifest" | jq -r --arg version "$version" '.versions | .[] | select(.id == $version) | .url')
+    version_url=$(printf "%s" "$manifest" | jq -r --arg version "$CustomServerVersion" '.versions | .[] | select(.id == $version) | .url')
 
     # Download the version JSON file
     version_manifest=$(curl -s $version_url)
