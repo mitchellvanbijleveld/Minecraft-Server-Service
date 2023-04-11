@@ -797,7 +797,7 @@ fi
 echo
 echo_Verbose "Running 'systemctl daemon-reload'..."
 systemctl daemon-reload
-        
+        ;;
         
         
     *)
