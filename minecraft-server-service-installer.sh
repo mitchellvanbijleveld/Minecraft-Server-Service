@@ -15,7 +15,7 @@ ScriptName="Mitchell's Minecraft Server Service Installation Script"
 ScriptDescription="Bash script that helps installing a Minecraft Server on Linux as a system service."
 ScriptDeveloper="Mitchell van Bijleveld"
 ScriptDeveloperWebsite="https://mitchellvanbijleveld.dev/"
-ScriptVersion="2023 04 06 00 38 - beta"
+ScriptVersion="2023 04 11 ** ** - beta"
 ScriptCopyright="© 2023"
 
 ####################################################################################################
@@ -696,12 +696,81 @@ sleep 0.5
 
 
 
+download_CustomServerJAR () {
+# Download version_manifest.json file
+manifest=$(curl -s https://launchermeta.mojang.com/mc/game/version_manifest.json)
+
+# Get the 10 most recent release versions
+versions=$(echo $manifest | jq -r '.versions | .[] | select(.type == "release") | .id' | head -n 10)
+
+# Print the versions to the terminal
+echo "The 10 most recent release versions are:"
+echo "$versions"
+
+# Prompt the user to select a version
+read -p "Enter the version number you want to download: " version
+
+# Check if the selected version is valid
+if ! echo "$versions" | grep -q "^$version$"; then
+  echo "Invalid version number. Exiting..."
+  exit 1
+fi
+
+# Get the URL of the version JSON file for the selected version
+version_url=$(echo $manifest | jq -r --arg version "$version" '.versions | .[] | select(.id == $version) | .url')
+
+# Download the version JSON file
+version_manifest=$(curl -s $version_url)
+
+# Get the URL of the server jar file
+server_url=$(echo $version_manifest | jq -r '.downloads.server.url')
+
+# Download the server jar file
+curl -o server.jar $server_url
+
+echo "Server jar file downloaded successfully."
+}
+
+
+
+
+
+download_LatestServerJAR () {
+# Download version_manifest.json file
+manifest=$(curl -s https://launchermeta.mojang.com/mc/game/version_manifest.json)
+
+# Get the URL of the latest release version JSON file
+version_url=$(echo $manifest | jq -r '.versions[] | select(.type == "release") | .url' | head -n 1)
+
+# Download the latest release version JSON file
+version_manifest=$(curl -s $version_url)
+
+# Get the version of the selected release
+version=$(echo $version_manifest | jq -r '.id')
+
+# Get the URL of the server jar file
+server_url=$(echo $version_manifest | jq -r '.downloads.server.url')
+
+# Download the server jar file
+curl -o server.jar $server_url
+
+echo "Server jar file for version $version downloaded successfully."
+}
+
+
+
+
+
 ####################################################################################################
 ##### Step 03 - Minecraft Server.                 ##################################################
 echo "####################################################################################################"
 echo "Step 3 - Downloading service file and Minecraft Server ."
 echo
 
+read -p "The script will now download the service file and the server jar file. Do you want to proceed? [yes/no] " yn
+    case $yn in
+    [Yy]*)
+        
 LogFileTimeStamp=$(date +"D%Y%m%dT%H%M")
 LogFileName="$LogFileTimeStamp.DownloadService.log"
 echo "Downloading Minecraft Server Service File..."
@@ -717,7 +786,7 @@ echo_Verbose "Creating directory '/etc/mitchellvanbijleveld/minecraft-server'...
 mkdir -p /etc/mitchellvanbijleveld/minecraft-server
 LogFileTimeStamp=$(date +"D%Y%m%dT%H%M")
 LogFileName="$LogFileTimeStamp.DownloadServerJar.log"
-echo "Downloading Minecraft Server Jar File (Version $Online_JarVersion)..."
+echo "Downloading latest Minecraft Server Jar File (Version $Online_JarVersion)..."
 curl --output /etc/mitchellvanbijleveld/minecraft-server/minecraft-server.jar $Online_JarURL --progress-bar
 if [ -e /etc/mitchellvanbijleveld/minecraft-server/minecraft-server.jar ]; then
     echo -n # Print empty newline
@@ -728,10 +797,14 @@ fi
 echo
 echo_Verbose "Running 'systemctl daemon-reload'..."
 systemctl daemon-reload
-
-
-
-
+        
+        
+        
+    *)
+        echo "OK exit"
+        exit
+        ;;
+    esac
 
 ##### Agree To Minecraft EULA
 Agree_To_EULA(){
