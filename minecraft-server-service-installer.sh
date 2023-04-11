@@ -445,7 +445,19 @@ Print_AvailableServerVersions () {
 ####################################################################################################
 
 
+####################################################################################################
+# Check The Custom Selected Server Version     #####################################################
 
+Check_CustomServerVersion () {
+  echo_Verbose "Checkig if the custom server version is found in the latest 10 releases..."
+  if echo "$versions_formatted" | grep -q "\\<$CustomServerVersion\\>"; then
+    echo_Verbose "Custom server version found!"
+  else
+    echo "\x1B[1;31mServer Version '$CustomServerVersion' has not not been found. Script will exit since it can't download a server jar file...\x1B[0m"
+    Print_AvailableServerVersions
+    exit
+  fi
+}
 
 
 ####################################################################################################
@@ -498,6 +510,8 @@ for ArgumentX in $@; do
         CustomServerVersion=$(printf '%s' "$ArgumentX" | sed 's/--server-version=//')
         echo "--server-version=$CustomServerVersion"
         echo "Waiting 3 seconds..."
+        Get_MostRecentMinecraftVersions
+        Check_CustomServerVersion
         sleep 3
         ;;
     "--show-server-versions")
@@ -753,14 +767,7 @@ download_ServerJAR () {
     
     Get_MostRecentMinecraftVersions
     
-    echo_Verbose "Checkig if the custom server version is found in the latest 10 releases..."
-    if echo "$versions_formatted" | grep -q "\\<$CustomServerVersion\\>"; then
-      echo_Verbose "Custom server version found!"
-    else
-      echo "\x1B[1;31mServer Version '$CustomServerVersion' has not not been found. Script will exit since it can't download a server jar file...\x1B[0m"
-      Print_AvailableServerVersions
-      exit
-    fi
+    Check_CustomServerVersion
 
     # Get the URL of the version JSON file for the selected version
     echo_Verbose "Get the custom server version JSON file..."
