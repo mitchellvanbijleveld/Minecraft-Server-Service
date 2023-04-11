@@ -701,63 +701,80 @@ sleep 0.5
 download_ServerJAR () {
 
   # Download the Minecraft Version Manifest JSON.
+  echo_Verbose "Downloading the Minecraft Version Manifest JSON File..."
   manifest=$(curl -s https://launchermeta.mojang.com/mc/game/version_manifest.json)
 
+  echo_Verbose "Checking if custom server version is set..."
   # Check if $CustomServerVersion is set.
   if [[ $1 = "" ]]; then
   # If $CustomServerVersion is empty, download the latest server version.
-    
+    echo_Verbose "No custom server version set. Downloading latest version JSON file..."
     # Get the URL of the latest release version JSON file
     version_url=$(printf "%s" "$manifest" | jq -r '.versions[] | select(.type == "release") | .url' | head -n 1)
-    
+    echo_Verbose "Download completed."
   else
-    echo "Custom Server Version selected: $CustomServerVersion."
+    echo "Custom Server Version: $CustomServerVersion."
     
     # Fetch the 10 most recent release versions
+    echo_Verbose "Getting latest 10 versions of Minecraft Servers..."
     versions=$(printf "%s" "$manifest" | jq -r '.versions | .[] | select(.type=="release") | .id' | head -n 10)
 
+    echo_Verbose "Setting servers string..."
     versions_formatted=$(echo $versions | tr '\n' ' ' | sed 's/ $/./;s/ / \/ /g')    
     
     # Print the versions to the terminal
-    echo "The 10 most recent release versions are: $versions_formatted"
+    echo_Verbose "The 10 most recent release versions are: $versions_formatted"
 
+    echo_Verbose "Checkig if the custom server version is found in the latest 10 releases..."
     if echo "$versions_formatted" | grep -q "\\<$CustomServerVersion\\>"; then
-      echo "1.19 is in the string."
+      echo_Verbose "Custom server version found!"
     else
-      echo "1.19 is not in the string."
+      echo "\x1B[1;31mCustom server version not found. Script will exit since it can't download a server jar file. Exiting...\x1B[0m"
+      exit
     fi
 
     # Get the URL of the version JSON file for the selected version
+    echo_Verbose "Get the custom server version JSON file..."
     version_url=$(printf "%s" "$manifest" | jq -r --arg version "$CustomServerVersion" '.versions | .[] | select(.id == $version) | .url')
-
+    echo_Verbose "Download completed."
   fi
   
   # Download release version JSON file
+  echo_Verbose "Downloading release version JSON file..."
   version_manifest=$(curl -s $version_url)
+  echo_Verbose "Download completed."
 
   # Get the version of the selected release
+  echo_Verbose "Get the version of the server..."
   version=$(printf "%s" "$version_manifest" | jq -r '.id')
 
   # Get the URL of the server jar file
+  echo_Verbose "Getting the server download url..."
   server_url=$(printf "%s" "$version_manifest" | jq -r '.downloads.server.url')
 
   # Download the server jar file
+  echo_Verbose "Downloading server jar file..."
   curl --output /etc/mitchellvanbijleveld/minecraft-server/minecraft-server.jar $server_url --progress-bar
+  echo_Verbose "Downlaod completed."
 
   echo "Server jar file for version $version downloaded successfully."
   
+  echo_Verbose "Checking if the server JAR file is in place..."
   if [ -e /etc/mitchellvanbijleveld/minecraft-server/minecraft-server.jar ]; then
       # Get the expected sha1 value
+      echo_Verbose "Getting expected sha1 value from JSON file..."
       expected_sha1=$(printf "%s" "$version_manifest" | jq -r '.downloads.server.sha1')
 
       # Calculate the actual sha1 value
+      echo_Verbose "Calculate actual sha1 value from downloaded server JAR file..."
       actual_sha1=$(shasum -a 1 /etc/mitchellvanbijleveld/minecraft-server/minecraft-server.jar | awk '{ print $1 }')
 
       # Compare the expected and actual sha1 values
+      echo_Verbose "Comparing sha1 values..."
       if [ "$expected_sha1" == "$actual_sha1" ]; then
-        echo "Server jar file for version %s downloaded successfully and has the expected sha1 value.\n" "$version"
+        echo_Verbose "Server jar file for version $version downloaded successfully and has the expected sha1 value."
       else
-        echo "Error: Server jar file for version %s downloaded but has an unexpected sha1 value.\n" "$version"
+        echo "\x1B[1;31mServer jar file for version $version downloaded but has an unexpected sha1 value. Exiting...\x1B[0m"
         exit
       fi
     else
