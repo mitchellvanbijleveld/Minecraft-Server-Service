@@ -508,11 +508,9 @@ for ArgumentX in $@; do
     "--server-version"*)
         echo_Verbose "Custom Server Version Selected."
         CustomServerVersion=$(printf '%s' "$ArgumentX" | sed 's/--server-version=//')
-        echo "--server-version=$CustomServerVersion"
-        echo "Waiting 3 seconds..."
+        echo_Verbose "--server-version=$CustomServerVersion"
         Get_MostRecentMinecraftVersions
         Check_CustomServerVersion
-        sleep 3
         ;;
     "--show-server-versions")
         ScriptOption_ShowServerVersions=true
@@ -764,10 +762,6 @@ download_ServerJAR () {
     echo_Verbose "Download completed."
   else
     echo_Verbose "\x1B[1;33mCustom Server Version: $CustomServerVersion.\x1B[0m"
-    
-    Get_MostRecentMinecraftVersions
-    
-    Check_CustomServerVersion
 
     # Get the URL of the version JSON file for the selected version
     echo_Verbose "Get the custom server version JSON file..."
