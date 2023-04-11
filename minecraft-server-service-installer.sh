@@ -462,6 +462,7 @@ ArgumentShowVersionInfo=false                # 6 #
 ArgumentSkipWaitTimer=false                  # 7 #
 LogExtraMessages=false                       # 8 #
 ArgumentWaitAfterStep=false                  # 9 #
+ScriptOption_ShowServerVersions=false
 ##################################################
 
 # Check the arguments.
