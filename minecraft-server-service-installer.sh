@@ -713,7 +713,7 @@ download_ServerJAR () {
     version_url=$(printf "%s" "$manifest" | jq -r '.versions[] | select(.type == "release") | .url' | head -n 1)
     echo_Verbose "Download completed."
   else
-    echo "Custom Server Version: $CustomServerVersion."
+    echo "\x1B[1;33mCustom Server Version: $CustomServerVersion.\x1B[0m"
     
     # Fetch the 10 most recent release versions
     echo_Verbose "Getting latest 10 versions of Minecraft Servers..."
@@ -757,7 +757,7 @@ download_ServerJAR () {
   curl --output /etc/mitchellvanbijleveld/minecraft-server/minecraft-server.jar $server_url --progress-bar
   echo_Verbose "Downlaod completed."
 
-  echo "Server jar file for version $version downloaded successfully."
+  echo_Verbose "Server jar file for version $version downloaded successfully."
   
   echo_Verbose "Checking if the server JAR file is in place..."
   if [ -e /etc/mitchellvanbijleveld/minecraft-server/minecraft-server.jar ]; then
@@ -775,6 +775,7 @@ download_ServerJAR () {
         echo_Verbose "Server jar file for version $version downloaded successfully and has the expected sha1 value."
       else
         echo "\x1B[1;31mServer jar file for version $version downloaded but has an unexpected sha1 value. Exiting...\x1B[0m"
+        echo
         exit
       fi
     else
