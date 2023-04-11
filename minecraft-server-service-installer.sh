@@ -17,7 +17,7 @@ ScriptName="Mitchell's Minecraft Server Service Installation Script"
 ScriptDescription="Bash script that helps installing a Minecraft Server on Linux as a system service."
 ScriptDeveloper="Mitchell van Bijleveld"
 ScriptDeveloperWebsite="https://mitchellvanbijleveld.dev/"
-ScriptVersion="2023.04.11-21.14-beta"
+ScriptVersion="2023.04.11-21.34-beta"
 ScriptCopyright="© 2023"
 
 ####################################################################################################
@@ -45,12 +45,14 @@ Show_Help() {
     echo "How to use the script: 'bash minecraft-server-service-installer.sh [options]'"
     echo
     echo "The following options are available:"
-    echo "     --allow-unsupported-os             :     Allow installation of the server on unsupported operating systems."
+    echo "     --allow-unsupported-os             :     Allow installation of the Minecraft server on unsupported operating systems."
     echo "                                              Make sure all required packages are already installed because the script won't check."
     echo "     --auto-install                     :     Do not ask for installation permissions for required packages."
     echo "     --check-os                         :     Check if your OS and OS Version are supported by the script."
     echo "     --check-packages                   :     Check if packages are installed. This will also check OS Support (--check-os)"
     echo "     --help                             :     Show this Help."
+    echo "     --server-version=[...]             :     To install a custom server, put a server version string like 1.19.4 here. Defaults to latest."
+    echo "                                              For example: 'bash minecraft-server-service-installer.sh --server-version=1.19.4'"
     echo "     --skip-wait                        :     Skip the 6 seconds wait timer before starting the script."
     echo "     --verbose                          :     Enable Verbose Logging during the execution of the script."
     echo "     --version                          :     Show Version Information about the script."
@@ -460,6 +462,10 @@ for ArgumentX in $@; do
         echo_Verbose "--version"
         ArgumentShowVersionInfo=true
         ;;
+    "--server-version"*)
+        echo_Verbose "--server-version"
+        echo "Custom Server Version Selected."
+        ;;
     "--skip-wait")
         echo_Verbose "--skip-wait"
         ArgumentSkipWaitTimer=true
@@ -813,7 +819,7 @@ LogFileName="$LogFileTimeStamp.DownloadService.log"
 echo "Downloading Minecraft Server Service File..."
 curl --output /etc/systemd/system/minecraft-server.service https://github.mitchellvanbijleveld.dev/Minecraft-Server-Service/minecraft-server.service --progress-bar
 echo_Verbose "Download completed"
-if [ ! -e /etc/systemd/system/minecraft-server.servicee ]; then
+if [ ! -e /etc/systemd/system/minecraft-server.service ]; then
     echo "\x1B[1;31mCould not save service file. Exiting...\x1B[0m"
     echo
     exit
