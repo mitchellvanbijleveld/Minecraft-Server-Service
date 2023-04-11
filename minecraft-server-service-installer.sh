@@ -742,7 +742,7 @@ download_ServerJAR () {
   else
     ##### DO NOT Download Latest Version
     # Get the 10 most recent release versions
-    versions=$(echo $manifest | jq -r '.versions | .[] | select(.type == "release") | .id' | head -n 10)
+    versions=$(printf "%s" "$manifest" | jq -r '.versions | .[] | select(.type == "release") | .id' | head -n 10)
 
     # Print the versions to the terminal
     echo "The 10 most recent release versions are:"
@@ -758,13 +758,13 @@ download_ServerJAR () {
     fi
 
     # Get the URL of the version JSON file for the selected version
-    version_url=$(echo $manifest | jq -r --arg version "$version" '.versions | .[] | select(.id == $version) | .url')
+    version_url=$(printf "%s" "$manifest" | jq -r --arg version "$version" '.versions | .[] | select(.id == $version) | .url')
 
     # Download the version JSON file
     version_manifest=$(curl -s $version_url)
 
     # Get the URL of the server jar file
-    server_url=$(echo $version_manifest | jq -r '.downloads.server.url')
+    server_url=$(printf "%s" "$version_manifest" | jq -r '.downloads.server.url')
 
     # Download the server jar file
     curl -o server.jar $server_url
