@@ -1,7 +1,5 @@
 #!/bin/bash
 
-CustomServerVersion="1.19"
-
 # 025
 #########################
 # 050
@@ -467,8 +465,8 @@ for ArgumentX in $@; do
         echo_Verbose "Custom Server Version Selected."
         CustomServerVersion=$ArgumentX
         echo $CustomServerVersion
-        echo "Pausing 30 seconds..."
-        pause 30
+        echo "Waiting 30 seconds..."
+        sleep 30
         ;;
     "--skip-wait")
         echo_Verbose "--skip-wait"
