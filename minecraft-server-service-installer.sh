@@ -17,7 +17,7 @@ ScriptName="Mitchell's Minecraft Server Service Installation Script"
 ScriptDescription="Bash script that helps installing a Minecraft Server on Linux as a system service."
 ScriptDeveloper="Mitchell van Bijleveld"
 ScriptDeveloperWebsite="https://mitchellvanbijleveld.dev/"
-ScriptVersion="2023 04 11 ** ** - beta"
+ScriptVersion="2023.04.11-21.14-beta"
 ScriptCopyright="© 2023"
 
 ####################################################################################################
@@ -707,13 +707,13 @@ download_ServerJAR () {
   echo_Verbose "Checking if custom server version is set..."
   # Check if $CustomServerVersion is set.
   if [[ $1 = "" ]]; then
-  # If $CustomServerVersion is empty, download the latest server version.
+    # If $CustomServerVersion is empty, download the latest server version.
     echo_Verbose "No custom server version set. Downloading latest version JSON file..."
     # Get the URL of the latest release version JSON file
     version_url=$(printf "%s" "$manifest" | jq -r '.versions[] | select(.type == "release") | .url' | head -n 1)
     echo_Verbose "Download completed."
   else
-    echo "\x1B[1;33mCustom Server Version: $CustomServerVersion.\x1B[0m"
+    echo_Verbose "\x1B[1;33mCustom Server Version: $CustomServerVersion.\x1B[0m"
     
     # Fetch the 10 most recent release versions
     echo_Verbose "Getting latest 10 versions of Minecraft Servers..."
@@ -730,6 +730,8 @@ download_ServerJAR () {
       echo_Verbose "Custom server version found!"
     else
       echo "\x1B[1;31mCustom server version not found. Script will exit since it can't download a server jar file. Exiting...\x1B[0m"
+      echo "The 10 most recent released versions are: $versions_formatted"
+      echo
       exit
     fi
 
@@ -754,6 +756,13 @@ download_ServerJAR () {
 
   # Download the server jar file
   echo_Verbose "Downloading server jar file..."
+  
+  if [[ $1 = "" ]]; then  
+    echo "Downloading Latest Server Version: $CustomServerVersion."
+  else
+    echo "\x1B[1;33mDownloading custom server version: $CustomServerVersion.\x1B[0m" 
+  fi
+  
   curl --output /etc/mitchellvanbijleveld/minecraft-server/minecraft-server.jar $server_url --progress-bar
   echo_Verbose "Downlaod completed."
 
