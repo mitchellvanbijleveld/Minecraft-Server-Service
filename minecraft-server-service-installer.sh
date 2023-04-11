@@ -464,9 +464,9 @@ for ArgumentX in $@; do
         echo_Verbose "--server-version"
         echo_Verbose "Custom Server Version Selected."
         CustomServerVersion=$(printf '%s' "$ArgumentX" | sed 's/--server-version=//')
-        echo "\-\-server\-version\=$CustomServerVersion"
-        echo "Waiting 30 seconds..."
-        sleep 30
+        echo "--server-version=$CustomServerVersion"
+        echo "Waiting 3 seconds..."
+        sleep 3
         ;;
     "--skip-wait")
         echo_Verbose "--skip-wait"
