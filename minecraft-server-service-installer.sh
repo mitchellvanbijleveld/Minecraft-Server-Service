@@ -478,6 +478,7 @@ ArgumentShowVersionInfo=false                # 6 #
 ArgumentSkipWaitTimer=false                  # 7 #
 LogExtraMessages=false                       # 8 #
 ArgumentWaitAfterStep=false                  # 9 #
+ScriptOption_ServerVersion=false
 ScriptOption_ShowServerVersions=false
 ##################################################
 
@@ -506,11 +507,7 @@ for ArgumentX in $@; do
         ArgumentShowVersionInfo=true
         ;;
     "--server-version"*)
-        echo_Verbose "Custom Server Version Selected."
-        CustomServerVersion=$(printf '%s' "$ArgumentX" | sed 's/--server-version=//')
-        echo_Verbose "--server-version=$CustomServerVersion"
-        Get_MostRecentMinecraftVersions
-        Check_CustomServerVersion
+        ScriptOption_ServerVersion=true
         ;;
     "--show-server-versions")
         ScriptOption_ShowServerVersions=true
@@ -573,6 +570,14 @@ fi
 if $LogExtraMessages; then # 7 #
     # Do nothing.
     echo -n
+fi
+
+if $ScriptOption_ServerVersion; then
+  echo_Verbose "Custom Server Version Selected."
+  CustomServerVersion=$(printf '%s' "$ArgumentX" | sed 's/--server-version=//')
+  echo_Verbose "--server-version=$CustomServerVersion"
+  Get_MostRecentMinecraftVersions
+  Check_CustomServerVersion
 fi
 
 if $ScriptOption_ShowServerVersions; then
