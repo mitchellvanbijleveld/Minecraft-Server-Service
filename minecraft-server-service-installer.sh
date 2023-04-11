@@ -721,40 +721,18 @@ download_ServerJAR () {
 
     echo "Server jar file for version $version downloaded successfully."
 
-    if [ -e /etc/mitchellvanbijleveld/minecraft-server/minecraft-server.jar ]; then
-      # Get the expected sha1 value
-      expected_sha1=$(printf "%s" "$version_manifest" | jq -r '.downloads.server.sha1')
-
-      # Calculate the actual sha1 value
-      actual_sha1=$(shasum -a 1 /etc/mitchellvanbijleveld/minecraft-server/minecraft-server.jar | awk '{ print $1 }')
-
-      # Compare the expected and actual sha1 values
-      if [ "$expected_sha1" == "$actual_sha1" ]; then
-        printf "Server jar file for version %s downloaded successfully and has the expected sha1 value.\n" "$version"
-      else
-        printf "Error: Server jar file for version %s downloaded but has an unexpected sha1 value.\n" "$version"
-        exit
-      fi
-    else
-      echo "\x1B[1;31mCould not save Java jar file. Exiting...\x1B[0m"
-      exit
-    fi
+    
   else
     ##### DO NOT Download Latest Version
     # Get the 10 most recent release versions
     versions=$(printf "%s" "$manifest" | jq -r '.versions | .[] | select(.type == "release") | .id' | head -n 10)
-
-    # Print the versions to the terminal
-    echo "The 10 most recent release versions are:"
-    echo "$versions"
-
-    # Prompt the user to select a version
-    read -p "Enter the version number you want to download: " version
-
-    # Check if the selected version is valid
-    if ! echo "$versions" | grep -q "^$version$"; then
-      echo "Invalid version number. Exiting..."
-      exit 1
+    
+    if ! echo "$CustomServerVersion" | grep -q "^$version$"; then
+      echo "invalid server version"
+      # Print the versions to the terminal
+      echo "The 10 most recent release versions are:"
+      echo "$versions"
+      exit
     fi
 
     # Get the URL of the version JSON file for the selected version
@@ -772,6 +750,29 @@ download_ServerJAR () {
     echo "Server jar file downloaded successfully."
 
   fi
+  
+  if [ -e /etc/mitchellvanbijleveld/minecraft-server/minecraft-server.jar ]; then
+      # Get the expected sha1 value
+      expected_sha1=$(printf "%s" "$version_manifest" | jq -r '.downloads.server.sha1')
+
+      # Calculate the actual sha1 value
+      actual_sha1=$(shasum -a 1 /etc/mitchellvanbijleveld/minecraft-server/minecraft-server.jar | awk '{ print $1 }')
+
+      # Compare the expected and actual sha1 values
+      if [ "$expected_sha1" == "$actual_sha1" ]; then
+        printf "Server jar file for version %s downloaded successfully and has the expected sha1 value.\n" "$version"
+      else
+        printf "Error: Server jar file for version %s downloaded but has an unexpected sha1 value.\n" "$version"
+        exit
+      fi
+    else
+      echo "\x1B[1;31mCould not save Java jar file. Exiting...\x1B[0m"
+      exit
+    fi
+  
+  
+  
+  
 
 }
 
