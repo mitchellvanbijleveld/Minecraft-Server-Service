@@ -737,29 +737,22 @@ echo "Server jar file downloaded successfully."
 
 download_LatestServerJAR () {
 # Download version_manifest.json file
-echo_Verbose "Downloading the Minecraft Version Manifest..."
 manifest=$(curl -s https://launchermeta.mojang.com/mc/game/version_manifest.json)
 
 # Get the URL of the latest release version JSON file
-echo_Verbose "Getting the latest available release version..."
-version_url=$(printf $manifest | jq -r '.versions[] | select(.type == "release") | .url' | head -n 1)
+version_url=$(echo $manifest | jq -r '.versions[] | select(.type == "release") | .url' | head -n 1)
 
 # Download the latest release version JSON file
-echo_Verbose "Downloading the latest release version JSON file..."
 version_manifest=$(curl -s $version_url)
 
-# Get the version of the selected release
-echo_Verbose "Getting the version of the latest release..."
-LatestVersion=$(printf $version_manifest | jq -r '.id')
-
 # Get the URL of the server jar file
-echo_Verbose "Getting the url of the latest release server JAR file..."
-server_url=$(printf $version_manifest | jq -r '.downloads.server.url')
+server_url=$(echo $version_manifest | jq -r '.downloads.server.url')
 
 # Download the server jar file
-echo "Downloading latest Minecraft Server Jar File (Version $LatestVersion)..."
-
 curl --output /etc/mitchellvanbijleveld/minecraft-server/minecraft-server.jar $server_url --progress-bar
+
+echo "Server jar file downloaded successfully."
+
 if [ -e /etc/mitchellvanbijleveld/minecraft-server/minecraft-server.jar ]; then
     echo -n # Print empty newline
 else
