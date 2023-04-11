@@ -574,13 +574,14 @@ fi
 
 if $ScriptOption_ServerVersion; then
   echo_Verbose "Custom Server Version Selected."
-  CustomServerVersion=$(printf '%s' "$ArgumentX" | sed 's/--server-version=//')
+  CustomServerVersion="${ArgumentX#*server-version=}"
   echo_Verbose "--server-version=$CustomServerVersion"
   Get_MostRecentMinecraftVersions
   Check_CustomServerVersion
 fi
 
 if $ScriptOption_ShowServerVersions; then
+    Get_MostRecentMinecraftVersions
     Print_AvailableServerVersions
     ExitScriptAfterCommand=true
 fi
