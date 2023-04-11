@@ -15,7 +15,7 @@ ScriptName="Mitchell's Minecraft Server Service Installation Script"
 ScriptDescription="Bash script that helps installing a Minecraft Server on Linux as a system service."
 ScriptDeveloper="Mitchell van Bijleveld"
 ScriptDeveloperWebsite="https://mitchellvanbijleveld.dev/"
-ScriptVersion="2023.04.11-21.34-beta"
+ScriptVersion="2023.04.11-21.45-beta"
 ScriptCopyright="© 2023"
 
 ####################################################################################################
@@ -463,8 +463,8 @@ for ArgumentX in $@; do
     "--server-version"*)
         echo_Verbose "--server-version"
         echo_Verbose "Custom Server Version Selected."
-        CustomServerVersion=$ArgumentX
-        echo $CustomServerVersion
+        CustomServerVersion=$(printf '%s' "$ArgumentX" | sed 's/--server-version=//')
+        echo "\-\-server\-version\=$CustomServerVersion"
         echo "Waiting 30 seconds..."
         sleep 30
         ;;
