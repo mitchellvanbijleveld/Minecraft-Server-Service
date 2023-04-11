@@ -696,87 +696,82 @@ sleep 0.5
 
 
 
-download_CustomServerJAR () {
-# Download version_manifest.json file
-manifest=$(curl -s https://launchermeta.mojang.com/mc/game/version_manifest.json)
+download_ServerJAR () {
 
-# Get the 10 most recent release versions
-versions=$(echo $manifest | jq -r '.versions | .[] | select(.type == "release") | .id' | head -n 10)
+  ##### Download Latest Version!
+  # Download version_manifest.json file
+  manifest=$(curl -s https://launchermeta.mojang.com/mc/game/version_manifest.json)
 
-# Print the versions to the terminal
-echo "The 10 most recent release versions are:"
-echo "$versions"
+  if [[ $1 = "" ]]; then
 
-# Prompt the user to select a version
-read -p "Enter the version number you want to download: " version
+    # Get the URL of the latest release version JSON file
+    version_url=$(printf "%s" "$manifest" | jq -r '.versions[] | select(.type == "release") | .url' | head -n 1)
 
-# Check if the selected version is valid
-if ! echo "$versions" | grep -q "^$version$"; then
-  echo "Invalid version number. Exiting..."
-  exit 1
-fi
+    # Download the latest release version JSON file
+    version_manifest=$(curl -s $version_url)
 
-# Get the URL of the version JSON file for the selected version
-version_url=$(echo $manifest | jq -r --arg version "$version" '.versions | .[] | select(.id == $version) | .url')
+    # Get the version of the selected release
+    version=$(printf "%s" "$version_manifest" | jq -r '.id')
 
-# Download the version JSON file
-version_manifest=$(curl -s $version_url)
+    # Get the URL of the server jar file
+    server_url=$(printf "%s" "$version_manifest" | jq -r '.downloads.server.url')
 
-# Get the URL of the server jar file
-server_url=$(echo $version_manifest | jq -r '.downloads.server.url')
+    # Download the server jar file
+    curl --output /etc/mitchellvanbijleveld/minecraft-server/minecraft-server.jar $server_url --progress-bar
 
-# Download the server jar file
-curl -o server.jar $server_url
+    echo "Server jar file for version $version downloaded successfully."
 
-echo "Server jar file downloaded successfully."
-}
+    if [ -e /etc/mitchellvanbijleveld/minecraft-server/minecraft-server.jar ]; then
+      # Get the expected sha1 value
+      expected_sha1=$(printf "%s" "$version_manifest" | jq -r '.downloads.server.sha1')
 
+      # Calculate the actual sha1 value
+      actual_sha1=$(shasum -a 1 /etc/mitchellvanbijleveld/minecraft-server/minecraft-server.jar | awk '{ print $1 }')
 
+      # Compare the expected and actual sha1 values
+      if [ "$expected_sha1" == "$actual_sha1" ]; then
+        printf "Server jar file for version %s downloaded successfully and has the expected sha1 value.\n" "$version"
+      else
+        printf "Error: Server jar file for version %s downloaded but has an unexpected sha1 value.\n" "$version"
+        exit
+      fi
+    else
+      echo "\x1B[1;31mCould not save Java jar file. Exiting...\x1B[0m"
+      exit
+    fi
+  else
+    ##### DO NOT Download Latest Version
+    # Get the 10 most recent release versions
+    versions=$(echo $manifest | jq -r '.versions | .[] | select(.type == "release") | .id' | head -n 10)
 
+    # Print the versions to the terminal
+    echo "The 10 most recent release versions are:"
+    echo "$versions"
 
+    # Prompt the user to select a version
+    read -p "Enter the version number you want to download: " version
 
-download_LatestServerJAR () {
-# Download version_manifest.json file
-manifest=$(curl -s https://launchermeta.mojang.com/mc/game/version_manifest.json)
+    # Check if the selected version is valid
+    if ! echo "$versions" | grep -q "^$version$"; then
+      echo "Invalid version number. Exiting..."
+      exit 1
+    fi
 
-# Get the URL of the latest release version JSON file
-version_url=$(printf "%s" "$manifest" | jq -r '.versions[] | select(.type == "release") | .url' | head -n 1)
+    # Get the URL of the version JSON file for the selected version
+    version_url=$(echo $manifest | jq -r --arg version "$version" '.versions | .[] | select(.id == $version) | .url')
 
-# Download the latest release version JSON file
-version_manifest=$(curl -s $version_url)
+    # Download the version JSON file
+    version_manifest=$(curl -s $version_url)
 
-# Get the version of the selected release
-version=$(printf "%s" "$version_manifest" | jq -r '.id')
+    # Get the URL of the server jar file
+    server_url=$(echo $version_manifest | jq -r '.downloads.server.url')
 
-# Get the URL of the server jar file
-server_url=$(printf "%s" "$version_manifest" | jq -r '.downloads.server.url')
+    # Download the server jar file
+    curl -o server.jar $server_url
 
-# Download the server jar file
-curl --output /etc/mitchellvanbijleveld/minecraft-server/minecraft-server.jar $server_url --progress-bar
+    echo "Server jar file downloaded successfully."
 
-echo "Server jar file for version $version downloaded successfully."
-
-if [ -e /etc/mitchellvanbijleveld/minecraft-server/minecraft-server.jar ]; then
-    # Get the expected sha1 value
-expected_sha1=$(printf "%s" "$version_manifest" | jq -r '.downloads.server.sha1')
-
-# Calculate the actual sha1 value
-actual_sha1=$(shasum -a 1 /etc/mitchellvanbijleveld/minecraft-server/minecraft-server.jar | awk '{ print $1 }')
-
-# Compare the expected and actual sha1 values
-if [ "$expected_sha1" == "$actual_sha1" ]; then
-    printf "Server jar file for version %s downloaded successfully and has the expected sha1 value.\n" "$version"
-else
-    printf "Error: Server jar file for version %s downloaded but has an unexpected sha1 value.\n" "$version"
-    exit
-fi
-else
-    echo "\x1B[1;31mCould not save Java jar file. Exiting...\x1B[0m"
-    exit
-fi
-
-
-
+  fi
 
 }
 
@@ -810,7 +805,7 @@ mkdir -p /etc/mitchellvanbijleveld/minecraft-server
 LogFileTimeStamp=$(date +"D%Y%m%dT%H%M")
 LogFileName="$LogFileTimeStamp.DownloadServerJar.log"
 
-download_LatestServerJAR
+download_ServerJAR $CustomServerVersion
 
 echo
 echo_Verbose "Running 'systemctl daemon-reload'..."
