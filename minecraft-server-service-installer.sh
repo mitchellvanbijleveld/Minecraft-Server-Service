@@ -730,10 +730,14 @@ download_ServerJAR () {
     ##### DO NOT Download Latest Version
     # Get the 10 most recent release versions
     # Fetch the 10 most recent release versions
-    versions=$(echo "$version_manifest" | jq -r '.versions[].id' | head -n 10 | paste -sd ", ")
+    versions=$(printf "%s" "$manifest" | jq -r '.versions | .[] | select(.type=="release") | .id' | head -n 10)
+
+
+    versions_formatted=$(echo $versions | tr '\n' ' ' | sed 's/ $/./;s/ /, /g')
+
 
     # Print the versions to the terminal
-    echo "The 10 most recent release versions are: $versions"
+    echo "The 10 most recent release versions are: $versions_formatted"
 
     
     
