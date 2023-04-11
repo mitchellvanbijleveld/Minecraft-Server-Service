@@ -737,24 +737,39 @@ echo "Server jar file downloaded successfully."
 
 download_LatestServerJAR () {
 # Download version_manifest.json file
+echo_Verbose "Downloading the Minecraft Version Manifest..."
 manifest=$(curl -s https://launchermeta.mojang.com/mc/game/version_manifest.json)
 
 # Get the URL of the latest release version JSON file
+echo_Verbose "Getting the latest available release version..."
 version_url=$(echo $manifest | jq -r '.versions[] | select(.type == "release") | .url' | head -n 1)
 
 # Download the latest release version JSON file
+echo_Verbose "Downloading the latest release version JSON file..."
 version_manifest=$(curl -s $version_url)
 
 # Get the version of the selected release
-version=$(echo $version_manifest | jq -r '.id')
+echo_Verbose "Getting the version of the latest release..."
+LatestVersion=$(echo $version_manifest | jq -r '.id')
 
 # Get the URL of the server jar file
+echo_Verbose "Getting the url of the latest release server JAR file..."
 server_url=$(echo $version_manifest | jq -r '.downloads.server.url')
 
 # Download the server jar file
-curl -o server.jar $server_url
+echo "Downloading latest Minecraft Server Jar File (Version $LatestVersion)..."
 
-echo "Server jar file for version $version downloaded successfully."
+curl --output /etc/mitchellvanbijleveld/minecraft-server/minecraft-server.jar $server_url --progress-bar
+if [ -e /etc/mitchellvanbijleveld/minecraft-server/minecraft-server.jar ]; then
+    echo -n # Print empty newline
+else
+    echo "\x1B[1;31mCould not save Java jar file. Exiting...\x1B[0m"
+    exit
+fi
+
+
+
+
 }
 
 
@@ -786,14 +801,9 @@ echo_Verbose "Creating directory '/etc/mitchellvanbijleveld/minecraft-server'...
 mkdir -p /etc/mitchellvanbijleveld/minecraft-server
 LogFileTimeStamp=$(date +"D%Y%m%dT%H%M")
 LogFileName="$LogFileTimeStamp.DownloadServerJar.log"
-echo "Downloading latest Minecraft Server Jar File (Version $Online_JarVersion)..."
-curl --output /etc/mitchellvanbijleveld/minecraft-server/minecraft-server.jar $Online_JarURL --progress-bar
-if [ -e /etc/mitchellvanbijleveld/minecraft-server/minecraft-server.jar ]; then
-    echo -n # Print empty newline
-else
-    echo "\x1B[1;31mCould not save Java jar file. Exiting...\x1B[0m"
-    exit
-fi
+
+download_LatestServerJAR
+
 echo
 echo_Verbose "Running 'systemctl daemon-reload'..."
 systemctl daemon-reload
