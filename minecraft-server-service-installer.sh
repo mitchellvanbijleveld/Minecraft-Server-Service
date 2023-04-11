@@ -1,5 +1,7 @@
 #!/bin/bash
 
+CustomServerVersion="1.19.2"
+
 # 025
 #########################
 # 050
@@ -723,6 +725,8 @@ download_ServerJAR () {
 
     
   else
+    echo "Custom Server Version selected: $CustomServerVersion."
+    
     ##### DO NOT Download Latest Version
     # Get the 10 most recent release versions
     versions=$(printf "%s" "$manifest" | jq -r '.versions | .[] | select(.type == "release") | .id' | head -n 10)
