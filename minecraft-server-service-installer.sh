@@ -464,7 +464,11 @@ for ArgumentX in $@; do
         ;;
     "--server-version"*)
         echo_Verbose "--server-version"
-        echo "Custom Server Version Selected."
+        echo_Verbose "Custom Server Version Selected."
+        CustomServerVersion=$ArgumentX
+        echo $CustomServerVersion
+        echo "Pausing 30 seconds..."
+        pause 30
         ;;
     "--skip-wait")
         echo_Verbose "--skip-wait"
