@@ -757,7 +757,19 @@ curl --output /etc/mitchellvanbijleveld/minecraft-server/minecraft-server.jar $s
 echo "Server jar file for version $version downloaded successfully."
 
 if [ -e /etc/mitchellvanbijleveld/minecraft-server/minecraft-server.jar ]; then
-    echo -n # Print empty newline
+    # Get the expected sha1 value
+expected_sha1=$(printf "%s" "$version_manifest" | jq -r '.downloads.server.sha1')
+
+# Calculate the actual sha1 value
+actual_sha1=$(shasum -a 1 /etc/mitchellvanbijleveld/minecraft-server/minecraft-server.jar | awk '{ print $1 }')
+
+# Compare the expected and actual sha1 values
+if [ "$expected_sha1" == "$actual_sha1" ]; then
+    printf "Server jar file for version %s downloaded successfully and has the expected sha1 value.\n" "$version"
+else
+    printf "Error: Server jar file for version %s downloaded but has an unexpected sha1 value.\n" "$version"
+    exit
+fi
 else
     echo "\x1B[1;31mCould not save Java jar file. Exiting...\x1B[0m"
     exit
