@@ -767,7 +767,7 @@ download_ServerJAR () {
   echo_Verbose "Downloading server jar file..."
   
   if [[ $1 = "" ]]; then  
-    echo "Downloading Latest Server Version: $CustomServerVersion."
+    echo "Downloading Latest Server Version: $version."
   else
     echo "\x1B[1;33mDownloading custom server version: $CustomServerVersion.\x1B[0m" 
   fi
@@ -813,6 +813,12 @@ echo "##########################################################################
 echo "Step 3 - Downloading service file and Minecraft Server ."
 echo
 
+if $ArgumentAutoInstall; then
+  echo "autoinstalling"
+else
+  echo "not autoinstalling"
+fi
+
 read -p "The script will now download the service file and the server jar file. Do you want to proceed? [yes/no] " yn
     case $yn in
     [Yy]*)
@@ -843,6 +849,7 @@ systemctl daemon-reload
         
     *)
         echo "OK exit"
+        echo
         exit
         ;;
     esac
