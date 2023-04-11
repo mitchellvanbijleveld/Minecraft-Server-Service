@@ -422,7 +422,7 @@ Get_MostRecentMinecraftVersions () {
   echo_Verbose "Getting latest 10 versions of Minecraft Servers..."
   versions=$(printf "%s" "$manifest" | jq -r '.versions | .[] | select(.type=="release") | .id' | head -n 10)
   echo_Verbose "Setting servers string..."
-  versions_formatted=$(echo $versions | tr '\n' ' ' | sed 's/ $/./;s/ / \/ /g')    
+  versions_formatted=$(printf "%s" "$versions" | tr '\n' ' ' | sed 's/ $/./;s/ / \/ /g')    
   # Print the versions to the terminal
   echo_Verbose "The 10 most recent release versions are: $versions_formatted"
 }
