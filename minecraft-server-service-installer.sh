@@ -812,13 +812,12 @@ LogFileTimeStamp=$(date +"D%Y%m%dT%H%M")
 LogFileName="$LogFileTimeStamp.DownloadService.log"
 echo "Downloading Minecraft Server Service File..."
 curl --output /etc/systemd/system/minecraft-server.service https://github.mitchellvanbijleveld.dev/Minecraft-Server-Service/minecraft-server.service --progress-bar
-if [ -e /etc/systemd/system/minecraft-server.service ]; then
-    echo -n # Print empty newline
-else
+echo_Verbose "Download completed"
+if [ ! -e /etc/systemd/system/minecraft-server.servicee ]; then
     echo "\x1B[1;31mCould not save service file. Exiting...\x1B[0m"
+    echo
     exit
 fi
-echo
 echo_Verbose "Creating directory '/etc/mitchellvanbijleveld/minecraft-server'..."
 mkdir -p /etc/mitchellvanbijleveld/minecraft-server
 LogFileTimeStamp=$(date +"D%Y%m%dT%H%M")
@@ -853,15 +852,16 @@ echo "eula=true" >/etc/mitchellvanbijleveld/minecraft-server/eula.txt
 }
 #####
 if $ArgumentAutoInstall; then
-Agree_To_EULA
+  Agree_To_EULA
 else
-read -p "Do you agree to the Minecraft (Server) EULA? [yes/no] " yn
+  read -p "Do you agree to the Minecraft (Server) EULA? [yes/no] " yn
     case $yn in
     [Yy]*)
         Agree_To_EULA;;
     *)
         echo "\x1B[1;33mPlease read the eula and add 'eula=true' to '/etc/mitchellvanbijleveld/minecraft-server/eula.txt'.\x1B[0m"
-        echo "     You can do so by executing the following command: 'eula=true >/etc/mitchellvanbijleveld/minecraft-server/eula.txt'."
+        echo "You can do so by executing the following command: 'eula=true >/etc/mitchellvanbijleveld/minecraft-server/eula.txt'."
+        echo
         ;;
     esac
 fi
