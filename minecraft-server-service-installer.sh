@@ -414,7 +414,7 @@ esac
 ####################################################################################################
 ##### Set Script Variables                                                #
 LogDirectory="/var/log/mitchellvanbijleveld/mc-server-installer/"         #
-PackagesDPKG="screen openjdk-17-jdk"                                      #
+PackagesDPKG="jq screen openjdk-17-jdk"                                   #
 PackagesRPM="epel-release screen java-17-openjdk"                         #
 ###########################################################################
 ##### Default Arguments to False.            #####
