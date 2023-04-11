@@ -15,7 +15,7 @@ ScriptName="Mitchell's Minecraft Server Service Installation Script"
 ScriptDescription="Bash script that helps installing a Minecraft Server on Linux as a system service."
 ScriptDeveloper="Mitchell van Bijleveld"
 ScriptDeveloperWebsite="https://mitchellvanbijleveld.dev/"
-ScriptVersion="2023.04.11-21.45-beta"
+ScriptVersion="2023.04.12-01.04-beta"
 ScriptCopyright="© 2023"
 
 ####################################################################################################
@@ -32,8 +32,6 @@ URL_SCRIPT="https://github.mitchellvanbijleveld.dev/Minecraft-Server-Service/min
 ####################################################################################################
 # Download and run custom function importer.      ##################################################
 eval "$(curl https://github.mitchellvanbijleveld.dev/Bash-Functions/import_Functions.sh --silent)"
-echo $@
-sleep 5
 if [[ "$@" == "" ]]; then
   import_Functions echo_Replaced print_ScriptInfo script_Updater
 else
@@ -454,7 +452,7 @@ Print_AvailableServerVersions () {
 # Check if the script is executed with options/arguments. Set Variables.   #########################
 ####################################################################################################
 ##### Set Script Variables                                                #
-LogDirectory="/var/log/mitchellvanbijleveld/mc-server-installer/"         #
+LogDirectory="/var/log/mitchellvanbijleveld/$Internal_ScriptName/"         #
 PackagesDPKG="jq screen openjdk-17-jdk"                                   #
 PackagesRPM="epel-release screen java-17-openjdk"                         #
 ###########################################################################
@@ -475,33 +473,27 @@ ScriptOption_ShowServerVersions=false
 ScriptArguments=" $@ "
 echo_Verbose ".$ScriptArguments."
 for ArgumentX in $@; do
+    echo_Verbose "$ArgumentX"
     case $ArgumentX in
     "--allow-unsupported-os")
-        echo_Verbose "--allow-unsupported-os"
         ArgumentAllowUnsupportedOS=true
         ;;
     "--auto-install")
-        echo_Verbose "--auto-install"
         ArgumentAutoInstall=true
         ;;
     "--check-os")
-        echo_Verbose "--check-os"
         ArgumentOnlyCheckOS=true
         ;;
     "--check-packages")
-        echo_Verbose "--check-packages"
         ArgumentOnlyCheckPackages=true
         ;;
     "--help")
-        echo_Verbose "--help"
         ArgumentShowHelp=true
         ;;
     "--version")
-        echo_Verbose "--version"
         ArgumentShowVersionInfo=true
         ;;
     "--server-version"*)
-        echo_Verbose "--server-version"
         echo_Verbose "Custom Server Version Selected."
         CustomServerVersion=$(printf '%s' "$ArgumentX" | sed 's/--server-version=//')
         echo "--server-version=$CustomServerVersion"
@@ -509,24 +501,20 @@ for ArgumentX in $@; do
         sleep 3
         ;;
     "--show-server-versions")
-        echo_Verbose "--show-server-versions"
         ScriptOption_ShowServerVersions=true
         ;;
     "--skip-wait")
-        echo_Verbose "--skip-wait"
         ArgumentSkipWaitTimer=true
         ;;
     "--verbose")
-        echo_Verbose "--verbose"
         LogExtraMessages=true
         LogStyle=Verbose
         ;;
     "--wait-after-step")
-        echo_Verbose "--wait-after-step"
         ArgumentWaitAfterStep=true
         ;;
     *) # Wild Card.
-        echo "Invalid Command. Exiting..."
+        echo "Checking command '$ArgumentX' went wrong since it is not valid. Exiting..."
         exit
         ;;
     esac
