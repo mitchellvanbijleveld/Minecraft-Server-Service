@@ -503,7 +503,7 @@ for ArgumentX in $@; do
         ;;
     "--show-server-versions")
         echo_Verbose "--show-server-versions"
-        ScriptOption_ShowServerVersions
+        ScriptOption_ShowServerVersions=true
         ;;
     "--skip-wait")
         echo_Verbose "--skip-wait"
