@@ -820,6 +820,7 @@ LogFileTimeStamp=$(date +"D%Y%m%dT%H%M")
 LogFileName="$LogFileTimeStamp.DownloadService.log"
 echo "Downloading Minecraft Server Service File..."
 curl --output /etc/systemd/system/minecraft-server.service https://github.mitchellvanbijleveld.dev/Minecraft-Server-Service/minecraft-server.service --progress-bar
+echo
 echo_Verbose "Download completed"
 if [ ! -e /etc/systemd/system/minecraft-server.service ]; then
     echo "\x1B[1;31mCould not save service file. Exiting...\x1B[0m"
