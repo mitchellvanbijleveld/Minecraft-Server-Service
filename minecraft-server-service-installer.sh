@@ -700,68 +700,51 @@ sleep 0.5
 
 download_ServerJAR () {
 
-  ##### Download Latest Version!
-  # Download version_manifest.json file
+  # Download the Minecraft Version Manifest JSON.
   manifest=$(curl -s https://launchermeta.mojang.com/mc/game/version_manifest.json)
 
+  # Check if $CustomServerVersion is set.
   if [[ $1 = "" ]]; then
-
+  # If $CustomServerVersion is empty, download the latest server version.
+    
     # Get the URL of the latest release version JSON file
     version_url=$(printf "%s" "$manifest" | jq -r '.versions[] | select(.type == "release") | .url' | head -n 1)
-
-    # Download the latest release version JSON file
-    version_manifest=$(curl -s $version_url)
-
-    # Get the version of the selected release
-    version=$(printf "%s" "$version_manifest" | jq -r '.id')
-
-    # Get the URL of the server jar file
-    server_url=$(printf "%s" "$version_manifest" | jq -r '.downloads.server.url')
-
-    # Download the server jar file
-    curl --output /etc/mitchellvanbijleveld/minecraft-server/minecraft-server.jar $server_url --progress-bar
-
-    echo "Server jar file for version $version downloaded successfully."
-
     
   else
     echo "Custom Server Version selected: $CustomServerVersion."
     
-    ##### DO NOT Download Latest Version
-    # Get the 10 most recent release versions
     # Fetch the 10 most recent release versions
     versions=$(printf "%s" "$manifest" | jq -r '.versions | .[] | select(.type=="release") | .id' | head -n 10)
 
-
-    versions_formatted=$(echo $versions | tr '\n' ' ' | sed 's/ $/./;s/ / \/ /g')
-
-if echo "versions_formatted" | grep -q "\\<$CustomServerVersion\\>"; then
-    echo "1.19 is in the string."
-else
-    echo "1.19 is not in the string."
-fi
-
-
-
-
+    versions_formatted=$(echo $versions | tr '\n' ' ' | sed 's/ $/./;s/ / \/ /g')    
+    
     # Print the versions to the terminal
     echo "The 10 most recent release versions are: $versions_formatted"
+
+    if echo "$versions_formatted" | grep -q "\\<$CustomServerVersion\\>"; then
+      echo "1.19 is in the string."
+    else
+      echo "1.19 is not in the string."
+    fi
 
     # Get the URL of the version JSON file for the selected version
     version_url=$(printf "%s" "$manifest" | jq -r --arg version "$CustomServerVersion" '.versions | .[] | select(.id == $version) | .url')
 
-    # Download the version JSON file
-    version_manifest=$(curl -s $version_url)
-
-    # Get the URL of the server jar file
-    server_url=$(printf "%s" "$version_manifest" | jq -r '.downloads.server.url')
-
-    # Download the server jar file
-    curl -o server.jar $server_url
-
-    echo "Server jar file downloaded successfully."
-
   fi
+  
+  # Download release version JSON file
+  version_manifest=$(curl -s $version_url)
+
+  # Get the version of the selected release
+  version=$(printf "%s" "$version_manifest" | jq -r '.id')
+
+  # Get the URL of the server jar file
+  server_url=$(printf "%s" "$version_manifest" | jq -r '.downloads.server.url')
+
+  # Download the server jar file
+  curl --output /etc/mitchellvanbijleveld/minecraft-server/minecraft-server.jar $server_url --progress-bar
+
+  echo "Server jar file for version $version downloaded successfully."
   
   if [ -e /etc/mitchellvanbijleveld/minecraft-server/minecraft-server.jar ]; then
       # Get the expected sha1 value
@@ -781,10 +764,6 @@ fi
       echo "\x1B[1;31mCould not save Java jar file. Exiting...\x1B[0m"
       exit
     fi
-  
-  
-  
-  
 
 }
 
