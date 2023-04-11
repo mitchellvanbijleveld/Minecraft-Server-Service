@@ -745,13 +745,16 @@ version_url=$(echo $manifest | jq -r '.versions[] | select(.type == "release") |
 # Download the latest release version JSON file
 version_manifest=$(curl -s $version_url)
 
+# Get the version of the selected release
+version=$(echo $version_manifest | jq -r '.id')
+
 # Get the URL of the server jar file
 server_url=$(echo $version_manifest | jq -r '.downloads.server.url')
 
 # Download the server jar file
 curl --output /etc/mitchellvanbijleveld/minecraft-server/minecraft-server.jar $server_url --progress-bar
 
-echo "Server jar file downloaded successfully."
+echo "Server jar file for version $version downloaded successfully."
 
 if [ -e /etc/mitchellvanbijleveld/minecraft-server/minecraft-server.jar ]; then
     echo -n # Print empty newline
