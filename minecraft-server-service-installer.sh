@@ -740,16 +740,16 @@ download_LatestServerJAR () {
 manifest=$(curl -s https://launchermeta.mojang.com/mc/game/version_manifest.json)
 
 # Get the URL of the latest release version JSON file
-version_url=$(echo $manifest | jq -r '.versions[] | select(.type == "release") | .url' | head -n 1)
+version_url=$(printf "%s" "$manifest" | jq -r '.versions[] | select(.type == "release") | .url' | head -n 1)
 
 # Download the latest release version JSON file
 version_manifest=$(curl -s $version_url)
 
 # Get the version of the selected release
-version=$(echo $version_manifest | jq -r '.id')
+version=$(printf "%s" "$version_manifest" | jq -r '.id')
 
 # Get the URL of the server jar file
-server_url=$(echo $version_manifest | jq -r '.downloads.server.url')
+server_url=$(printf "%s" "$version_manifest" | jq -r '.downloads.server.url')
 
 # Download the server jar file
 curl --output /etc/mitchellvanbijleveld/minecraft-server/minecraft-server.jar $server_url --progress-bar
