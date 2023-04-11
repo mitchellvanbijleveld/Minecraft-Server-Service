@@ -51,6 +51,7 @@ Show_Help() {
     echo "     --help                             :     Show this Help."
     echo "     --server-version=[...]             :     To install a custom server, put a server version string like 1.19.4 here. Defaults to latest."
     echo "                                              For example: 'bash minecraft-server-service-installer.sh --server-version=1.19.4'"
+    echo "     --show-server-versions             :     Show the available server versions."
     echo "     --skip-wait                        :     Skip the 6 seconds wait timer before starting the script."
     echo "     --verbose                          :     Enable Verbose Logging during the execution of the script."
     echo "     --version                          :     Show Version Information about the script."
@@ -410,6 +411,38 @@ esac
 
 
 
+####################################################################################################
+# Print Latest 10 Available Minecraft Server Versions    ###########################################
+Get_MostRecentMinecraftVersions () {
+  # Fetch the 10 most recent release versions
+  echo_Verbose "Getting latest 10 versions of Minecraft Servers..."
+  versions=$(printf "%s" "$manifest" | jq -r '.versions | .[] | select(.type=="release") | .id' | head -n 10)
+  echo_Verbose "Setting servers string..."
+  versions_formatted=$(echo $versions | tr '\n' ' ' | sed 's/ $/./;s/ / \/ /g')    
+  # Print the versions to the terminal
+  echo_Verbose "The 10 most recent release versions are: $versions_formatted"
+}
+####################################################################################################
+
+
+####################################################################################################
+# Print Latest 10 Available Minecraft Server Versions    ###########################################
+echo_Verbose "Downloading the Minecraft Version Manifest JSON File..."
+# Download the Minecraft Version Manifest JSON.
+manifest=$(curl -s https://launchermeta.mojang.com/mc/game/version_manifest.json)
+
+Print_AvailableServerVersions () {
+
+  Get_MostRecentMinecraftVersions
+  echo "The 10 most recent released versions are: $versions_formatted"
+  echo "Use '--server-version=[...]' with one of the versions listed above."
+  echo
+}
+####################################################################################################
+
+
+
+
 
 ####################################################################################################
 # Check if the script is executed with options/arguments. Set Variables.   #########################
@@ -467,6 +500,10 @@ for ArgumentX in $@; do
         echo "--server-version=$CustomServerVersion"
         echo "Waiting 3 seconds..."
         sleep 3
+        ;;
+    "--show-server-versions")
+        echo_Verbose "--show-server-versions"
+        ScriptOption_ShowServerVersions
         ;;
     "--skip-wait")
         echo_Verbose "--skip-wait"
@@ -531,6 +568,11 @@ if $LogExtraMessages; then # 7 #
     echo -n
 fi
 
+if $ScriptOption_ShowServerVersions; then
+    Print_AvailableServerVersions
+    ExitScriptAfterCommand=true
+fi
+
 if $ArgumentWaitAfterStep; then # 8 #
     # Do nothing.
     echo -n
@@ -539,6 +581,7 @@ fi
 if $ExitScriptAfterCommand; then
     exit
 fi
+
 
 echo_Verbose "Arguments are set as follows:"
 echo_Verbose "ArgumentAllowUnsupportedOS      : $ArgumentAllowUnsupportedOS"
@@ -713,24 +756,14 @@ download_ServerJAR () {
   else
     echo_Verbose "\x1B[1;33mCustom Server Version: $CustomServerVersion.\x1B[0m"
     
-    # Fetch the 10 most recent release versions
-    echo_Verbose "Getting latest 10 versions of Minecraft Servers..."
-    versions=$(printf "%s" "$manifest" | jq -r '.versions | .[] | select(.type=="release") | .id' | head -n 10)
-
-    echo_Verbose "Setting servers string..."
-    versions_formatted=$(echo $versions | tr '\n' ' ' | sed 's/ $/./;s/ / \/ /g')    
+    Get_MostRecentMinecraftVersions
     
-    # Print the versions to the terminal
-    echo_Verbose "The 10 most recent release versions are: $versions_formatted"
-
     echo_Verbose "Checkig if the custom server version is found in the latest 10 releases..."
     if echo "$versions_formatted" | grep -q "\\<$CustomServerVersion\\>"; then
       echo_Verbose "Custom server version found!"
     else
       echo "\x1B[1;31mServer Version '$CustomServerVersion' has not not been found. Script will exit since it can't download a server jar file...\x1B[0m"
-      echo "The 10 most recent released versions are: $versions_formatted"
-      echo "Use '--server-version=[...]' with one of the versions listed above."
-      echo
+      Print_AvailableServerVersions
       exit
     fi
 
