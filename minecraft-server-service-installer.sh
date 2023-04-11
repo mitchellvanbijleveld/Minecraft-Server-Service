@@ -755,9 +755,9 @@ download_ServerJAR () {
 
       # Compare the expected and actual sha1 values
       if [ "$expected_sha1" == "$actual_sha1" ]; then
-        printf "Server jar file for version %s downloaded successfully and has the expected sha1 value.\n" "$version"
+        echo "Server jar file for version %s downloaded successfully and has the expected sha1 value.\n" "$version"
       else
-        printf "Error: Server jar file for version %s downloaded but has an unexpected sha1 value.\n" "$version"
+        echo "Error: Server jar file for version %s downloaded but has an unexpected sha1 value.\n" "$version"
         exit
       fi
     else
