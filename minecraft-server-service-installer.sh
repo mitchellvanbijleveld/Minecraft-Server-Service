@@ -737,8 +737,9 @@ download_ServerJAR () {
     if echo "$versions_formatted" | grep -q "\\<$CustomServerVersion\\>"; then
       echo_Verbose "Custom server version found!"
     else
-      echo "\x1B[1;31mCustom server version not found. Script will exit since it can't download a server jar file. Exiting...\x1B[0m"
+      echo "\x1B[1;31mServer Version '$CustomServerVersion' has not not been found. Script will exit since it can't download a server jar file...\x1B[0m"
       echo "The 10 most recent released versions are: $versions_formatted"
+      echo "Use '--server-version=[...]' with one of the versions listed above."
       echo
       exit
     fi
