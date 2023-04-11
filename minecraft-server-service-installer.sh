@@ -1,6 +1,6 @@
 #!/bin/bash
 
-CustomServerVersion="1.19.2"
+CustomServerVersion="1.19"
 
 # 025
 #########################
@@ -734,6 +734,14 @@ download_ServerJAR () {
 
 
     versions_formatted=$(echo $versions | tr '\n' ' ' | sed 's/ $/./;s/ / \/ /g')
+
+if echo "versions_formatted" | grep -q '\<$CustomServerVersion\>'; then
+    echo "1.19 is in the string."
+else
+    echo "1.19 is not in the string."
+fi
+
+
 
 
     # Print the versions to the terminal
