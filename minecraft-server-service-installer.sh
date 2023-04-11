@@ -33,8 +33,8 @@ URL_SCRIPT="https://github.mitchellvanbijleveld.dev/Minecraft-Server-Service/min
 # Download and run custom function importer.      ##################################################
 eval "$(curl https://github.mitchellvanbijleveld.dev/Bash-Functions/import_Functions.sh --silent)"
 echo $@
-sleep 30
-if [[ ! $@ == "" ]]; then
+sleep 5
+if [[ "$@" == "" ]]; then
   import_Functions echo_Replaced print_ScriptInfo script_Updater
 else
   import_Functions echo_Replaced print_ScriptInfo script_Updater --silent
