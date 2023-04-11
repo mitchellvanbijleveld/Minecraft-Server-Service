@@ -438,8 +438,6 @@ Get_MostRecentMinecraftVersions () {
 ####################################################################################################
 # Print Latest 10 Available Minecraft Server Versions    ###########################################
 Print_AvailableServerVersions () {
-
-  Get_MostRecentMinecraftVersions
   echo "The 10 most recent released versions are: $versions_formatted"
   echo "Use '--server-version=[...]' with one of the versions listed above."
   echo
