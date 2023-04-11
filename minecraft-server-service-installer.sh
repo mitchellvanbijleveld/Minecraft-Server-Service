@@ -729,13 +729,18 @@ download_ServerJAR () {
     
     ##### DO NOT Download Latest Version
     # Get the 10 most recent release versions
-    versions=$(printf "%s" "$manifest" | jq -r '.versions | .[] | select(.type == "release") | .id' | head -n 10)
+    # Fetch the 10 most recent release versions
+    versions=$(echo "$version_manifest" | jq -r '.versions[].id' | head -n 10 | paste -sd ", ")
+
+    # Print the versions to the terminal
+    echo "The 10 most recent release versions are: $versions"
+
+    
     
     if ! echo "$CustomServerVersion" | grep -q "^$version$"; then
       echo "invalid server version"
       # Print the versions to the terminal
       echo "The 10 most recent release versions are:"
-      echo "$versions"
       exit
     fi
 
