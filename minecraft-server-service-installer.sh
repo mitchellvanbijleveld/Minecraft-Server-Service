@@ -415,18 +415,6 @@ esac
 
 
 
-####################################################################################################
-# Print Latest 10 Available Minecraft Server Versions    ###########################################
-Get_MostRecentMinecraftVersions () {
-  # Fetch the 10 most recent release versions
-  echo_Verbose "Getting latest 10 versions of Minecraft Servers..."
-  versions=$(printf "%s" "$manifest" | jq -r '.versions | .[] | select(.type=="release") | .id' | head -n 10)
-  echo_Verbose "Setting servers string..."
-  versions_formatted=$(printf "%s" "$versions" | tr '\n' ' ' | sed 's/ $/./;s/ / \/ /g')    
-  # Print the versions to the terminal
-  echo_Verbose "The 10 most recent release versions are: $versions_formatted"
-}
-####################################################################################################
 
 
 ####################################################################################################
@@ -435,6 +423,20 @@ echo_Verbose "Downloading the Minecraft Version Manifest JSON File..."
 # Download the Minecraft Version Manifest JSON.
 manifest=$(curl -s https://launchermeta.mojang.com/mc/game/version_manifest.json)
 
+####################################################################################################
+# Get Latest 10 Available Minecraft Server Versions    #############################################
+Get_MostRecentMinecraftVersions () {
+  # Fetch the 10 most recent release versions
+  echo_Verbose "Getting latest 10 versions of Minecraft Servers..."
+  versions=$(printf "%s" "$manifest" | jq -r '.versions | .[] | select(.type=="release") | .id' | head -n 10)
+  echo_Verbose "Setting servers string..."
+  versions_formatted=$(printf "%s" "$versions" | tr '\n' ' ' | sed 's/ $/./;s/ / \/ /g')    
+}
+####################################################################################################
+
+
+####################################################################################################
+# Print Latest 10 Available Minecraft Server Versions    ###########################################
 Print_AvailableServerVersions () {
 
   Get_MostRecentMinecraftVersions
@@ -450,7 +452,7 @@ Print_AvailableServerVersions () {
 
 Check_CustomServerVersion () {
   echo_Verbose "Checkig if the custom server version is found in the latest 10 releases..."
-  if echo "$versions_formatted" | grep -q "\\<$CustomServerVersion\\>"; then
+  if printf "%s" "$versions_formatted" | grep -q "\\<$CustomServerVersion\\>"; then
     echo_Verbose "Custom server version found!"
   else
     echo "\x1B[1;31mServer Version '$CustomServerVersion' has not not been found. Script will exit since it can't download a server jar file...\x1B[0m"
