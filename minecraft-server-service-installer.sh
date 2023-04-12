@@ -1,18 +1,26 @@
 #!/bin/bash
 ####################################################################################################
-##### Script Information.                             ##############################################
+##### Script Information.                         ##################################################
 ####################################################################################################
 ScriptName="Mitchell's Minecraft Server Service Installation Script"
 ScriptDescription="Bash script that helps installing a Minecraft Server on Linux as a system service."
 ScriptDeveloper="Mitchell van Bijleveld"
 ScriptDeveloperWebsite="https://mitchellvanbijleveld.dev/"
-ScriptVersion="2023.04.12-01.04-beta"
+ScriptVersion="2023.04.13-01.35-beta"
 ScriptCopyright="© 2023"
-###### Mitchell van Bijleveld's Script Updater.        #############################################
+##### Mitchell van Bijleveld's Script Updater.    ##################################################
 Internal_ScriptName="Minecraft-Server-Service"
 URL_VERSION="https://github.mitchellvanbijleveld.dev/Minecraft-Server-Service/VERSION"
 URL_SCRIPT="https://github.mitchellvanbijleveld.dev/Minecraft-Server-Service/minecraft-server-service-installer.sh"
 ####################################################################################################
+####################################################################################################
+####################################################################################################
+
+
+####################################################################################################
+##### Set Default Variables.                      ##################################################
+####################################################################################################
+LogExtraMessages=false
 ####################################################################################################
 ####################################################################################################
 ####################################################################################################
@@ -479,7 +487,6 @@ ArgumentOnlyCheckPackages=false              # 4 #
 ArgumentShowHelp=false                       # 5 #
 ArgumentShowVersionInfo=false                # 6 #
 ArgumentSkipWaitTimer=false                  # 7 #
-LogExtraMessages=false                       # 8 #
 ArgumentWaitAfterStep=false                  # 9 #
 ScriptOption_ServerVersion=false
 ScriptOption_ShowServerVersions=false
