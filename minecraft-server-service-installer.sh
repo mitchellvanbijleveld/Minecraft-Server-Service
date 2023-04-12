@@ -486,7 +486,7 @@ ScriptOption_ShowServerVersions=false
 ScriptArguments=" $@ "
 echo_Verbose ".$ScriptArguments."
 for ArgumentX in $@; do
-    echo_Verbose "$ArgumentX"
+    echo_Verbose "Found an option: '$ArgumentX'!"
     case $ArgumentX in
     "--allow-unsupported-os")
         ArgumentAllowUnsupportedOS=true
