@@ -1,11 +1,20 @@
 #!/bin/bash
 
+# Import the Function Importer.
+eval "$(curl https://github.mitchellvanbijleveld.dev/Bash-Functions/import_Functions.sh --silent)"
+
 ##### Before starting the script, check if the --verbose option is passed.
 if [[ "$@" == *"--verbose"* ]]; then
+    # If --verbose, then set the corresponding verbose variables. LogExtraMessages is usded to print more messages then normal.
+    #logStyle=Verbose changes the terminal output to a verbose style with timestamps.
     LogExtraMessages=true
     LogStyle=Verbose
+    
+    # If --verbose, then import the functions with terminal output.
+    import_Functions echo_Replaced print_ScriptInfo script_Updater
 else
-    echo "Verbose option does not exist in the string"
+    # if not --verbose, then import the functions without terminal output.
+    import_Functions echo_Replaced print_ScriptInfo script_Updater --silent
 fi
 
 # 025
@@ -18,7 +27,8 @@ fi
 ####################################################################################################
 
 ####################################################################################################
-# Script Information.                             ##################################################
+##### Script Information.                             ##############################################
+####################################################################################################
 ScriptName="Mitchell's Minecraft Server Service Installation Script"
 ScriptDescription="Bash script that helps installing a Minecraft Server on Linux as a system service."
 ScriptDeveloper="Mitchell van Bijleveld"
@@ -32,21 +42,6 @@ Internal_ScriptName="Minecraft-Server-Service"
 URL_VERSION="https://github.mitchellvanbijleveld.dev/Minecraft-Server-Service/VERSION"
 URL_SCRIPT="https://github.mitchellvanbijleveld.dev/Minecraft-Server-Service/minecraft-server-service-installer.sh"
 ####################################################################################################
-
-
-
-
-
-####################################################################################################
-# Download and run custom function importer.      ##################################################
-eval "$(curl https://github.mitchellvanbijleveld.dev/Bash-Functions/import_Functions.sh --silent)"
-if [[ "$@" == "" ]]; then
-  import_Functions echo_Replaced print_ScriptInfo script_Updater
-else
-  import_Functions echo_Replaced print_ScriptInfo script_Updater --silent
-fi
-####################################################################################################
-
 
 
 ####################################################################################################
