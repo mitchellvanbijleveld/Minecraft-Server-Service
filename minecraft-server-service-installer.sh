@@ -508,6 +508,9 @@ for ArgumentX in $@; do
         ;;
     "--server-version"*)
         ScriptOption_ServerVersion=true
+        echo_Verbose "Custom Server Version Selected."
+        CustomServerVersion=$(printf "%s" "$ArgumentX" | grep -o -- "--server-version=[^[:space:]]*")
+        echo_Verbose "--server-version=$CustomServerVersion"
         ;;
     "--show-server-versions")
         ScriptOption_ShowServerVersions=true
@@ -573,9 +576,6 @@ if $LogExtraMessages; then # 7 #
 fi
 
 if $ScriptOption_ServerVersion; then
-  echo_Verbose "Custom Server Version Selected."
-  CustomServerVersion=$(printf "%s" "$string" | grep -o -- "--server-version=[^[:space:]]*")
-  echo_Verbose "--server-version=$CustomServerVersion"
   Get_MostRecentMinecraftVersions
   Check_CustomServerVersion
 fi
