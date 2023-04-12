@@ -1,5 +1,13 @@
 #!/bin/bash
 
+##### Before starting the script, check if the --verbose option is passed.
+if [[ "$@" == *"--verbose"* ]]; then
+    LogExtraMessages=true
+    LogStyle=Verbose
+else
+    echo "Verbose option does not exist in the string"
+fi
+
 # 025
 #########################
 # 050
@@ -518,8 +526,9 @@ for ArgumentX in $@; do
         ArgumentSkipWaitTimer=true
         ;;
     "--verbose")
-        LogExtraMessages=true
-        LogStyle=Verbose
+        #LogExtraMessages=true
+        #LogStyle=Verbose
+        echo
         ;;
     "--wait-after-step")
         ArgumentWaitAfterStep=true
