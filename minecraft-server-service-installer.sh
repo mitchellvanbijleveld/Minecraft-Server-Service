@@ -508,9 +508,8 @@ for ArgumentX in $@; do
         ;;
     "--server-version"*)
         ScriptOption_ServerVersion=true
-        echo_Verbose "Custom Server Version Selected."
-        CustomServerVersion=$(printf "%s" "$ArgumentX" | grep -o -- "--server-version=[^[:space:]]*")
-        echo_Verbose "--server-version=$CustomServerVersion"
+        CustomServerVersion=$(printf '%s' "$ArgumentX" | sed 's/--server-version=//')
+        echo_Verbose "Custom Server Version Selected: $CustomServerVersion"
         ;;
     "--show-server-versions")
         ScriptOption_ShowServerVersions=true
