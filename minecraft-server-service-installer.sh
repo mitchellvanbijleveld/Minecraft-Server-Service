@@ -574,7 +574,7 @@ fi
 
 if $ScriptOption_ServerVersion; then
   echo_Verbose "Custom Server Version Selected."
-  CustomServerVersion="${ArgumentX#*--server-version=}"
+  CustomServerVersion=$(printf "%s" "$string" | grep -o -- "--server-version=[^[:space:]]*")
   echo_Verbose "--server-version=$CustomServerVersion"
   Get_MostRecentMinecraftVersions
   Check_CustomServerVersion
