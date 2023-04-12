@@ -1,4 +1,21 @@
 #!/bin/bash
+####################################################################################################
+##### Script Information.                             ##############################################
+####################################################################################################
+ScriptName="Mitchell's Minecraft Server Service Installation Script"
+ScriptDescription="Bash script that helps installing a Minecraft Server on Linux as a system service."
+ScriptDeveloper="Mitchell van Bijleveld"
+ScriptDeveloperWebsite="https://mitchellvanbijleveld.dev/"
+ScriptVersion="2023.04.12-01.04-beta"
+ScriptCopyright="© 2023"
+###### Mitchell van Bijleveld's Script Updater.        #############################################
+Internal_ScriptName="Minecraft-Server-Service"
+URL_VERSION="https://github.mitchellvanbijleveld.dev/Minecraft-Server-Service/VERSION"
+URL_SCRIPT="https://github.mitchellvanbijleveld.dev/Minecraft-Server-Service/minecraft-server-service-installer.sh"
+####################################################################################################
+####################################################################################################
+####################################################################################################
+####################################################################################################
 
 # Import the Function Importer.
 eval "$(curl https://github.mitchellvanbijleveld.dev/Bash-Functions/import_Functions.sh --silent)"
@@ -24,23 +41,6 @@ fi
 # 075
 ###########################################################################
 # 100
-####################################################################################################
-
-####################################################################################################
-##### Script Information.                             ##############################################
-####################################################################################################
-ScriptName="Mitchell's Minecraft Server Service Installation Script"
-ScriptDescription="Bash script that helps installing a Minecraft Server on Linux as a system service."
-ScriptDeveloper="Mitchell van Bijleveld"
-ScriptDeveloperWebsite="https://mitchellvanbijleveld.dev/"
-ScriptVersion="2023.04.12-01.04-beta"
-ScriptCopyright="© 2023"
-
-####################################################################################################
-# Mitchell van Bijleveld's Script Updater.        ##################################################
-Internal_ScriptName="Minecraft-Server-Service"
-URL_VERSION="https://github.mitchellvanbijleveld.dev/Minecraft-Server-Service/VERSION"
-URL_SCRIPT="https://github.mitchellvanbijleveld.dev/Minecraft-Server-Service/minecraft-server-service-installer.sh"
 ####################################################################################################
 
 
