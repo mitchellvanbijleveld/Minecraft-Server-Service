@@ -19,7 +19,7 @@ URL_SCRIPT="https://github.mitchellvanbijleveld.dev/Minecraft-Server-Service/min
 ####################################################################################################
 ##### Set Default Variables.                      ##################################################
 ####################################################################################################
-ScriptOption_LogLevel_Verbose=false
+##
 ####################################################################################################
 ####################################################################################################
 ####################################################################################################
@@ -29,9 +29,9 @@ eval "$(curl https://github.mitchellvanbijleveld.dev/Bash-Functions/import_Funct
 
 ##### Before starting the script, check if the --verbose option is passed.
 if [[ "$@" == *"--verbose"* ]]; then
-    # If --verbose, then set the corresponding verbose variables. ScriptOption_LogLevel_Verbose is usded to print more messages then normal.
+    # If --verbose, then set the corresponding verbose variables. ScriptOption_LogLevel is usded to print more messages then normal.
     #ScriptOption_LogStyle=Verbose changes the terminal output to a verbose style with timestamps.
-    ScriptOption_LogLevel_Verbose=true
+    ScriptOption_LogLevel=Verbose
     ScriptOption_LogStyle=Verbose
 
     # If --verbose, then import the functions with terminal output.
@@ -301,7 +301,7 @@ Check_Packages() {
     debian | ubuntu) # Check for the required packages on Debian and Ubuntu.
         # Before checking, run apt-get update
         echo "Running 'apt-get update' to make sure all available packages are listed..."
-        if $ScriptOption_LogLevel_Verbose; then
+        if [[ $ScriptOption_LogLevel == "Verbose" ]]; then
             apt-get update
         else
             LogFileTimeStamp=$(date +"D%Y%m%dT%H%M")
@@ -426,11 +426,6 @@ for ArgumentX in $@; do
     "--skip-wait")
         ArgumentSkipWaitTimer=true
         ;;
-    "--verbose")
-        #ScriptOption_LogLevel_Verbose=true
-        #ScriptOption_LogStyle=Verbose
-        echo
-        ;;
     "--wait-after-step")
         ArgumentWaitAfterStep=true
         ;;
@@ -469,11 +464,6 @@ if $ArgumentSkipWaitTimer; then # 5 #
     echo -n
 fi
 
-if $ScriptOption_LogLevel_Verbose; then # 7 #
-    # Do nothing.
-    echo -n
-fi
-
 if $ArgumentWaitAfterStep; then # 8 #
     # Do nothing.
     echo -n
@@ -507,7 +497,7 @@ echo_Verbose "ArgumentOnlyCheckPackages       : $ArgumentOnlyCheckPackages"
 echo_Verbose "ArgumentShowHelp                : $ArgumentShowHelp"
 echo_Verbose "ArgumentShowVersionInfo         : $ArgumentShowVersionInfo"
 echo_Verbose "ArgumentSkipWaitTimer           : $ArgumentSkipWaitTimer"
-echo_Verbose "ScriptOption_LogLevel_Verbose.               : $ScriptOption_LogLevel_Verbose"
+echo_Verbose "ScriptOption_LogLevel.          : $ScriptOption_LogLevel"
 echo_Verbose "ArgumentWaitAfterStep=false     : $ArgumentWaitAfterStep"
 echo_Verbose
 
