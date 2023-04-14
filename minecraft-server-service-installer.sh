@@ -220,15 +220,57 @@ Check_OS_Support() {
 
 
 
+####################################################################################################
+##### Check if requested packages is installed.   ##################################################
+####################################################################################################
+Check_Package() {
+    # Set InstallPackage to false.
+    InstallPackage=false
+
+    echo_Verbose "Checking if package '$1' is installed..."
+    case $OS_ID in
+    debian | ubuntu) # Check for the required packages on Debian and Ubuntu.
+        echo_Verbose "Checking Package Status for '$1'..."
+        dpkg --status $1 &> /dev/null
+        if [[ ! $? == 0 ]]; then
+            apt-get install $1
+        fi
+        ;;
+    almalinux | rocky | centos) # Check for the required packegs on Almalinux and Rocky.
+        echo_Verbose "Checking Package Status for '$1'..."
+        rpm -q $1 &> /dev/null
+        if [[ ! $? == 0 ]]; then
+            yum install $1
+        fi
+        ;;
+    *)
+        echo "Your OS is not supported. Therefore the script cannot check for the required package..."
+        ;;
+    esac
+
+    # Checking if installation was successful
+    if [[ ! $? == 0 ]]; then
+        echo "Unable to install $1! Your base system has a problem; please check your default OS's package repositories because $1 should work."
+        exit 1
+    fi
+}
+####################################################################################################
+####################################################################################################
+####################################################################################################
+
+
+
+
+
+
 
 ####################################################################################################
 # Check for Installed Packages on Debian.         ##################################################
 Check_Required_Packages_DPKG() {
 
-    # Set InstallPackage to false.
-    InstallPackage=false
+
     
-    echo_Verbose "Checking if package '$1' is installed..."
+
     
     PackageStatus=$(dpkg-query --list | grep "ii  $1")
     # echo $PackageStatus
