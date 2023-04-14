@@ -680,7 +680,13 @@ fi
 sleep 0.5
 
 
-
+Check_SELinux() {
+    if cat /etc/selinux/config | grep "SELINUX=enforcing" &> /dev/null; then
+        echo "SELinux is enabled. Please set SELinux to 'permissive' or 'disabled'."
+        echo
+        exit 1
+    fi
+}
 
 
 download_ServerJAR () {
