@@ -412,6 +412,8 @@ for ArgumentX in $@; do
     "--help")
         ArgumentShowHelp=true
         ;;
+    "--verbose")
+        ;;
     "--version")
         ArgumentShowVersionInfo=true
         ;;
