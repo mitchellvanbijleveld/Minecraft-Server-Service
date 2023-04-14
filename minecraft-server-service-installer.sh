@@ -407,6 +407,10 @@ ArgumentShowHelp=false                       # 5 #
 ArgumentShowVersionInfo=false                # 6 #
 ArgumentSkipWaitTimer=false                  # 7 #
 ArgumentWaitAfterStep=false                  # 9 #
+
+# NEW VERSION OF VARIABLES
+ScriptOption_AutoInstall=false
+ScriptOption_CheckPackagesOnly=false
 ScriptOption_ServerVersion=false
 ScriptOption_ShowServerVersions=false
 ##################################################
@@ -427,7 +431,7 @@ for ArgumentX in $@; do
         ArgumentOnlyCheckOS=true
         ;;
     "--check-packages")
-        ArgumentOnlyCheckPackages=true
+        ScriptOption_CheckPackagesOnly=true
         ;;
     "--help")
         ArgumentShowHelp=true
