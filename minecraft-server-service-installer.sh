@@ -30,9 +30,9 @@ eval "$(curl https://github.mitchellvanbijleveld.dev/Bash-Functions/import_Funct
 ##### Before starting the script, check if the --verbose option is passed.
 if [[ "$@" == *"--verbose"* ]]; then
     # If --verbose, then set the corresponding verbose variables. ScriptOption_LogLevel_Verbose is usded to print more messages then normal.
-    #logStyle=Verbose changes the terminal output to a verbose style with timestamps.
+    #ScriptOption_LogStyle=Verbose changes the terminal output to a verbose style with timestamps.
     ScriptOption_LogLevel_Verbose=true
-    LogStyle=Verbose
+    ScriptOption_LogStyle=Verbose
 
     # If --verbose, then import the functions with terminal output.
     import_Functions echo_Replaced print_ScriptInfo script_Updater
@@ -428,7 +428,7 @@ for ArgumentX in $@; do
         ;;
     "--verbose")
         #ScriptOption_LogLevel_Verbose=true
-        #LogStyle=Verbose
+        #ScriptOption_LogStyle=Verbose
         echo
         ;;
     "--wait-after-step")
