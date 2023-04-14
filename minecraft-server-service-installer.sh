@@ -106,19 +106,15 @@ Check_OS_Support() {
         OS_ID=$ID
         echo_Verbose "Setting OS_VersionID..."
         OS_VersionID=$VERSION_ID
-    else
-        # No Linux? Try macOS.
-        if [ -e "/usr/bin/sw_vers" ]; then
+    elif[ -e "/usr/bin/sw_vers" ]; then
             macOSVersionInfo=$("/usr/bin/sw_vers")
-            OS_Name=$(/usr/bin/sw_vers | /usr/bin/grep ProductName | sed 's/ProductName://')
+            OS_Name=$(/usr/bin/sw_vers --productName)
             echo_Verbose "Setting OS_Version..."
-            OS_Version=$(/usr/bin/sw_vers | /usr/bin/grep ProductVersion | sed 's/ProductVersion://')
+            OS_Version=$(/usr/bin/sw_vers --productVersion)
             echo_Verbose "Setting OS_ID..."
             if [ $OS_Name == "macOS" ]; then
                 OS_ID="macos"
             fi
-        fi
-
     fi
 
     # For debugging purposes, print the OS_ID and OS_Version variables.
