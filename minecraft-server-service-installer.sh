@@ -6,7 +6,7 @@ ScriptName="Mitchell's Minecraft Server Service Installation Script"
 ScriptDescription="Bash script that helps installing a Minecraft Server on Linux as a system service."
 ScriptDeveloper="Mitchell van Bijleveld"
 ScriptDeveloperWebsite="https://mitchellvanbijleveld.dev/"
-ScriptVersion="2023.04.13-01.35-beta"
+ScriptVersion="2023.04.14-22.50-beta"
 ScriptCopyright="© 2023"
 ##### Mitchell van Bijleveld's Script Updater.    ##################################################
 Internal_ScriptName="Minecraft-Server-Service"
@@ -306,169 +306,6 @@ Check_Package() {
 
 
 ####################################################################################################
-# Check for Installed Packages on Debian.         ##################################################
-Check_Required_Packages_DPKG() {
-
-
-    
-
-    
-    PackageStatus=$(dpkg-query --list | grep "ii  $1")
-    # echo $PackageStatus
-    case $PackageStatus in
-    "ii  $1"*)
-        echo "\x1B[1;32mThe requested package '$1' is already installed, continuing...\x1B[0m"
-        ;;
-    *)
-        echo "\x1B[1;33mThe requested package '$1' has not been installed yet.\x1B[0m"
-        if $ArgumentOnlyCheckPackages; then
-            echo -n ""
-        else
-        if $ArgumentAutoInstall; then
-            echo "Automatically installing package '$1'..."
-            InstallPackage=true
-        else
-            while [ $ArgumentAutoInstall == false ]; do
-                echo -n "Do you want to install the required package '$1' now? "
-                read -p "Please answer [yes/no]: " yn
-                case $yn in
-                [Yy]*)
-                    echo "Installing the package '$1'"
-                    InstallPackage=true
-                    break
-                    ;;
-                [Nn]*)
-                    echo "Not installing the package."
-                    echo
-                    exit
-                    ;;
-                *)
-                    echo
-                    echo "Please answer the question below."
-                    ;;
-                esac
-            done
-        fi
-        fi
-        ;;
-    esac
-
-    if $InstallPackage; then
-        if $LogExtraMessages; then
-            apt-get install $1 -y
-        else
-            LogFileTimeStamp=$(date +"D%Y%m%dT%H%M")
-            LogFileName="$LogFileTimeStamp.PackageInstall.$1.log"
-            apt-get install $1 -y >"$LogDirectory$LogFileName"
-
-    # Set InstallPackage to false.
-    InstallPackage=false
-    PackageStatus=$(dpkg-query --list | grep "ii  $1")
-    # echo $PackageStatus
-    case $PackageStatus in
-    "ii  $1"*)
-                echo "\x1B[1;32mThe requested package '$1' has successfully been installed\x1B[0m"
-                ;;
-            *)
-                echo
-                echo "\x1B[1;31mSomething went wrong and I need to end the script here.\x1B[0m"
-                exit
-                ;;
-            esac
-        fi
-    fi
-    echo
-
-}
-####################################################################################################
-
-
-
-
-
-####################################################################################################
-# Check for Installed Packages on CentOS.         ##################################################
-Check_Required_Packages_RPM() {
-    # Set InstallPackage to false.
-    InstallPackage=false
-    
-    echo_Verbose "Checking if package '$1' is installed..."
-    
-    PackageStatus=$(rpm -q $1)
-    # echo $PackageStatus
-    case $PackageStatus in
-    "$1"*)
-        echo "\x1B[1;32mThe requested package '$1' is already installed, continuing...\x1B[0m"
-        ;;
-    "package $1 is not installed")
-        echo "\x1B[1;33mThe requested package '$1' has not been installed yet.\x1B[0m"
-                if $ArgumentOnlyCheckPackages; then
-                echo -n ""
-                else
-        if $ArgumentAutoInstall; then
-            echo "Automatically installing package '$1'..."
-            InstallPackage=true
-        else
-            while [ $ArgumentAutoInstall == false ]; do
-                echo -n "Do you want to install the required package '$1' now? "
-                read -p "Please answer [yes/no]: " yn
-                case $yn in
-                [Yy]*)
-                    echo "Installing the package '$1'"
-                    InstallPackage=true
-                    break
-                    ;;
-                [Nn]*)
-                    echo "Not installing the package."
-                    echo
-                    exit
-                    ;;
-                *)
-                    echo
-                    echo "Please answer the question below."
-                    ;;
-                esac
-            done
-        fi
-        fi
-        ;;
-    *)
-        echo "\x1B[1;31mCould not check for package status(ses).\x1B[0m"
-        exit
-        ;;
-    esac
-
-    if $InstallPackage; then
-        if $LogExtraMessages; then
-            dnf install $1 -y
-        else
-            LogFileTimeStamp=$(date +"D%Y%m%dT%H%M")
-            LogFileName="$LogFileTimeStamp.PackageInstall.$1.log"
-            dnf install $1 -y >"$LogDirectory$LogFileName"
-
-            PackageStatus=$(rpm -q $1)
-            # echo $PackageStatus
-            case $PackageStatus in
-            "$1"*)
-                echo "\x1B[1;32mThe requested package '$1' has successfully been installed\x1B[0m"
-                ;;
-            *)
-                echo
-                echo "\x1B[1;31mSomething went wrong and I need to end the script here.\x1B[0m"
-                exit
-                ;;
-            esac
-        fi
-    fi
-    echo
-
-}
-####################################################################################################
-
-
-
-
-####################################################################################################
 # Check Packages on detected Operating System.    ##################################################
 Check_Packages(){
 
@@ -489,13 +326,13 @@ debian | ubuntu) # Check for the required packages on Debian and Ubuntu.
     fi
     echo
     for ApplicationX in $PackagesDPKG; do
-        Check_Required_Packages_DPKG $ApplicationX
+        Check_Package $ApplicationX
     done
     ;;
 
 almalinux | rocky | centos) # Check for the required packegs on Almalinux and Rocky.
     for ApplicationX in $PackagesRPM; do
-        Check_Required_Packages_RPM $ApplicationX
+        Check_Package $ApplicationX
     done
     ;;
 
@@ -505,7 +342,6 @@ almalinux | rocky | centos) # Check for the required packegs on Almalinux and Ro
     ;;
 esac
 }
-
 
 
 
