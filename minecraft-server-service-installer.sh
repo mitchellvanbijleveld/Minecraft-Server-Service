@@ -238,7 +238,7 @@ Check_Package() {
         ;;
     almalinux | rocky | centos) # Check for the required packegs on Almalinux and Rocky.
         echo_Verbose "Checking Package Status for '$1'..."
-        rpm -q $1 &> /dev/null
+        rpm --query $1 &> /dev/null
         if [[ ! $? == 0 ]]; then
             yum install $1
         fi
