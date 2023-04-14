@@ -402,7 +402,6 @@ PackagesRPM="epel-release screen java-17-openjdk"                         #
 ###########################################################################
 ##### Default Arguments to False.            #####
 ArgumentAllowUnsupportedOS=false             # 1 #
-ArgumentAutoInstall=false                    # 2 #
 ArgumentOnlyCheckOS=false                    # 3 #
 ArgumentOnlyCheckPackages=false              # 4 #
 ArgumentShowHelp=false                       # 5 #
@@ -475,11 +474,6 @@ if $ArgumentAllowUnsupportedOS; then # 6 #
     echo -n
 fi
 
-if $ArgumentAutoInstall; then # 1 #
-    # Do nothing.
-    echo -n
-fi
-
 if $ArgumentOnlyCheckOS; then # 2 #
     Check_OS_Support
     ExitScriptAfterCommand=true
@@ -535,7 +529,7 @@ fi
 
 echo_Verbose "Arguments are set as follows:"
 echo_Verbose "ArgumentAllowUnsupportedOS      : $ArgumentAllowUnsupportedOS"
-echo_Verbose "ArgumentAutoInstall             : $ArgumentAutoInstall"
+echo_Verbose "ScriptOption_AutoInstall        : $ScriptOption_AutoInstall"
 echo_Verbose "ArgumentOnlyCheckOS             : $ArgumentOnlyCheckOS"
 echo_Verbose "ArgumentOnlyCheckPackages       : $ArgumentOnlyCheckPackages"
 echo_Verbose "ArgumentShowHelp                : $ArgumentShowHelp"
@@ -775,7 +769,7 @@ echo "##########################################################################
 echo "Step 3 - Downloading service file and Minecraft Server ."
 echo
 
-if $ArgumentAutoInstall; then
+if $ScriptOption_AutoInstall; then
   echo "autoinstalling"
 else
   echo "not autoinstalling"
@@ -830,7 +824,7 @@ echo "eula=true" >/etc/mitchellvanbijleveld/minecraft-server/eula.txt
         echo
 }
 #####
-if $ArgumentAutoInstall; then
+if $ScriptOption_AutoInstall; then
   Agree_To_EULA
 else
   read -p "Do you agree to the Minecraft (Server) EULA? [yes/no] " yn
@@ -881,7 +875,7 @@ Enable_Server() {
     echo
 }
 #####
-if $ArgumentAutoInstall; then
+if $ScriptOption_AutoInstall; then
 Enable_Server
 else
 read -p "Do you want to start the server automatically during startup [yes/no] " yn
@@ -915,7 +909,7 @@ if [[ $ServerStatus == *'Active: active (running)'* ]]; then
     echo
 }
 #####
-if $ArgumentAutoInstall; then
+if $ScriptOption_AutoInstall; then
     Start_Server
 else
     read -p "Do you want to start the server now? [yes/no] " yn
@@ -942,7 +936,7 @@ Connect_To_Server(){
         echo
 }
 #####
-if $ArgumentAutoInstall; then
+if $ScriptOption_AutoInstall; then
 Connect_To_Server
 else
 if $ServerStarted; then
