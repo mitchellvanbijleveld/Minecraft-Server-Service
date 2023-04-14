@@ -87,173 +87,158 @@ Show_Help() {
 
 ####################################################################################################
 # Check the OS Name and OS Version. Return if the OS is supported.         #########################
-Check_OS_Support() {
-    # Set Supported OS to false.
-    SupportedOS=false
-
-    # Read the OS Release file.
-    echo_Verbose "Reading '/etc/os-release'..." # using this file because it's present on almost all linux distos
-
-    if [ -e /etc/os-release ]; then
-        . /etc/os-release
-        # Set the OS_ID and OS_Version variables.
-        echo_Verbose "Setting OS_Name..."
-        OS_Name=$NAME
-        echo_Verbose "Setting OS_Version..."
-        OS_Version=$VERSION
-
-        echo_Verbose "Setting OS_ID..."
-        OS_ID=$ID
-        echo_Verbose "Setting OS_VersionID..."
-        OS_VersionID=$VERSION_ID
-    else
-        # No Linux? Try macOS.
-        if [ -e "/usr/bin/sw_vers" ]; then
-            macOSVersionInfo=$("/usr/bin/sw_vers")
-            OS_Name=$(/usr/bin/sw_vers | /usr/bin/grep ProductName | sed 's/ProductName://')
-            echo_Verbose "Setting OS_Version..."
-            OS_Version=$(/usr/bin/sw_vers | /usr/bin/grep ProductVersion | sed 's/ProductVersion://')
-            echo_Verbose "Setting OS_ID..."
-            if [ $OS_Name == "macOS" ]; then
-                OS_ID="macos"
-            fi
-        fi
-
-    fi
-
-    # For debugging purposes, print the OS_ID and OS_Version variables.
-    echo_Verbose "OS ID         : $OS_ID"
-    echo_Verbose "OS Version ID : $OS_VersionID"
-    echo_Verbose "OS Version    : $OS_Version"
-    echo_Verbose "OS Name       : $OS_Name"
-
-    echo_Verbose "Checking if OS matches list of supported operating systems..."
-    case $OS_ID in
-    debian | ubuntu | almalinux | rocky | centos) #List of supported operating systems / distributions.
-        echo_Verbose "Your OS '$OS_ID' is supported. Checking if your OS version is supported as well..."
-
-        case $OS_ID in
-        debian)
-            case $OS_VersionID in
-            "9"* | "10"* | "11"*)
-                echo_Verbose "Your version '$OS_VersionID' of $OS_ID is supported!"
-                SupportedOS=true
-                ;;
-            *)
-                echo_Verbose "Unfortunately, your version '$OS_VersionID' of $OS_ID is not supported. Please us a supported version of your OS to use this script."
-                echo_Verbose
-                ;;
-            esac
-            ;;
-        ubuntu)
-            case $OS_VersionID in
-            "20.04"* | "22.04"*)
-                echo_Verbose "Your version '$OS_VersionID' of $OS_ID is supported!"
-                SupportedOS=true
-                ;;
-            *)
-                echo_Verbose "Unfortunately, your version '$OS_VersionID' of $OS_ID is not supported. Please us a supported version of your OS to use this script."
-                echo_Verbose
-                ;;
-            esac
-            ;;
-        almalinux | rocky)
-            case $OS_VersionID in
-            "8."* | "9."*)
-                echo_Verbose "Your version '$OS_VersionID' of $OS_ID is supported!"
-                SupportedOS=true
-                ;;
-            *)
-                echo_Verbose "Unfortunately, your version '$OS_VersionID' of $OS_ID is not supported. Please us a supported version of your OS to use this script."
-                echo_Verbose
-                ;;
-            esac
-            ;;
-        centos) # Stream, btw.
-            case $OS_VersionID in
-            8 | 9) # doesn't need a dot because it's a 'rolling release' as in stream.
-                echo_Verbose "Your version '$OS_VersionID' of $OS_ID is supported!"
-                SupportedOS=true
-                ;;
-            *)
-                echo_Verbose "Unfortunately, your version '$OS_VersionID' of $OS_ID is not supported. Please us a supported version of your OS to use this script."
-                echo_Verbose
-                ;;
-            esac
-            ;;
-        *)
-            echo "\x1B[1;31mNo valid OS detected.\x1B[0m"
-            ;;
-        esac
-        #####
-
-        ;;
-
-    macos)
-        echo "Support for macOS is coming later."
-        echo_Verbose "OS Not yet Supported..."
-        ;;
-    *)
-        echo_Verbose "OS Not Supported..."
-        ;;
-    esac
-
-    echo "Detected OS: $OS_Name $OS_Version."
-
-    echo_Verbose "Printing information about OS Support..."
-    if $SupportedOS; then
-        echo "\x1B[1;32mYour OS and Version are supported.\x1B[0m"
-    else
-        echo "\x1B[1;31m  Unfortunately, your OS is not supported.\x1B[0m"
-        if $ArgumentAllowUnsupportedOS; then
-            echo "\x1B[1;33m  Script is allowed to continue on an unsupported OS because the '--allow-unsupported-os' flag is passed. Continuing...\x1B[0m"
-        else
-            echo "\x1B[1;31m  Please use this script on a supported OS or pass the '--allow-unsupported-os' option.\x1B[0m"
-            echo
-            exit
-        fi
-    fi
-    echo
-}
-####################################################################################################
-
-
-
-
-####################################################################################################
-##### Check if requested packages is installed.   ##################################################
-####################################################################################################
 Check_Package() {
-    # Set InstallPackage to false.
-    InstallPackage=false
+    ScriptOption_CheckPackagesOnly=true
+    # this function will check if the requested package has been installed or not.
+    # If it's not installed, then install the package.
 
     echo_Verbose "Checking if package '$1' is installed..."
     case $OS_ID in
     debian | ubuntu) # Check for the required packages on Debian and Ubuntu.
-        echo_Verbose "Checking Package Status for '$1'..."
-        dpkg --status $1 &> /dev/null
-        if [[ ! $? == 0 ]]; then
-            apt-get install $1
-        fi
+        echo_Verbose "Checking Package Status via 'dpkg' for '$1'..."
+        dpkg --status $1 &>/dev/null
         ;;
     almalinux | rocky | centos) # Check for the required packegs on Almalinux and Rocky.
-        echo_Verbose "Checking Package Status for '$1'..."
-        rpm --query $1 &> /dev/null
-        if [[ ! $? == 0 ]]; then
-            yum install $1
-        fi
+        echo_Verbose "Checking Package Status via 'rpm' for '$1'..."
+        rpm --query $1 &>/dev/null
         ;;
     *)
         echo "Your OS is not supported. Therefore the script cannot check for the required package..."
         ;;
     esac
 
-    # Checking if installation was successful
-    if [[ ! $? == 0 ]]; then
-        echo "Unable to install $1! Your base system has a problem; please check your default OS's package repositories because $1 should work."
-        exit 1
+    # Check if package is insatlled with exit code = 0
+    if [[ $? == 0 ]]; then
+        echo "\x1B[1;32mThe requested package '$1' is already installed!\x1B[0m"
+    else
+        echo "\x1B[1;33mThe requested package '$1' has not been installed yet.\x1B[0m"
+
+        # Check if this is a check-only or not.
+        if ! $ScriptOption_CheckPackagesOnly; then
+            if $ScriptOption_AutoInstall; then
+                Boolean_InstallPackage=true
+            else
+                echo -n "Do you want to install the required package '$1' now? "
+                read -p "Please answer [yes/no]: " yn
+                case $yn in
+                [Yy]*)
+                    Boolean_InstallPackage=true
+                    ;;
+                [Nn]*)
+                    echo "Not installing the package."
+                    echo
+                    exit
+                    ;;
+                *)
+                    echo
+                    echo "Please answer the question below."
+                    ;;
+                esac
+
+                if $Boolean_InstallPackage; then
+                    case $OS_ID in
+                    debian | ubuntu) # Check for the required packages on Debian and Ubuntu.
+                        apt-get install $1 --assume-yes
+                        ;;
+                    almalinux | rocky | centos) # Check for the required packegs on Almalinux and Rocky.
+                        yum install $1 --assumeyes
+                        ;;
+                    *)
+                        echo "Unable to find a way to install packages on your system."
+                        exit 1
+                        ;;
+                    esac
+                fi
+            fi
+        fi
+
+        # Checking if installation was successful
+        if [[ ! $? == 0 ]]; then
+            echo "Unable to install $1! Your base system has a problem; please check your default OS's package repositories because $1 should work."
+            exit 1
+        fi
     fi
 }
+####################################################################################################
+
+
+
+####################################################################################################
+####################################################################################################
+##### Check if requested packages is installed.   ##################################################
+####################################################################################################
+Check_Package() {
+    ScriptOption_CheckPackagesOnly=true
+    # this function will check if the requested package has been installed or not.
+    # If it's not installed, then install the package.
+
+    echo_Verbose "Checking if package '$1' is installed..."
+    case $OS_ID in
+    debian | ubuntu) # Check for the required packages on Debian and Ubuntu.
+        echo_Verbose "Checking Package Status via 'dpkg' for '$1'..."
+        dpkg --status $1 &>/dev/null
+        ;;
+    almalinux | rocky | centos) # Check for the required packegs on Almalinux and Rocky.
+        echo_Verbose "Checking Package Status via 'rpm' for '$1'..."
+        rpm --query $1 &>/dev/null
+        ;;
+    *)
+        echo "Your OS is not supported. Therefore the script cannot check for the required package..."
+        ;;
+    esac
+
+    # Check if package is insatlled with exit code = 0
+    if [[ $? == 0 ]]; then
+        echo "\x1B[1;32mThe requested package '$1' is already installed!\x1B[0m"
+    else
+        echo "\x1B[1;33mThe requested package '$1' has not been installed yet.\x1B[0m"
+
+        # Check if this is a check-only or not.
+        if ! $ScriptOption_CheckPackagesOnly; then
+            if $ScriptOption_AutoInstall; then
+                Boolean_InstallPackage=true
+            else
+                echo -n "Do you want to install the required package '$1' now? "
+                read -p "Please answer [yes/no]: " yn
+                case $yn in
+                [Yy]*)
+                    Boolean_InstallPackage=true
+                    ;;
+                [Nn]*)
+                    echo "Not installing the package."
+                    echo
+                    exit
+                    ;;
+                *)
+                    echo
+                    echo "Please answer the question below."
+                    ;;
+                esac
+            fi
+            
+            if $Boolean_InstallPackage; then
+                case $OS_ID in
+                debian | ubuntu) # Check for the required packages on Debian and Ubuntu.
+                    apt-get install $1 --assume-yes
+                    ;;
+                almalinux | rocky | centos) # Check for the required packegs on Almalinux and Rocky.
+                    yum install $1 --assumeyes
+                    ;;
+                *)
+                    echo "Unable to find a way to install packages on your system."
+                    exit 1
+                    ;;
+                esac
+            fi
+        fi
+        # Checking if installation was successful
+        if [[ ! $? == 0 ]]; then
+            echo "Unable to install $1! Your base system has a problem; please check your default OS's package repositories because $1 should work."
+            exit 1
+        fi
+    fi
+}
+
 ####################################################################################################
 ####################################################################################################
 ####################################################################################################
