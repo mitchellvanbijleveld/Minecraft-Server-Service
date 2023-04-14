@@ -749,13 +749,10 @@ esac
 
 ##### Agree To Minecraft EULA
 Agree_To_EULA() {
-    echo "eula=true" >/etc/mitchellvanbijleveld/minecraft-server/eula.txt
-    EulaText=$(cat /etc/mitchellvanbijleveld/minecraft-server/eula.txt)
-    if [ $EulaText == "eula=true" ]; then
-        echo -n # Print empty newline
-    else
+    printf "eula=true" > /etc/mitchellvanbijleveld/minecraft-server/eula.txt
+    if ! cat /etc/mitchellvanbijleveld/minecraft-server/eula.txt | grep "eula=true" &> /dev/null; then
         echo "\x1B[1;31mCould not save eula file. Exiting...\x1B[0m"
-        exit
+        exit 1
     fi
     echo "\x1B[1;32mAdded 'eula=true' to '/etc/mitchellvanbijleveld/minecraft-server/eula.txt'.\x1B[0m"
     echo
