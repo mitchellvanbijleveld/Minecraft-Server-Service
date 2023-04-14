@@ -6,7 +6,7 @@ ScriptName="Mitchell's Minecraft Server Service Installation Script"
 ScriptDescription="Bash script that helps installing a Minecraft Server on Linux as a system service."
 ScriptDeveloper="Mitchell van Bijleveld"
 ScriptDeveloperWebsite="https://mitchellvanbijleveld.dev/"
-ScriptVersion="2023.04.14-23.31-beta"
+ScriptVersion="2023.04.14-23.33-beta"
 ScriptCopyright="© 2023"
 ##### Mitchell van Bijleveld's Script Updater.    ##################################################
 Internal_ScriptName="Minecraft-Server-Service"
@@ -311,7 +311,7 @@ Check_Package() {
 # Check Packages on detected Operating System.    ##################################################
 Check_Packages(){
 
-if $ArgumentOnlyCheckPackages; then
+if $ScriptOption_CheckPackagesOnly; then
     Check_OS_Support
 fi
 
