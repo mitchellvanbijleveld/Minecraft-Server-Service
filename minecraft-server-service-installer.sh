@@ -106,7 +106,7 @@ Check_OS_Support() {
         OS_ID=$ID
         echo_Verbose "Setting OS_VersionID..."
         OS_VersionID=$VERSION_ID
-    elif[ -e "/usr/bin/sw_vers" ]; then
+    elif [ -e "/usr/bin/sw_vers" ]; then
             macOSVersionInfo=$("/usr/bin/sw_vers")
             OS_Name=$(/usr/bin/sw_vers --productName)
             echo_Verbose "Setting OS_Version..."
