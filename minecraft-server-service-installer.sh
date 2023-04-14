@@ -413,7 +413,7 @@ ArgumentWaitAfterStep=false                  # 9 #
 # NEW VERSION OF VARIABLES
 ScriptOption_AutoInstall=false
 ScriptOption_CheckPackagesOnly=false
-ScriptOption_ServerVersion=false
+ScriptOption_CustomServerVersion=false
 ScriptOption_ShowServerVersions=false
 ##################################################
 
@@ -427,7 +427,7 @@ for ArgumentX in $@; do
         ArgumentAllowUnsupportedOS=true
         ;;
     "--auto-install")
-        ArgumentAutoInstall=true
+        ScriptOption_AutoInstall=true
         ;;
     "--check-os")
         ArgumentOnlyCheckOS=true
@@ -442,7 +442,7 @@ for ArgumentX in $@; do
         ArgumentShowVersionInfo=true
         ;;
     "--server-version"*)
-        ScriptOption_ServerVersion=true
+        ScriptOption_CustomServerVersion=true
         CustomServerVersion=$(printf '%s' "$ArgumentX" | sed 's/--server-version=//')
         echo_Verbose "Custom Server Version Selected: $CustomServerVersion"
         ;;
@@ -485,11 +485,6 @@ if $ArgumentOnlyCheckOS; then # 2 #
     ExitScriptAfterCommand=true
 fi
 
-if $ArgumentOnlyCheckPackages; then #  #
-    Check_Packages
-    ExitScriptAfterCommand=true
-fi
-
 if $ArgumentShowHelp; then # 3 #
     Show_Help
     ExitScriptAfterCommand=true
@@ -510,7 +505,17 @@ if $LogExtraMessages; then # 7 #
     echo -n
 fi
 
-if $ScriptOption_ServerVersion; then
+if $ArgumentWaitAfterStep; then # 8 #
+    # Do nothing.
+    echo -n
+fi
+
+if $$ScriptOption_CheckPackagesOnly; then #  #
+    Check_Packages
+    ExitScriptAfterCommand=true
+fi
+
+if $ScriptOption_CustomServerVersion; then
   Get_MostRecentMinecraftVersions
   Check_CustomServerVersion
 fi
@@ -521,10 +526,7 @@ if $ScriptOption_ShowServerVersions; then
     ExitScriptAfterCommand=true
 fi
 
-if $ArgumentWaitAfterStep; then # 8 #
-    # Do nothing.
-    echo -n
-fi
+
 
 if $ExitScriptAfterCommand; then
     exit
