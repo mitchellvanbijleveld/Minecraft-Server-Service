@@ -16,11 +16,10 @@ URL_SCRIPT="https://github.mitchellvanbijleveld.dev/Minecraft-Server-Service/min
 ####################################################################################################
 ####################################################################################################
 
-
 ####################################################################################################
 ##### Set Default Variables.                      ##################################################
 ####################################################################################################
-LogExtraMessages=false
+ScriptOption_LogLevel_Verbose=false
 ####################################################################################################
 ####################################################################################################
 ####################################################################################################
@@ -30,11 +29,11 @@ eval "$(curl https://github.mitchellvanbijleveld.dev/Bash-Functions/import_Funct
 
 ##### Before starting the script, check if the --verbose option is passed.
 if [[ "$@" == *"--verbose"* ]]; then
-    # If --verbose, then set the corresponding verbose variables. LogExtraMessages is usded to print more messages then normal.
+    # If --verbose, then set the corresponding verbose variables. ScriptOption_LogLevel_Verbose is usded to print more messages then normal.
     #logStyle=Verbose changes the terminal output to a verbose style with timestamps.
-    LogExtraMessages=true
+    ScriptOption_LogLevel_Verbose=true
     LogStyle=Verbose
-    
+
     # If --verbose, then import the functions with terminal output.
     import_Functions echo_Replaced print_ScriptInfo script_Updater
 else
@@ -50,7 +49,6 @@ fi
 ###########################################################################
 # 100
 ####################################################################################################
-
 
 ####################################################################################################
 # Print Help Information to the terminal.         ##################################################
@@ -81,10 +79,6 @@ Show_Help() {
 }
 ####################################################################################################
 
-
-
-
-
 ####################################################################################################
 # Check the OS Name and OS Version. Return if the OS is supported.         #########################
 Check_OS_Support() {
@@ -107,14 +101,14 @@ Check_OS_Support() {
         echo_Verbose "Setting OS_VersionID..."
         OS_VersionID=$VERSION_ID
     elif [ -e "/usr/bin/sw_vers" ]; then
-            macOSVersionInfo=$("/usr/bin/sw_vers")
-            OS_Name=$(/usr/bin/sw_vers --productName)
-            echo_Verbose "Setting OS_Version..."
-            OS_Version=$(/usr/bin/sw_vers --productVersion)
-            echo_Verbose "Setting OS_ID..."
-            if [ $OS_Name == "macOS" ]; then
-                OS_ID="macos"
-            fi
+        macOSVersionInfo=$("/usr/bin/sw_vers")
+        OS_Name=$(/usr/bin/sw_vers --productName)
+        echo_Verbose "Setting OS_Version..."
+        OS_Version=$(/usr/bin/sw_vers --productVersion)
+        echo_Verbose "Setting OS_ID..."
+        if [ $OS_Name == "macOS" ]; then
+            OS_ID="macos"
+        fi
     fi
 
     # For debugging purposes, print the OS_ID and OS_Version variables.
@@ -213,8 +207,6 @@ Check_OS_Support() {
 }
 ####################################################################################################
 
-
-
 ####################################################################################################
 ####################################################################################################
 ##### Check if requested packages is installed.   ##################################################
@@ -224,7 +216,7 @@ Check_Package() {
     # If it's not installed, then install the package.
 
     echo_Verbose "Checking if package '$1' is installed..."
-    
+
     # Switching OS_ID to check the packages depending on the OS.
     case $OS_ID in
     debian | ubuntu) # Check for the required packages on Debian and Ubuntu.
@@ -269,7 +261,7 @@ Check_Package() {
                     ;;
                 esac
             fi
-            
+
             if $Boolean_InstallPackage; then
                 case $OS_ID in
                 debian | ubuntu) # Check for the required packages on Debian and Ubuntu.
@@ -297,53 +289,43 @@ Check_Package() {
 ####################################################################################################
 ####################################################################################################
 
-
-
-
-
-
-
 ####################################################################################################
 # Check Packages on detected Operating System.    ##################################################
-Check_Packages(){
+Check_Packages() {
 
-if $ScriptOption_CheckPackagesOnly; then
-    Check_OS_Support
-fi
-
-case $OS_ID in
-debian | ubuntu) # Check for the required packages on Debian and Ubuntu.
-    # Before checking, run apt-get update
-    echo "Running 'apt-get update' to make sure all available packages are listed..."
-    if $LogExtraMessages; then
-      apt-get update
-    else
-      LogFileTimeStamp=$(date +"D%Y%m%dT%H%M")
-      LogFileName="$LogFileTimeStamp.AptGetUpdate.log"
-      apt-get update >"$LogDirectory$LogFileName"
+    if $ScriptOption_CheckPackagesOnly; then
+        Check_OS_Support
     fi
-    echo
-    for ApplicationX in $PackagesDPKG; do
-        Check_Package $ApplicationX
-    done
-    ;;
 
-almalinux | rocky | centos) # Check for the required packegs on Almalinux and Rocky.
-    for ApplicationX in $PackagesRPM; do
-        Check_Package $ApplicationX
-    done
-    ;;
+    case $OS_ID in
+    debian | ubuntu) # Check for the required packages on Debian and Ubuntu.
+        # Before checking, run apt-get update
+        echo "Running 'apt-get update' to make sure all available packages are listed..."
+        if $ScriptOption_LogLevel_Verbose; then
+            apt-get update
+        else
+            LogFileTimeStamp=$(date +"D%Y%m%dT%H%M")
+            LogFileName="$LogFileTimeStamp.AptGetUpdate.log"
+            apt-get update >"$LogDirectory$LogFileName"
+        fi
+        echo
+        for ApplicationX in $PackagesDPKG; do
+            Check_Package $ApplicationX
+        done
+        ;;
 
-*)
-    echo "Your OS is unsupported. Can't check for installed packages..."
-    echo
-    ;;
-esac
+    almalinux | rocky | centos) # Check for the required packegs on Almalinux and Rocky.
+        for ApplicationX in $PackagesRPM; do
+            Check_Package $ApplicationX
+        done
+        ;;
+
+    *)
+        echo "Your OS is unsupported. Can't check for installed packages..."
+        echo
+        ;;
+    esac
 }
-
-
-
-
 
 ####################################################################################################
 # Print Latest 10 Available Minecraft Server Versions    ###########################################
@@ -353,57 +335,54 @@ manifest=$(curl -s https://launchermeta.mojang.com/mc/game/version_manifest.json
 
 ####################################################################################################
 # Get Latest 10 Available Minecraft Server Versions    #############################################
-Get_MostRecentMinecraftVersions () {
-  # Fetch the 10 most recent release versions
-  echo_Verbose "Getting latest 10 versions of Minecraft Servers..."
-  versions=$(printf "%s" "$manifest" | jq -r '.versions | .[] | select(.type=="release") | .id' | head -n 10)
-  echo_Verbose "Setting servers string..."
-  versions_formatted=$(printf "%s" "$versions" | tr '\n' ' ' | sed 's/ $/./;s/ / \/ /g')    
+Get_MostRecentMinecraftVersions() {
+    # Fetch the 10 most recent release versions
+    echo_Verbose "Getting latest 10 versions of Minecraft Servers..."
+    versions=$(printf "%s" "$manifest" | jq -r '.versions | .[] | select(.type=="release") | .id' | head -n 10)
+    echo_Verbose "Setting servers string..."
+    versions_formatted=$(printf "%s" "$versions" | tr '\n' ' ' | sed 's/ $/./;s/ / \/ /g')
 }
 ####################################################################################################
-
 
 ####################################################################################################
 # Print Latest 10 Available Minecraft Server Versions    ###########################################
-Print_AvailableServerVersions () {
-  echo "The 10 most recent released versions are: $versions_formatted"
-  echo "Use '--server-version=[...]' with one of the versions listed above."
-  echo
+Print_AvailableServerVersions() {
+    echo "The 10 most recent released versions are: $versions_formatted"
+    echo "Use '--server-version=[...]' with one of the versions listed above."
+    echo
 }
 ####################################################################################################
-
 
 ####################################################################################################
 # Check The Custom Selected Server Version     #####################################################
 
-Check_CustomServerVersion () {
-  echo_Verbose "Checkig if the custom server version is found in the latest 10 releases..."
-  if printf "%s" "$versions_formatted" | grep -q "\\<$CustomServerVersion\\>"; then
-    echo_Verbose "Custom server version found!"
-  else
-    echo "\x1B[1;31mServer Version '$CustomServerVersion' has not not been found. Script will exit since it can't download a server jar file...\x1B[0m"
-    Print_AvailableServerVersions
-    exit
-  fi
+Check_CustomServerVersion() {
+    echo_Verbose "Checkig if the custom server version is found in the latest 10 releases..."
+    if printf "%s" "$versions_formatted" | grep -q "\\<$CustomServerVersion\\>"; then
+        echo_Verbose "Custom server version found!"
+    else
+        echo "\x1B[1;31mServer Version '$CustomServerVersion' has not not been found. Script will exit since it can't download a server jar file...\x1B[0m"
+        Print_AvailableServerVersions
+        exit
+    fi
 }
-
 
 ####################################################################################################
 # Check if the script is executed with options/arguments. Set Variables.   #########################
 ####################################################################################################
 ##### Set Script Variables                                                #
-LogDirectory="/var/log/mitchellvanbijleveld/$Internal_ScriptName/"         #
-PackagesDPKG="jq screen openjdk-17-jdk"                                   #
-PackagesRPM="epel-release screen java-17-openjdk"                         #
+LogDirectory="/var/log/mitchellvanbijleveld/$Internal_ScriptName/" #
+PackagesDPKG="jq screen openjdk-17-jdk"                            #
+PackagesRPM="epel-release screen java-17-openjdk"                  #
 ###########################################################################
 ##### Default Arguments to False.            #####
-ArgumentAllowUnsupportedOS=false             # 1 #
-ArgumentOnlyCheckOS=false                    # 3 #
-ArgumentOnlyCheckPackages=false              # 4 #
-ArgumentShowHelp=false                       # 5 #
-ArgumentShowVersionInfo=false                # 6 #
-ArgumentSkipWaitTimer=false                  # 7 #
-ArgumentWaitAfterStep=false                  # 9 #
+ArgumentAllowUnsupportedOS=false # 1 #
+ArgumentOnlyCheckOS=false        # 3 #
+ArgumentOnlyCheckPackages=false  # 4 #
+ArgumentShowHelp=false           # 5 #
+ArgumentShowVersionInfo=false    # 6 #
+ArgumentSkipWaitTimer=false      # 7 #
+ArgumentWaitAfterStep=false      # 9 #
 
 # NEW VERSION OF VARIABLES
 ScriptOption_AutoInstall=false
@@ -448,7 +427,7 @@ for ArgumentX in $@; do
         ArgumentSkipWaitTimer=true
         ;;
     "--verbose")
-        #LogExtraMessages=true
+        #ScriptOption_LogLevel_Verbose=true
         #LogStyle=Verbose
         echo
         ;;
@@ -490,7 +469,7 @@ if $ArgumentSkipWaitTimer; then # 5 #
     echo -n
 fi
 
-if $LogExtraMessages; then # 7 #
+if $ScriptOption_LogLevel_Verbose; then # 7 #
     # Do nothing.
     echo -n
 fi
@@ -506,8 +485,8 @@ if $ScriptOption_CheckPackagesOnly; then #  #
 fi
 
 if $ScriptOption_CustomServerVersion; then
-  Get_MostRecentMinecraftVersions
-  Check_CustomServerVersion
+    Get_MostRecentMinecraftVersions
+    Check_CustomServerVersion
 fi
 
 if $ScriptOption_ShowServerVersions; then
@@ -516,12 +495,9 @@ if $ScriptOption_ShowServerVersions; then
     ExitScriptAfterCommand=true
 fi
 
-
-
 if $ExitScriptAfterCommand; then
     exit
 fi
-
 
 echo_Verbose "Arguments are set as follows:"
 echo_Verbose "ArgumentAllowUnsupportedOS      : $ArgumentAllowUnsupportedOS"
@@ -531,7 +507,7 @@ echo_Verbose "ArgumentOnlyCheckPackages       : $ArgumentOnlyCheckPackages"
 echo_Verbose "ArgumentShowHelp                : $ArgumentShowHelp"
 echo_Verbose "ArgumentShowVersionInfo         : $ArgumentShowVersionInfo"
 echo_Verbose "ArgumentSkipWaitTimer           : $ArgumentSkipWaitTimer"
-echo_Verbose "LogExtraMessages.               : $LogExtraMessages"
+echo_Verbose "ScriptOption_LogLevel_Verbose.               : $ScriptOption_LogLevel_Verbose"
 echo_Verbose "ArgumentWaitAfterStep=false     : $ArgumentWaitAfterStep"
 echo_Verbose
 
@@ -539,10 +515,6 @@ echo_Verbose "Log directory is set to $LogDirectory..."
 
 echo_Verbose "Setting default arguments to false before checking passed arguments..."
 ####################################################################################################
-
-
-
-
 
 ####################################################################################################
 ####################################################################################################
@@ -562,14 +534,8 @@ else
 fi
 clear
 
-
-
 ##### Check for script updates...
 Check_Script_Update $@
-
-
-
-
 
 ####################################################################################################
 # Prepare the start of the script by clearing the terminal.                #########################
@@ -586,10 +552,6 @@ sleep 1
 # Clearing the terminal output before showing anything that is script related.
 clear
 ####################################################################################################
-
-
-
-
 
 ####################################################################################################
 # Function that enables a check before contuing to the next step.          #########################
@@ -617,10 +579,6 @@ Print_Next_Step_Confirmation_Question() {
 sleep 1
 ####################################################################################################
 
-
-
-
-
 ####################################################################################################
 ##### Step 00 - Check OS Name and OS Version.     ##################################################
 ####################################################################################################
@@ -640,10 +598,6 @@ fi
 ####################################################################################################
 sleep 0.5
 
-
-
-
-
 ####################################################################################################
 ##### Step 1 - Check OS Name and OS Version.      ##################################################
 echo "####################################################################################################"
@@ -656,10 +610,6 @@ if $ArgumentWaitAfterStep; then # 8 #
 fi
 ####################################################################################################
 sleep 0.5
-
-
-
-
 
 ####################################################################################################
 ##### Step 02 - Check for required packages.      ##################################################
@@ -675,95 +625,89 @@ fi
 ####################################################################################################
 sleep 0.5
 
-
 Check_SELinux() {
-    if cat /etc/selinux/config | grep "SELINUX=enforcing" &> /dev/null; then
+    if cat /etc/selinux/config | grep "SELINUX=enforcing" &>/dev/null; then
         echo "SELinux is enabled. Please set SELinux to 'permissive' or 'disabled'."
         echo
         exit 1
     fi
 }
 
+download_ServerJAR() {
 
-download_ServerJAR () {
+    # Download the Minecraft Version Manifest JSON.
+    echo_Verbose "Downloading the Minecraft Version Manifest JSON File..."
+    manifest=$(curl -s https://launchermeta.mojang.com/mc/game/version_manifest.json)
 
-  # Download the Minecraft Version Manifest JSON.
-  echo_Verbose "Downloading the Minecraft Version Manifest JSON File..."
-  manifest=$(curl -s https://launchermeta.mojang.com/mc/game/version_manifest.json)
-
-  echo_Verbose "Checking if custom server version is set..."
-  # Check if $CustomServerVersion is set.
-  if [[ $1 = "" ]]; then
-    # If $CustomServerVersion is empty, download the latest server version.
-    echo_Verbose "No custom server version set. Downloading latest version JSON file..."
-    # Get the URL of the latest release version JSON file
-    version_url=$(printf "%s" "$manifest" | jq -r '.versions[] | select(.type == "release") | .url' | head -n 1)
-    echo_Verbose "Download completed."
-  else
-    echo_Verbose "\x1B[1;33mCustom Server Version: $CustomServerVersion.\x1B[0m"
-
-    # Get the URL of the version JSON file for the selected version
-    echo_Verbose "Get the custom server version JSON file..."
-    version_url=$(printf "%s" "$manifest" | jq -r --arg version "$CustomServerVersion" '.versions | .[] | select(.id == $version) | .url')
-    echo_Verbose "Download completed."
-  fi
-  
-  # Download release version JSON file
-  echo_Verbose "Downloading release version JSON file..."
-  version_manifest=$(curl -s $version_url)
-  echo_Verbose "Download completed."
-
-  # Get the version of the selected release
-  echo_Verbose "Get the version of the server..."
-  version=$(printf "%s" "$version_manifest" | jq -r '.id')
-
-  # Get the URL of the server jar file
-  echo_Verbose "Getting the server download url..."
-  server_url=$(printf "%s" "$version_manifest" | jq -r '.downloads.server.url')
-
-  # Download the server jar file
-  echo_Verbose "Downloading server jar file..."
-  
-  if [[ $1 = "" ]]; then  
-    echo "Downloading Latest Server Version: $version."
-  else
-    echo "\x1B[1;33mDownloading custom server version: $CustomServerVersion.\x1B[0m" 
-  fi
-  
-  curl --output /etc/mitchellvanbijleveld/minecraft-server/minecraft-server.jar $server_url --progress-bar
-  echo_Verbose "Downlaod completed."
-
-  echo_Verbose "Server jar file for version $version downloaded successfully."
-  
-  echo_Verbose "Checking if the server JAR file is in place..."
-  if [ -e /etc/mitchellvanbijleveld/minecraft-server/minecraft-server.jar ]; then
-      # Get the expected sha1 value
-      echo_Verbose "Getting expected sha1 value from JSON file..."
-      expected_sha1=$(printf "%s" "$version_manifest" | jq -r '.downloads.server.sha1')
-
-      # Calculate the actual sha1 value
-      echo_Verbose "Calculate actual sha1 value from downloaded server JAR file..."
-      actual_sha1=$(sha1sum /etc/mitchellvanbijleveld/minecraft-server/minecraft-server.jar | awk '{ print $1 }')
-
-      # Compare the expected and actual sha1 values
-      echo_Verbose "Comparing sha1 values..."
-      if [ "$expected_sha1" == "$actual_sha1" ]; then
-        echo_Verbose "Server jar file for version $version downloaded successfully and has the expected sha1 value."
-      else
-        echo "\x1B[1;31mServer jar file for version $version downloaded but has an unexpected sha1 value. Exiting...\x1B[0m"
-        echo
-        exit
-      fi
+    echo_Verbose "Checking if custom server version is set..."
+    # Check if $CustomServerVersion is set.
+    if [[ $1 = "" ]]; then
+        # If $CustomServerVersion is empty, download the latest server version.
+        echo_Verbose "No custom server version set. Downloading latest version JSON file..."
+        # Get the URL of the latest release version JSON file
+        version_url=$(printf "%s" "$manifest" | jq -r '.versions[] | select(.type == "release") | .url' | head -n 1)
+        echo_Verbose "Download completed."
     else
-      echo "\x1B[1;31mCould not save Java jar file. Exiting...\x1B[0m"
-      exit
+        echo_Verbose "\x1B[1;33mCustom Server Version: $CustomServerVersion.\x1B[0m"
+
+        # Get the URL of the version JSON file for the selected version
+        echo_Verbose "Get the custom server version JSON file..."
+        version_url=$(printf "%s" "$manifest" | jq -r --arg version "$CustomServerVersion" '.versions | .[] | select(.id == $version) | .url')
+        echo_Verbose "Download completed."
+    fi
+
+    # Download release version JSON file
+    echo_Verbose "Downloading release version JSON file..."
+    version_manifest=$(curl -s $version_url)
+    echo_Verbose "Download completed."
+
+    # Get the version of the selected release
+    echo_Verbose "Get the version of the server..."
+    version=$(printf "%s" "$version_manifest" | jq -r '.id')
+
+    # Get the URL of the server jar file
+    echo_Verbose "Getting the server download url..."
+    server_url=$(printf "%s" "$version_manifest" | jq -r '.downloads.server.url')
+
+    # Download the server jar file
+    echo_Verbose "Downloading server jar file..."
+
+    if [[ $1 = "" ]]; then
+        echo "Downloading Latest Server Version: $version."
+    else
+        echo "\x1B[1;33mDownloading custom server version: $CustomServerVersion.\x1B[0m"
+    fi
+
+    curl --output /etc/mitchellvanbijleveld/minecraft-server/minecraft-server.jar $server_url --progress-bar
+    echo_Verbose "Downlaod completed."
+
+    echo_Verbose "Server jar file for version $version downloaded successfully."
+
+    echo_Verbose "Checking if the server JAR file is in place..."
+    if [ -e /etc/mitchellvanbijleveld/minecraft-server/minecraft-server.jar ]; then
+        # Get the expected sha1 value
+        echo_Verbose "Getting expected sha1 value from JSON file..."
+        expected_sha1=$(printf "%s" "$version_manifest" | jq -r '.downloads.server.sha1')
+
+        # Calculate the actual sha1 value
+        echo_Verbose "Calculate actual sha1 value from downloaded server JAR file..."
+        actual_sha1=$(sha1sum /etc/mitchellvanbijleveld/minecraft-server/minecraft-server.jar | awk '{ print $1 }')
+
+        # Compare the expected and actual sha1 values
+        echo_Verbose "Comparing sha1 values..."
+        if [ "$expected_sha1" == "$actual_sha1" ]; then
+            echo_Verbose "Server jar file for version $version downloaded successfully and has the expected sha1 value."
+        else
+            echo "\x1B[1;31mServer jar file for version $version downloaded but has an unexpected sha1 value. Exiting...\x1B[0m"
+            echo
+            exit
+        fi
+    else
+        echo "\x1B[1;31mCould not save Java jar file. Exiting...\x1B[0m"
+        exit
     fi
 
 }
-
-
-
-
 
 ####################################################################################################
 ##### Step 03 - Minecraft Server.                 ##################################################
@@ -772,67 +716,67 @@ echo "Step 3 - Downloading service file and Minecraft Server ."
 echo
 
 if $ScriptOption_AutoInstall; then
-  echo "autoinstalling"
+    echo "autoinstalling"
 else
-  echo "not autoinstalling"
+    echo "not autoinstalling"
 fi
 
 read -p "The script will now download the service file and the server jar file. Do you want to proceed? [yes/no] " yn
-    case $yn in
-    [Yy]*)
-        
-LogFileTimeStamp=$(date +"D%Y%m%dT%H%M")
-LogFileName="$LogFileTimeStamp.DownloadService.log"
-echo "Downloading Minecraft Server Service File..."
-curl --output /etc/systemd/system/minecraft-server.service https://github.mitchellvanbijleveld.dev/Minecraft-Server-Service/minecraft-server.service --progress-bar
-echo
-echo_Verbose "Download completed"
-if [ ! -e /etc/systemd/system/minecraft-server.service ]; then
-    echo "\x1B[1;31mCould not save service file. Exiting...\x1B[0m"
+case $yn in
+[Yy]*)
+
+    LogFileTimeStamp=$(date +"D%Y%m%dT%H%M")
+    LogFileName="$LogFileTimeStamp.DownloadService.log"
+    echo "Downloading Minecraft Server Service File..."
+    curl --output /etc/systemd/system/minecraft-server.service https://github.mitchellvanbijleveld.dev/Minecraft-Server-Service/minecraft-server.service --progress-bar
     echo
-    exit
-fi
-echo_Verbose "Creating directory '/etc/mitchellvanbijleveld/minecraft-server'..."
-mkdir -p /etc/mitchellvanbijleveld/minecraft-server
-LogFileTimeStamp=$(date +"D%Y%m%dT%H%M")
-LogFileName="$LogFileTimeStamp.DownloadServerJar.log"
-
-download_ServerJAR $CustomServerVersion
-
-echo
-echo_Verbose "Running 'systemctl daemon-reload'..."
-systemctl daemon-reload
-        ;;
-        
-        
-    *)
-        echo "OK exit"
+    echo_Verbose "Download completed"
+    if [ ! -e /etc/systemd/system/minecraft-server.service ]; then
+        echo "\x1B[1;31mCould not save service file. Exiting...\x1B[0m"
         echo
         exit
-        ;;
-    esac
+    fi
+    echo_Verbose "Creating directory '/etc/mitchellvanbijleveld/minecraft-server'..."
+    mkdir -p /etc/mitchellvanbijleveld/minecraft-server
+    LogFileTimeStamp=$(date +"D%Y%m%dT%H%M")
+    LogFileName="$LogFileTimeStamp.DownloadServerJar.log"
+
+    download_ServerJAR $CustomServerVersion
+
+    echo
+    echo_Verbose "Running 'systemctl daemon-reload'..."
+    systemctl daemon-reload
+    ;;
+
+*)
+    echo "OK exit"
+    echo
+    exit
+    ;;
+esac
 
 ##### Agree To Minecraft EULA
-Agree_To_EULA(){
-echo "eula=true" >/etc/mitchellvanbijleveld/minecraft-server/eula.txt
-        EulaText=$(cat /etc/mitchellvanbijleveld/minecraft-server/eula.txt)
-        if [ $EulaText == "eula=true" ]; then
-            echo -n # Print empty newline
-        else
-            echo "\x1B[1;31mCould not save eula file. Exiting...\x1B[0m"
-            exit
-        fi
-        echo "\x1B[1;32mAdded 'eula=true' to '/etc/mitchellvanbijleveld/minecraft-server/eula.txt'.\x1B[0m"
-        echo
+Agree_To_EULA() {
+    echo "eula=true" >/etc/mitchellvanbijleveld/minecraft-server/eula.txt
+    EulaText=$(cat /etc/mitchellvanbijleveld/minecraft-server/eula.txt)
+    if [ $EulaText == "eula=true" ]; then
+        echo -n # Print empty newline
+    else
+        echo "\x1B[1;31mCould not save eula file. Exiting...\x1B[0m"
+        exit
+    fi
+    echo "\x1B[1;32mAdded 'eula=true' to '/etc/mitchellvanbijleveld/minecraft-server/eula.txt'.\x1B[0m"
+    echo
 }
 #####
 if $ScriptOption_AutoInstall; then
-  Agree_To_EULA
+    Agree_To_EULA
 else
-  read -p "Do you agree to the Minecraft (Server) EULA? [yes/no] " yn
+    read -p "Do you agree to the Minecraft (Server) EULA? [yes/no] " yn
     case $yn in
     [Yy]*)
-        Agree_To_EULA;;
+        Agree_To_EULA
+        ;;
     *)
         echo "\x1B[1;33mPlease read the eula and add 'eula=true' to '/etc/mitchellvanbijleveld/minecraft-server/eula.txt'.\x1B[0m"
         echo "You can do so by executing the following command: 'eula=true >/etc/mitchellvanbijleveld/minecraft-server/eula.txt'."
@@ -841,20 +785,12 @@ else
     esac
 fi
 
-
-
-
 if $ArgumentWaitAfterStep; then # 8 #
     Print_Next_Step_Confirmation_Question "The script has prepared the server."
 fi
 
-
 ####################################################################################################
 sleep 0.5
-
-
-
-
 
 ####################################################################################################
 ##### Step 04 - Service Settings                  ##################################################
@@ -868,8 +804,6 @@ echo
 
 echo "The Minecraft Server has successfully been installed as a system service."
 
-
-
 ##### Enable Start @ Boot
 Enable_Server() {
     systemctl enable minecraft-server
@@ -878,30 +812,27 @@ Enable_Server() {
 }
 #####
 if $ScriptOption_AutoInstall; then
-Enable_Server
+    Enable_Server
 else
-read -p "Do you want to start the server automatically during startup [yes/no] " yn
-case $yn in
-[Yy]*)
-Enable_Server;;
-*)
-    echo "\x1B[1;33mThe server has not been enabled to start during boot.\x1B[0m To do so in the future, run the command below:"
-    echo "systemctl enable minecraft-server"
-    echo
-    ;;
-esac
+    read -p "Do you want to start the server automatically during startup [yes/no] " yn
+    case $yn in
+    [Yy]*)
+        Enable_Server
+        ;;
+    *)
+        echo "\x1B[1;33mThe server has not been enabled to start during boot.\x1B[0m To do so in the future, run the command below:"
+        echo "systemctl enable minecraft-server"
+        echo
+        ;;
+    esac
 fi
-
-
-
-
 
 ##### Start Server
 Start_Server() {
-systemctl start minecraft-server
+    systemctl start minecraft-server
     ServerStatus=$(systemctl status minecraft-server | grep Active)
     echo_Verbose $ServerStatus
-if [[ $ServerStatus == *'Active: active (running)'* ]]; then
+    if [[ $ServerStatus == *'Active: active (running)'* ]]; then
         ServerStarted=true
         echo "\x1B[1;32mThe server has been started in the background within a Screen session.\x1B[0m"
     else
@@ -917,46 +848,39 @@ else
     read -p "Do you want to start the server now? [yes/no] " yn
     case $yn in
     [Yy]*)
-        Start_Server;;
+        Start_Server
+        ;;
     *)
-    echo "\x1B[1;33mThe server will not be started right now.\x1B[0m To start the server, run the following command:"
-    echo "sudo systemctl start minecraft-server"
-    echo
-    ;;
-esac
-fi
-
-
-
-
-
-
-##### Connect To The Server
-Connect_To_Server(){
-        echo "\x1B[1;32mWill connect to Screen session after exit.\x1B[0m"
-        ConnectToScreenAfterExit=true
-        echo
-}
-#####
-if $ScriptOption_AutoInstall; then
-Connect_To_Server
-else
-if $ServerStarted; then
-    read -p "The server has been started. Do you want to connect to the Screen session to view the logs?? [yes/no] " yn
-    case $yn in
-    [Yy]*)
-     Connect_To_Server;;
-    *)
-        echo "\x1B[1;33mWill not connect to Screen session after exit.\x1B[0m"
+        echo "\x1B[1;33mThe server will not be started right now.\x1B[0m To start the server, run the following command:"
+        echo "sudo systemctl start minecraft-server"
         echo
         ;;
     esac
 fi
+
+##### Connect To The Server
+Connect_To_Server() {
+    echo "\x1B[1;32mWill connect to Screen session after exit.\x1B[0m"
+    ConnectToScreenAfterExit=true
+    echo
+}
+#####
+if $ScriptOption_AutoInstall; then
+    Connect_To_Server
+else
+    if $ServerStarted; then
+        read -p "The server has been started. Do you want to connect to the Screen session to view the logs?? [yes/no] " yn
+        case $yn in
+        [Yy]*)
+            Connect_To_Server
+            ;;
+        *)
+            echo "\x1B[1;33mWill not connect to Screen session after exit.\x1B[0m"
+            echo
+            ;;
+        esac
+    fi
 fi
-
-
-
-
 
 if $ArgumentWaitAfterStep; then # 8 #
     Print_Next_Step_Confirmation_Question "Step 03"
