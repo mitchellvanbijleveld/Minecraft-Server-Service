@@ -224,11 +224,12 @@ Check_OS_Support() {
 ##### Check if requested packages is installed.   ##################################################
 ####################################################################################################
 Check_Package() {
-    ScriptOption_CheckPackagesOnly=true
     # this function will check if the requested package has been installed or not.
     # If it's not installed, then install the package.
 
     echo_Verbose "Checking if package '$1' is installed..."
+    
+    # Switching OS_ID to check the packages depending on the OS.
     case $OS_ID in
     debian | ubuntu) # Check for the required packages on Debian and Ubuntu.
         echo_Verbose "Checking Package Status via 'dpkg' for '$1'..."
@@ -240,6 +241,7 @@ Check_Package() {
         ;;
     *)
         echo "Your OS is not supported. Therefore the script cannot check for the required package..."
+        exit 1
         ;;
     esac
 
