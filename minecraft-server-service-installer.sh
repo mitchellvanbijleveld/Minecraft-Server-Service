@@ -6,7 +6,7 @@ ScriptName="Mitchell's Minecraft Server Service Installation Script"
 ScriptDescription="Bash script that helps installing a Minecraft Server on Linux as a system service."
 ScriptDeveloper="Mitchell van Bijleveld"
 ScriptDeveloperWebsite="https://mitchellvanbijleveld.dev/"
-ScriptVersion="2023.04.14-23.33-beta"
+ScriptVersion="2023.04.15-00.13-beta"
 ScriptCopyright="© 2023"
 ##### Mitchell van Bijleveld's Script Updater.    ##################################################
 Internal_ScriptName="Minecraft-Server-Service"
@@ -747,7 +747,7 @@ download_ServerJAR () {
 
       # Calculate the actual sha1 value
       echo_Verbose "Calculate actual sha1 value from downloaded server JAR file..."
-      actual_sha1=$(shasum -a 1 /etc/mitchellvanbijleveld/minecraft-server/minecraft-server.jar | awk '{ print $1 }')
+      actual_sha1=$(sha1sum /etc/mitchellvanbijleveld/minecraft-server/minecraft-server.jar | awk '{ print $1 }')
 
       # Compare the expected and actual sha1 values
       echo_Verbose "Comparing sha1 values..."
