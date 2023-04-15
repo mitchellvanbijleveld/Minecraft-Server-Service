@@ -236,6 +236,7 @@ Check_Package() {
     # Check if package is insatlled with exit code = 0
     if [[ $? == 0 ]]; then
         echo "\x1B[1;32mThe requested package '$1' is already installed!\x1B[0m"
+        echo
     else
         echo "\x1B[1;33mThe requested package '$1' has not been installed yet.\x1B[0m"
 
@@ -302,11 +303,11 @@ Check_Packages() {
         # Before checking, run apt-get update
         echo "Running 'apt-get update' to make sure all available packages are listed..."
         if [[ $ScriptOption_LogLevel == "Verbose" ]]; then
-            apt-get update
+            apt-get update | sed 's/^/$(date +"%Y-%m-%d %H:%M:%S") [DEBUG] : /'
         else
             LogFileTimeStamp=$(date +"D%Y%m%dT%H%M")
             LogFileName="$LogFileTimeStamp.AptGetUpdate.log"
-            apt-get update >"$LogDirectory$LogFileName"
+            apt-get update &> "$LogDirectory$LogFileName"
         fi
         echo
         for ApplicationX in $PackagesDPKG; do
