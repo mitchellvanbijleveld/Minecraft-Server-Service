@@ -239,6 +239,7 @@ Check_Package() {
         echo
     else
         echo "\x1B[1;33mThe requested package '$1' has not been installed yet.\x1B[0m"
+        echo
 
         # Check if this is a check-only or not.
         if ! $ScriptOption_CheckPackagesOnly; then
