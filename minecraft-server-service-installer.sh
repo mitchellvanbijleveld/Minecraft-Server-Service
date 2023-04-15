@@ -303,7 +303,7 @@ Check_Packages() {
         # Before checking, run apt-get update
         echo "Running 'apt-get update' to make sure all available packages are listed..."
         if [[ $ScriptOption_LogLevel == "Verbose" ]]; then
-            apt-get update | sed 's/^/$(date +"%Y-%m-%d %H:%M:%S") [DEBUG] : /'
+            apt-get update | sed "s/^/$(date +'%Y-%m-%d %H:%M:%S') [DEBUG] : /"
         else
             LogFileTimeStamp=$(date +"D%Y%m%dT%H%M")
             LogFileName="$LogFileTimeStamp.AptGetUpdate.log"
