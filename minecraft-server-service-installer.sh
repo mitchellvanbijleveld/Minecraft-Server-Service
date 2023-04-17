@@ -805,6 +805,16 @@ Enable_Server() {
     echo
 }
 #####
+##### Disable Start @ Boot
+Disable_Server() {
+    #make sure the server is disabled
+    systemctl disable minecraft-server
+    echo
+}
+#####
+
+
+
 if $ScriptOption_AutoInstall; then
     Enable_Server
 else
@@ -814,6 +824,7 @@ else
         Enable_Server
         ;;
     *)
+        Disable_Server
         echo "\x1B[1;33mThe server has not been enabled to start during boot.\x1B[0m To do so in the future, run the command below:"
         echo "systemctl enable minecraft-server"
         echo
