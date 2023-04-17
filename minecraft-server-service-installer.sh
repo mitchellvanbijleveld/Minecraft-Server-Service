@@ -66,6 +66,7 @@ Show_Help() {
     echo "                                              For example: 'bash minecraft-server-service-installer.sh --server-version=1.19.4'"
     echo "     --show-server-versions             :     Show the available server versions."
     echo "     --skip-wait                        :     Skip the 6 seconds wait timer before starting the script."
+    echo "     --update                           :     Check for updates and install them if available."
     echo "     --verbose                          :     Enable Verbose Logging during the execution of the script."
     echo "     --version                          :     Show Version Information about the script."
     echo "     --wait-after-step                  :     Ask for confirmation to continue after completing a step."
@@ -426,6 +427,11 @@ for ArgumentX in $@; do
         ;;
     "--show-server-versions")
         ScriptOption_ShowServerVersions=true
+        ;;
+    "--update")
+        echo "Checking for updates will not work in this testing release."
+        echo
+        exit 1
         ;;
     "--skip-wait")
         ArgumentSkipWaitTimer=true
