@@ -19,7 +19,11 @@ URL_SCRIPT="https://github.mitchellvanbijleveld.dev/Minecraft-Server-Service/min
 ####################################################################################################
 ##### Set Default Variables.                      ##################################################
 ####################################################################################################
-##
+FolderPath_Temp="/tmp/mitchellvanbijleveld/Minecraft-Server"
+FolderPath_Logs="/var/log/mitchellvanbijleveld/Minecraft-Server" #
+FolderPath_ProgramFiles="/opt/mitchellvanbijleveld/Minecraft-Server"
+PackagesDPKG="jq screen openjdk-17-jdk"                            #
+PackagesRPM="epel-release screen java-17-openjdk"                  #
 ####################################################################################################
 ####################################################################################################
 ####################################################################################################
@@ -309,7 +313,7 @@ Check_Packages() {
         else
             LogFileTimeStamp=$(date +"D%Y%m%dT%H%M")
             LogFileName="$LogFileTimeStamp.AptGetUpdate.log"
-            apt-get update &> "$LogDirectory$LogFileName"
+            apt-get update &> "$FolderPath_Logs/$LogFileName"
         fi
         echo
         for ApplicationX in $PackagesDPKG; do
@@ -373,10 +377,7 @@ Check_CustomServerVersion() {
 ####################################################################################################
 # Check if the script is executed with options/arguments. Set Variables.   #########################
 ####################################################################################################
-##### Set Script Variables                                                #
-LogDirectory="/var/log/mitchellvanbijleveld/$Internal_ScriptName/" #
-PackagesDPKG="jq screen openjdk-17-jdk"                            #
-PackagesRPM="epel-release screen java-17-openjdk"                  #
+
 ###########################################################################
 ##### Default Arguments to False.            #####
 ArgumentAllowUnsupportedOS=false # 1 #
@@ -509,11 +510,8 @@ echo_Verbose "ArgumentShowVersionInfo         : $ArgumentShowVersionInfo"
 echo_Verbose "ArgumentSkipWaitTimer           : $ArgumentSkipWaitTimer"
 echo_Verbose "ScriptOption_LogLevel.          : $ScriptOption_LogLevel"
 echo_Verbose "ArgumentWaitAfterStep=false     : $ArgumentWaitAfterStep"
-echo_Verbose
 
-echo_Verbose "Log directory is set to $LogDirectory..."
-
-echo_Verbose "Setting default arguments to false before checking passed arguments..."
+echo_Verbose "Log directory is set to $FolderPath_Logs..."
 ####################################################################################################
 
 ####################################################################################################
@@ -523,11 +521,9 @@ echo_Verbose "Setting default arguments to false before checking passed argument
 # ACTUAL START OF THE SCRIPT!                     ##################################################
 
 #Check if the script is ran by root
+echo_Verbose "Check if the current user has root privileges..."
 SYSTEM_USER_NAME=$(id -u -n) # Used -u -n to make it compatible with macOS.
-if [ $SYSTEM_USER_NAME == "root" ]; then
-    # Just print an empty line.
-    echo -n
-else
+if [ ! $SYSTEM_USER_NAME == "root" ]; then
     echo "\x1B[1;31mYou are not running this script as root. Script will exit.\x1B[0m"
     echo
     exit
@@ -587,7 +583,7 @@ print_ScriptInfo
 echo "####################################################################################################"
 echo "Welcome to the Minecraft Server As A Service Installation Script."
 echo "This script will help you to install the Minecraft Server with an easy to follow step-by-step installation wizard."
-mkdir -p $LogDirectory
+mkdir -p $FolderPath_Logs
 
 echo
 
@@ -636,8 +632,8 @@ Check_SELinux() {
 download_ServerJAR() {
 
     # Download the Minecraft Version Manifest JSON.
-    echo_Verbose "Downloading the Minecraft Version Manifest JSON File..."
-    manifest=$(curl -s https://launchermeta.mojang.com/mc/game/version_manifest.json)
+    #echo_Verbose "Downloading the Minecraft Version Manifest JSON File..."
+    #manifest=$(curl -s https://launchermeta.mojang.com/mc/game/version_manifest.json)
 
     echo_Verbose "Checking if custom server version is set..."
     # Check if $CustomServerVersion is set.
@@ -678,20 +674,20 @@ download_ServerJAR() {
         echo "\x1B[1;33mDownloading custom server version: $CustomServerVersion.\x1B[0m"
     fi
 
-    curl --output /etc/mitchellvanbijleveld/minecraft-server/minecraft-server.jar $server_url --progress-bar
+    curl --output "$FolderPath_ProgramFiles/minecraft-server.jar" $server_url --progress-bar
     echo_Verbose "Downlaod completed."
 
     echo_Verbose "Server jar file for version $version downloaded successfully."
 
     echo_Verbose "Checking if the server JAR file is in place..."
-    if [ -e /etc/mitchellvanbijleveld/minecraft-server/minecraft-server.jar ]; then
+    if [ -e "$FolderPath_ProgramFiles/minecraft-server.jar" ]; then
         # Get the expected sha1 value
         echo_Verbose "Getting expected sha1 value from JSON file..."
         expected_sha1=$(printf "%s" "$version_manifest" | jq -r '.downloads.server.sha1')
 
         # Calculate the actual sha1 value
         echo_Verbose "Calculate actual sha1 value from downloaded server JAR file..."
-        actual_sha1=$(sha1sum /etc/mitchellvanbijleveld/minecraft-server/minecraft-server.jar | awk '{ print $1 }')
+        actual_sha1=$(sha1sum "$FolderPath_ProgramFiles/minecraft-server.jar" | awk '{ print $1 }')
 
         # Compare the expected and actual sha1 values
         echo_Verbose "Comparing sha1 values..."
@@ -736,8 +732,8 @@ case $yn in
         echo
         exit
     fi
-    echo_Verbose "Creating directory '/etc/mitchellvanbijleveld/minecraft-server'..."
-    mkdir -p /etc/mitchellvanbijleveld/minecraft-server
+    echo_Verbose "Creating directory '$FolderPath_ProgramFiles'..."
+    mkdir -p $FolderPath_ProgramFiles
     LogFileTimeStamp=$(date +"D%Y%m%dT%H%M")
     LogFileName="$LogFileTimeStamp.DownloadServerJar.log"
 
@@ -757,9 +753,9 @@ esac
 
 ##### Agree To Minecraft EULA
 Agree_To_EULA() {
-    printf "eula=true" > /etc/mitchellvanbijleveld/minecraft-server/eula.txt
-    if cat /etc/mitchellvanbijleveld/minecraft-server/eula.txt | grep "eula=true" &> /dev/null; then
-        echo "\x1B[1;32mAdded 'eula=true' to '/etc/mitchellvanbijleveld/minecraft-server/eula.txt'.\x1B[0m"
+    printf "eula=true" > "$FolderPath_ProgramFiles/eula.txt"
+    if cat "$FolderPath_ProgramFiles/eula.txt" | grep "eula=true" &> /dev/null; then
+        echo "\x1B[1;32mAdded 'eula=true' to '$FolderPath_ProgramFiles/eula.txt'.\x1B[0m"
         echo
     else
         echo "\x1B[1;31mCould not save eula file. Exiting...\x1B[0m"
@@ -776,8 +772,8 @@ else
         Agree_To_EULA
         ;;
     *)
-        echo "\x1B[1;33mPlease read the eula and add 'eula=true' to '/etc/mitchellvanbijleveld/minecraft-server/eula.txt'.\x1B[0m"
-        echo "You can do so by executing the following command: 'eula=true >/etc/mitchellvanbijleveld/minecraft-server/eula.txt'."
+        echo "\x1B[1;33mPlease read the eula and add 'eula=true' to '$FolderPath_ProgramFiles/eula.txt'.\x1B[0m"
+        echo "You can do so by executing the following command: 'eula=true >$FolderPath_ProgramFiles/minecraft-server/eula.txt'."
         echo
         ;;
     esac
