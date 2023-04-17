@@ -6,10 +6,10 @@ ScriptName="Mitchell's Minecraft Server Service Installation Script"
 ScriptDescription="Bash script that helps installing a Minecraft Server on Linux as a system service."
 ScriptDeveloper="Mitchell van Bijleveld"
 ScriptDeveloperWebsite="https://mitchellvanbijleveld.dev/"
-ScriptVersion="2023.04.15-00.13-beta"
+ScriptVersion="2023.04.17-20.46-beta"
 ScriptCopyright="© 2023"
 ##### Mitchell van Bijleveld's Script Updater.    ##################################################
-Internal_ScriptName="Minecraft-Server-Service"
+Internal_ScriptName="Minecraft-Server-Service" #So I want to get rid of this.
 URL_VERSION="https://github.mitchellvanbijleveld.dev/Minecraft-Server-Service/VERSION"
 URL_SCRIPT="https://github.mitchellvanbijleveld.dev/Minecraft-Server-Service/minecraft-server-service-installer.sh"
 ####################################################################################################
@@ -57,7 +57,7 @@ fi
 ####################################################################################################
 # Print Help Information to the terminal.         ##################################################
 Show_Help() {
-    echo "How to use the script: 'bash minecraft-server-service-installer.sh [options]'"
+    echo "How to use the script: 'bash $0 [options]'"
     echo
     echo "The following options are available:"
     echo "     --allow-unsupported-os             :     Allow installation of the Minecraft server on unsupported operating systems."
