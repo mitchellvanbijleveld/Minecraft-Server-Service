@@ -26,7 +26,7 @@ All the commands below need to be run as the root user. So, either login with `s
 #### Debiab / Ubuntu
 On Debian or Ubuntu systems we need the following packages: `screen` and `java`. We can do so by running the following command:
 ```
-apt-get install screen openjdk-17-jdk -y
+apt-get install jq screen openjdk-17-jdk -y
 ```
 
 #### Rocky Linux / Almalinux / CentOS
@@ -39,7 +39,7 @@ dnf install epel-release -y
 
 Now we can install both `screen` and `java` by running the following command:
 ```
-dnf install screen java-17-openjdk -y
+dnf install jq screen java-17-openjdk -y
 ```
 ### Installation Instructions
 Below, you will find the step-by-step installation instructions.
