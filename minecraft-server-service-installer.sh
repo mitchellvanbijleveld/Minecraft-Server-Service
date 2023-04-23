@@ -68,7 +68,7 @@ Show_Help() {
     echo "     --check-os                         :     Check if your OS and OS Version are supported by the script."
     echo "     --check-packages                   :     Check if packages are installed. This will also check OS Support (--check-os)"
     echo "     --help                             :     Show this Help."
-    echo "     --remove-all                       :     Remove the server and all of the files files."
+    echo "     --remove                           :     Remove the server and all of the files files."
     echo "     --server-version=[...]             :     To install a custom server, put a server version string like 1.19.4 here. Defaults to latest."
     echo "                                              For example: 'bash minecraft-server-service-installer.sh --server-version=1.19.4'"
     echo "     --show-server-versions             :     Show the available server versions."
@@ -399,7 +399,7 @@ ScriptOption_AutoInstall=false
 ScriptOption_CheckPackagesOnly=false
 ScriptOption_CustomServerVersion=false
 ScriptOption_ShowServerVersions=false
-ScriptOption_RemoveAll=false
+ScriptOption_Remove=false
 ##################################################
 
 # Check the arguments.
@@ -424,7 +424,7 @@ for ArgumentX in $@; do
         ArgumentShowHelp=true
         ;;
     "--remove-all")
-        ScriptOption_RemoveAll=true
+        ScriptOption_Remove=true
         ;;
     "--verbose")
         ;;
@@ -460,10 +460,11 @@ done
 # Before checking all the arguments, make sure the script will continue if it does not need to exit after an argument (such as --help or --version).
 ExitScriptAfterCommand=false
 
-if $ScriptOption_RemoveAll; then
+if $ScriptOption_Remove; then
     echo
     echo "Remove All is currently not supported."
     echo
+    ExitScriptAfterCommand=true
 fi
 
 if $ArgumentAllowUnsupportedOS; then # 6 #
