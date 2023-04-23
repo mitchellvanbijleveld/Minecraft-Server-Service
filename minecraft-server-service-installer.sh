@@ -460,23 +460,28 @@ done
 ExitScriptAfterCommand=false
 
 if $ScriptOption_Remove; then
-    echo "Remove All is currently not supported."
-    echo -n "\x1B[1;31m  WARNING! You are about to remove the Minecraft Server from your system.\x1B[0m"
-    read -p "     Do you want to continue? [yes/no] " yn
+    echo -n "\x1B[1;31mWARNING! You are about to remove the Minecraft Server from your system.\x1B[0m"
+    read -p " Are you sure you want to delete the Minecraft Server? [Yes/No] " yn
     case $yn in
-    [Yy]*)
+    "Yes")
         echo "Stopping Minecraft Server..."
-        systemct stop minecraft-server
+        systemctl stop minecraft-server
+        echo
 
+        echo "Disabling Minecraft Server..."
         systemctl disable minecraft-server
+        echo
+
 
         echo "Removing service file..."
         /usr/bin/rm -rv "/etc/systemd/system/minecraft-server.service"
+        echo
 
         echo "Removing all other files and directories..."
         /usr/bin/rm -rv $FolderPath_Temp
         /usr/bin/rm -rv $FolderPath_Logs
         /usr/bin/rm -rv $FolderPath_ProgramFiles
+        echo
         ;;
     [Nn]*)
         echo "Nothing will happen."
