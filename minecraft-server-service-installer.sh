@@ -22,8 +22,8 @@ URL_SCRIPT="https://github.mitchellvanbijleveld.dev/Minecraft-Server-Service/min
 FolderPath_Temp="/tmp/mitchellvanbijleveld/Minecraft-Server"
 FolderPath_Logs="/var/log/mitchellvanbijleveld/Minecraft-Server" #
 FolderPath_ProgramFiles="/opt/mitchellvanbijleveld/Minecraft-Server"
-PackagesDPKG="jq screen openjdk-17-jdk"                            #
-PackagesRPM="jq epel-release screen java-17-openjdk"                  #
+PackagesDPKG="jq screen openjdk-17-jdk"              #
+PackagesRPM="jq epel-release screen java-17-openjdk" #
 ####################################################################################################
 ####################################################################################################
 ####################################################################################################
@@ -319,7 +319,7 @@ Check_Packages() {
         else
             LogFileTimeStamp=$(date +"D%Y%m%dT%H%M")
             LogFileName="$LogFileTimeStamp.AptGetUpdate.log"
-            apt-get update &> "$FolderPath_Logs/$LogFileName"
+            apt-get update &>"$FolderPath_Logs/$LogFileName"
         fi
         echo
         for ApplicationX in $PackagesDPKG; do
@@ -423,11 +423,10 @@ for ArgumentX in $@; do
     "--help")
         ArgumentShowHelp=true
         ;;
-    "--remove-all")
+    "--remove")
         ScriptOption_Remove=true
         ;;
-    "--verbose")
-        ;;
+    "--verbose") ;;
     "--version")
         ArgumentShowVersionInfo=true
         ;;
@@ -461,9 +460,34 @@ done
 ExitScriptAfterCommand=false
 
 if $ScriptOption_Remove; then
-    echo
     echo "Remove All is currently not supported."
-    echo
+    echo -n "\x1B[1;31m  WARNING! You are about to remove the Minecraft Server from your system.\x1B[0m"
+    read -p "     Do you want to continue? [yes/no] " yn
+    case $yn in
+    [Yy]*)
+        echo "Stopping Minecraft Server..."
+        systemct stop minecraft-server
+
+        systemctl disable minecraft-server
+
+        echo "Removing service file..."
+        /usr/bin/rm -rv "/etc/systemd/system/minecraft-server.service"
+
+        echo "Removing all other files and directories..."
+        /usr/bin/rm -rv $FolderPath_Temp
+        /usr/bin/rm -rv $FolderPath_Logs
+        /usr/bin/rm -rv $FolderPath_ProgramFiles
+        ;;
+    [Nn]*)
+        echo "Nothing will happen."
+        exit 1
+        ;;
+    *)
+        echo "No answer given."
+        exit 1
+        ;;
+    esac
+
     ExitScriptAfterCommand=true
 fi
 
@@ -770,8 +794,8 @@ esac
 
 ##### Agree To Minecraft EULA
 Agree_To_EULA() {
-    printf "eula=true" > "$FolderPath_ProgramFiles/eula.txt"
-    if cat "$FolderPath_ProgramFiles/eula.txt" | grep "eula=true" &> /dev/null; then
+    printf "eula=true" >"$FolderPath_ProgramFiles/eula.txt"
+    if cat "$FolderPath_ProgramFiles/eula.txt" | grep "eula=true" &>/dev/null; then
         echo "\x1B[1;32mAdded 'eula=true' to '$FolderPath_ProgramFiles/eula.txt'.\x1B[0m"
         echo
     else
@@ -829,8 +853,6 @@ Disable_Server() {
     echo
 }
 #####
-
-
 
 if $ScriptOption_AutoInstall; then
     Enable_Server
