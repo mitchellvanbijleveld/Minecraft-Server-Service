@@ -1,12 +1,12 @@
 [Unit]
-Description=Minecraft Server driven by Java as a service for Linux. Made by Mitchell van Bijleveld (https://mitchellvanbijleveld.dev/).
+Description=Minecraft Server as a service for Linux. Made by Mitchell van Bijleveld (https://mitchellvanbijleveld.dev/).
 After=network-online.target
 
 [Service]
 Type=forking
-WorkingDirectory=/etc/mitchellvanbijleveld/minecraft-server/
+WorkingDirectory=/opt/mitchellvanbijleveld/Minecraft-Server/
 KillMode=none
-ExecStart=/bin/screen -dmS MinecraftServer /bin/java -Xmx1024M -Xms1024M -jar /etc/mitchellvanbijleveld/minecraft-server/minecraft-server.jar --nogui
+ExecStart=/bin/screen -dmS MinecraftServer /bin/java -Xmx1024M -Xms1024M -jar /opt/mitchellvanbijleveld/Minecraft-Server/minecraft-server.jar --nogui
 ExecStop=/bin/screen -S MinecraftServer -X stuff "stop^M"
 
 [Install]
