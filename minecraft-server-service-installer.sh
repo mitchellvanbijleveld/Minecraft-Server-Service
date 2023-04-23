@@ -472,7 +472,6 @@ if $ScriptOption_Remove; then
         systemctl disable minecraft-server
         echo
 
-
         echo "Removing service file..."
         /usr/bin/rm -rv "/etc/systemd/system/minecraft-server.service"
         echo
@@ -485,10 +484,12 @@ if $ScriptOption_Remove; then
         ;;
     [Nn]*)
         echo "Nothing will happen."
+        echo
         exit 1
         ;;
     *)
-        echo "No answer given."
+        echo "No valid answer given."
+        echo
         exit 1
         ;;
     esac
@@ -618,7 +619,7 @@ Print_Next_Step_Confirmation_Question() {
     done
 }
 
-sleep 1
+#sleep 1
 ####################################################################################################
 
 ####################################################################################################
@@ -638,7 +639,7 @@ if $ArgumentWaitAfterStep; then # 8 #
 fi
 
 ####################################################################################################
-sleep 0.5
+#sleep 0.5
 
 ####################################################################################################
 ##### Step 1 - Check OS Name and OS Version.      ##################################################
@@ -651,7 +652,7 @@ if $ArgumentWaitAfterStep; then # 8 #
     Print_Next_Step_Confirmation_Question "Your OS and OS Version are supported."
 fi
 ####################################################################################################
-sleep 0.5
+#sleep 0.5
 
 ####################################################################################################
 ##### Step 02 - Check for required packages.      ##################################################
@@ -665,7 +666,7 @@ if $ArgumentWaitAfterStep; then # 8 #
     Print_Next_Step_Confirmation_Question "Your system has the required packages installed."
 fi
 ####################################################################################################
-sleep 0.5
+#sleep 0.5
 
 Check_SELinux() {
     if cat /etc/selinux/config | grep "SELINUX=enforcing" &>/dev/null; then
@@ -830,7 +831,7 @@ if $ArgumentWaitAfterStep; then # 8 #
 fi
 
 ####################################################################################################
-sleep 0.5
+#sleep 0.5
 
 ####################################################################################################
 ##### Step 04 - Service Settings                  ##################################################
