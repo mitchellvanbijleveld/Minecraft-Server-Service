@@ -6,7 +6,7 @@ ScriptName="Mitchell's Minecraft Server Service Installation Script"
 ScriptDescription="Bash script that helps installing a Minecraft Server on Linux as a system service."
 ScriptDeveloper="Mitchell van Bijleveld"
 ScriptDeveloperWebsite="https://mitchellvanbijleveld.dev/"
-ScriptVersion="2023.04.17-20.46-beta"
+ScriptVersion="2023.04.24-00.09-beta"
 ScriptCopyright="© 2023"
 ##### Mitchell van Bijleveld's Script Updater.    ##################################################
 Internal_ScriptName="Minecraft-Server-Service" #So I want to get rid of this.
@@ -23,7 +23,7 @@ FolderPath_Temp="/tmp/mitchellvanbijleveld/Minecraft-Server"
 FolderPath_Logs="/var/log/mitchellvanbijleveld/Minecraft-Server" #
 FolderPath_ProgramFiles="/opt/mitchellvanbijleveld/Minecraft-Server"
 PackagesDPKG="jq screen openjdk-17-jdk"                            #
-PackagesRPM="epel-release screen java-17-openjdk"                  #
+PackagesRPM="jq epel-release screen java-17-openjdk"                  #
 ####################################################################################################
 ####################################################################################################
 ####################################################################################################
