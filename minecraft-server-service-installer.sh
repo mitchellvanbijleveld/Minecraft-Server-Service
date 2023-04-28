@@ -6,7 +6,7 @@ ScriptName="Mitchell's Minecraft Server Service Installation Script"
 ScriptDescription="Bash script that helps installing a Minecraft Server on Linux as a system service."
 ScriptDeveloper="Mitchell van Bijleveld"
 ScriptDeveloperWebsite="https://mitchellvanbijleveld.dev/"
-ScriptVersion="2023.04.24-00.09-beta"
+Script_Version="2023.04.28-12.54-beta"
 ScriptCopyright="© 2023"
 ##### Mitchell van Bijleveld's Script Updater.    ##################################################
 Internal_ScriptName="Minecraft-Server-Service" #So I want to get rid of this.
@@ -473,13 +473,13 @@ if $ScriptOption_Remove; then
         echo
 
         echo "Removing service file..."
-        /usr/bin/rm -rv "/etc/systemd/system/minecraft-server.service"
+        /usr/bin/rm -drv "/etc/systemd/system/minecraft-server.service"
         echo
 
         echo "Removing all other files and directories..."
-        /usr/bin/rm -rv $FolderPath_Temp
-        /usr/bin/rm -rv $FolderPath_Logs
-        /usr/bin/rm -rv $FolderPath_ProgramFiles
+        /usr/bin/rm -drv $FolderPath_Temp
+        /usr/bin/rm -drv $FolderPath_Logs
+        /usr/bin/rm -drv $FolderPath_ProgramFiles
         echo
         ;;
     [Nn]*)
