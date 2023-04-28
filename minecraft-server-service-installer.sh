@@ -9,7 +9,7 @@ ScriptName="Mitchell's Minecraft Server Service Installation Script"
 ScriptDescription="Bash script that helps installing a Minecraft Server on Linux as a system service."
 ScriptDeveloper="Mitchell van Bijleveld"
 ScriptDeveloperWebsite="https://mitchellvanbijleveld.dev/"
-Script_Version="2023.04.28-13.13-beta"
+Script_Version="2023.04.28-14.51-beta"
 ScriptCopyright="© 2023"
 ##### Mitchell van Bijleveld's Script Updater.    ##################################################
 Internal_ScriptName="Minecraft-Server-Service" #So I want to get rid of this.
@@ -878,6 +878,7 @@ ConnectToScreenAfterExit=false
 print_Banner "Step 04 - Configuring Minecraft Server Service."
 
 echo "\x1B[1;32mThe Minecraft Server has successfully been installed as a system service!\x1B[0m"
+echo
 
 ##### Enable Start @ Boot
 Enable_Server() {
