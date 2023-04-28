@@ -27,6 +27,7 @@ FolderPath_BaseProgramFiles="/opt/mitchellvanbijleveld"
 FolderPath_ProgramFiles="$FolderPath_BaseProgramFiles/Minecraft-Server"
 PackagesDPKG="jq screen openjdk-17-jdk"              #
 PackagesRPM="jq epel-release screen java-17-openjdk" #
+Banner_TerminalWidth=$(( $(tput cols) - 32 ))
 ####################################################################################################
 ####################################################################################################
 ####################################################################################################
@@ -41,14 +42,11 @@ if [[ "$@" == *"--verbose"* ]]; then
     ScriptOption_LogLevel=Verbose
     ScriptOption_LogStyle=Verbose
 
-    Banner_TerminalWidth=$(( $(tput cols) - 30 ))
-
     # If --verbose, then import the functions with terminal output.
     import_Functions echo_Replaced print_ScriptInfo script_Updater
 else
     # if not --verbose, then import the functions without terminal output.
     import_Functions echo_Replaced print_ScriptInfo script_Updater --silent
-    Banner_TerminalWidth=$(tput cols)
 fi
 
 for ((i = 1; i <= $Banner_TerminalWidth; i++)); do
