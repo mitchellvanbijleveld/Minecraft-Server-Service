@@ -883,14 +883,12 @@ echo "\x1B[1;32mThe Minecraft Server has successfully been installed as a system
 Enable_Server() {
     systemctl enable minecraft-server
     echo "\x1B[1;32mThe server has been enabled to start during boot.\x1B[0m"
-    echo
 }
 #####
 ##### Disable Start @ Boot
 Disable_Server() {
     #make sure the server is disabled
     systemctl disable minecraft-server
-    echo
 }
 #####
 
@@ -902,6 +900,7 @@ else
     case $yn in
     [Yy]*)
         Enable_Server
+        echo
         ;;
     *)
         Disable_Server
