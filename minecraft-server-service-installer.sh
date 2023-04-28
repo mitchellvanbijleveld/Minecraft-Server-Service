@@ -27,6 +27,7 @@ FolderPath_BaseProgramFiles="/opt/mitchellvanbijleveld"
 FolderPath_ProgramFiles="$FolderPath_BaseProgramFiles/Minecraft-Server"
 PackagesDPKG="jq screen openjdk-17-jdk"              #
 PackagesRPM="jq epel-release screen java-17-openjdk" #
+TerminalWidth=$(tput cols)
 ####################################################################################################
 ####################################################################################################
 ####################################################################################################
@@ -41,6 +42,8 @@ if [[ "$@" == *"--verbose"* ]]; then
     ScriptOption_LogLevel=Verbose
     ScriptOption_LogStyle=Verbose
 
+    TerminalWidth=$(tput cols | awk '{print $1-30}')
+
     # If --verbose, then import the functions with terminal output.
     import_Functions echo_Replaced print_ScriptInfo script_Updater
 else
@@ -48,15 +51,20 @@ else
     import_Functions echo_Replaced print_ScriptInfo script_Updater --silent
 fi
 
-
 print_Banner() {
-    echo "===================================================================================================="
-    echo "===================================================================================================="
+
+    for ((i = 1; i <= $TerminalWidth; i++)); do
+        echo -n "="
+    done
+    for ((i = 1; i <= $TerminalWidth; i++)); do
+        echo -n "="
+    done
     echo "= $@"
-    echo "===================================================================================================="
+    for ((i = 1; i <= $TerminalWidth; i++)); do
+        echo -n "="
+    done
     echo
 }
-
 
 # 025
 #########################
