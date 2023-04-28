@@ -802,8 +802,8 @@ case $yn in
     LogFileName="$LogFileTimeStamp.DownloadService.log"
     echo "Downloading Minecraft Server Service File..."
     curl --output /etc/systemd/system/minecraft-server.service https://github.mitchellvanbijleveld.dev/Minecraft-Server-Service/minecraft-server.service --progress-bar
-    echo
     echo_Verbose "Download completed"
+    echo
     if [ ! -e /etc/systemd/system/minecraft-server.service ]; then
         echo "\x1B[1;31mCould not save service file. Exiting...\x1B[0m"
         echo
@@ -851,7 +851,7 @@ else
         ;;
     *)
         echo "\x1B[1;33mPlease read the eula and add 'eula=true' to '$FolderPath_ProgramFiles/eula.txt'.\x1B[0m"
-        echo "You can do so by executing the following command: 'eula=true >$FolderPath_ProgramFiles/minecraft-server/eula.txt'."
+        echo "You can do so by executing the following command: 'eula=true >$FolderPath_ProgramFiles/eula.txt'."
         echo
         ;;
     esac
