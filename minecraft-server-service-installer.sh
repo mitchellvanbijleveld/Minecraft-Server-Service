@@ -41,7 +41,8 @@ if [[ "$@" == *"--verbose"* ]]; then
     ScriptOption_LogLevel=Verbose
     ScriptOption_LogStyle=Verbose
 
-    TerminalWidth=$(tput cols | awk '{print $1-30}')
+    TerminalWidth=$(tput cols)
+    TerminalWidth=$(($TerminalWidth-30))
 
     # If --verbose, then import the functions with terminal output.
     import_Functions echo_Replaced print_ScriptInfo script_Updater
