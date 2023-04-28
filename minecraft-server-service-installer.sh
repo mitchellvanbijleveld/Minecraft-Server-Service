@@ -792,7 +792,8 @@ else
     echo "not autoinstalling"
 fi
 
-read -p "The script will now download the service file and the server jar file. Do you want to proceed? [yes/no] " yn
+echo -n "The script will now download the service file and the server jar file."
+read -p " Do you want to proceed? [yes/no] " yn
 case $yn in
 [Yy]*)
 
@@ -841,7 +842,8 @@ Agree_To_EULA() {
 if $ScriptOption_AutoInstall; then
     Agree_To_EULA
 else
-    read -p "Do you agree to the Minecraft (Server) EULA? [yes/no] " yn
+    echo -n "Do you agree to the Minecraft (Server) EULA?"
+    read -p " [yes/no] " yn
     case $yn in
     [Yy]*)
         Agree_To_EULA
@@ -894,7 +896,8 @@ Disable_Server() {
 if $ScriptOption_AutoInstall; then
     Enable_Server
 else
-    read -p "Do you want to start the server automatically during startup [yes/no] " yn
+    echo -n "Do you want to start the server automatically during startup"
+    read -p " [yes/no] " yn
     case $yn in
     [Yy]*)
         Enable_Server
@@ -926,7 +929,8 @@ Start_Server() {
 if $ScriptOption_AutoInstall; then
     Start_Server
 else
-    read -p "Do you want to start the server now? [yes/no] " yn
+    echo -n "Do you want to start the server now?"
+    read -p " [yes/no] " yn
     case $yn in
     [Yy]*)
         Start_Server
@@ -950,7 +954,8 @@ if $ScriptOption_AutoInstall; then
     Connect_To_Server
 else
     if $ServerStarted; then
-        read -p "The server has been started. Do you want to connect to the Screen session to view the logs?? [yes/no] " yn
+        echo -n "The server has been started. Do you want to connect to the Screen Session to view the logs?"
+        read -p " [yes/no] " yn
         case $yn in
         [Yy]*)
             Connect_To_Server
