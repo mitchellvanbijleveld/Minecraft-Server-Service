@@ -41,18 +41,18 @@ if [[ "$@" == *"--verbose"* ]]; then
     ScriptOption_LogLevel=Verbose
     ScriptOption_LogStyle=Verbose
 
-    TerminalWidth=$(tput cols)
-    TerminalWidth=$(($TerminalWidth-30))
+    Banner_TerminalWidth=$(tput cols)
+    Banner_TerminalWidth=$(($Banner_TerminalWidth-30))
 
     # If --verbose, then import the functions with terminal output.
     import_Functions echo_Replaced print_ScriptInfo script_Updater
 else
     # if not --verbose, then import the functions without terminal output.
     import_Functions echo_Replaced print_ScriptInfo script_Updater --silent
-    TerminalWidth=$(tput cols)
+    Banner_TerminalWidth=$(tput cols)
 fi
 
-for ((i = 1; i <= $TerminalWidth; i++)); do
+for ((i = 1; i <= $Banner_TerminalWidth; i++)); do
     Banner_Header="$Banner_Header="
 done
 
