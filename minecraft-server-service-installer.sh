@@ -27,7 +27,6 @@ FolderPath_BaseProgramFiles="/opt/mitchellvanbijleveld"
 FolderPath_ProgramFiles="$FolderPath_BaseProgramFiles/Minecraft-Server"
 PackagesDPKG="jq screen openjdk-17-jdk"              #
 PackagesRPM="jq epel-release screen java-17-openjdk" #
-TerminalWidth=$(tput cols)
 ####################################################################################################
 ####################################################################################################
 ####################################################################################################
@@ -49,6 +48,7 @@ if [[ "$@" == *"--verbose"* ]]; then
 else
     # if not --verbose, then import the functions without terminal output.
     import_Functions echo_Replaced print_ScriptInfo script_Updater --silent
+    TerminalWidth=$(tput cols)
 fi
 
 for ((i = 1; i <= $TerminalWidth; i++)); do
