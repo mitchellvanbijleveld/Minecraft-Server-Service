@@ -6,7 +6,7 @@ ScriptName="Mitchell's Minecraft Server Service Installation Script"
 ScriptDescription="Bash script that helps installing a Minecraft Server on Linux as a system service."
 ScriptDeveloper="Mitchell van Bijleveld"
 ScriptDeveloperWebsite="https://mitchellvanbijleveld.dev/"
-Script_Version="2023.04.28-12.54-beta"
+Script_Version="2023.04.28-13.13-beta"
 ScriptCopyright="© 2023"
 ##### Mitchell van Bijleveld's Script Updater.    ##################################################
 Internal_ScriptName="Minecraft-Server-Service" #So I want to get rid of this.
@@ -19,9 +19,12 @@ URL_SCRIPT="https://github.mitchellvanbijleveld.dev/Minecraft-Server-Service/min
 ####################################################################################################
 ##### Set Default Variables.                      ##################################################
 ####################################################################################################
-FolderPath_Temp="/tmp/mitchellvanbijleveld/Minecraft-Server"
-FolderPath_Logs="/var/log/mitchellvanbijleveld/Minecraft-Server" #
-FolderPath_ProgramFiles="/opt/mitchellvanbijleveld/Minecraft-Server"
+FolderPath_BaseTemp="/tmp/mitchellvanbijleveld"
+FolderPath_Temp="$FolderPath_BaseTemp/Minecraft-Server"
+FolderPath_BaseLogs="/var/log/mitchellvanbijleveld"
+FolderPath_Logs="$FolderPath_BaseLogs/Minecraft-Server" #
+FolderPath_BaseProgramFiles="/opt/mitchellvanbijleveld"
+FolderPath_ProgramFiles="$FolderPath_BaseProgramFiles/Minecraft-Server"
 PackagesDPKG="jq screen openjdk-17-jdk"              #
 PackagesRPM="jq epel-release screen java-17-openjdk" #
 ####################################################################################################
@@ -478,8 +481,11 @@ if $ScriptOption_Remove; then
 
         echo "Removing all other files and directories..."
         /usr/bin/rm -drv $FolderPath_Temp
+        /usr/bin/rmdir -v --ignore-fail-on-non-empty $FolderPath_BaseTemp
         /usr/bin/rm -drv $FolderPath_Logs
+        /usr/bin/rmdir -v --ignore-fail-on-non-empty $FolderPath_BaseLogs
         /usr/bin/rm -drv $FolderPath_ProgramFiles
+        /usr/bin/rmdir -v --ignore-fail-on-non-empty $FolderPath_BaseProgramFiles
         echo
         ;;
     [Nn]*)
