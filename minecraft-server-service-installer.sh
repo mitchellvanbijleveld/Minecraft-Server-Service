@@ -874,7 +874,7 @@ ConnectToScreenAfterExit=false
 
 print_Banner "Step 04 - Configuring Minecraft Server Service."
 
-echo "The Minecraft Server has successfully been installed as a system service."
+echo "\x1B[1;32mThe Minecraft Server has successfully been installed as a system service!\x1B[0m"
 
 ##### Enable Start @ Boot
 Enable_Server() {
