@@ -51,18 +51,15 @@ else
     import_Functions echo_Replaced print_ScriptInfo script_Updater --silent
 fi
 
-print_Banner() {
+for ((i = 1; i <= $TerminalWidth; i++)); do
+    Banner_Header="$Banner_Header="
+done
 
-    for ((i = 1; i <= $TerminalWidth; i++)); do
-        echo -n "="
-    done
-    for ((i = 1; i <= $TerminalWidth; i++)); do
-        echo -n "="
-    done
+print_Banner() {
+    echo $Banner_Header
+    echo $Banner_Header
     echo "= $@"
-    for ((i = 1; i <= $TerminalWidth; i++)); do
-        echo -n "="
-    done
+    echo $Banner_Header
     echo
 }
 
