@@ -30,7 +30,7 @@ FolderPath_BaseProgramFiles="/opt/mitchellvanbijleveld"
 FolderPath_ProgramFiles="$FolderPath_BaseProgramFiles/Minecraft-Server"
 PackagesDPKG="jq screen openjdk-17-jdk"              #
 PackagesRPM="jq epel-release screen java-17-openjdk" #
-Banner_TerminalWidth=$(( $(tput cols) - 32 ))
+Banner_TerminalWidth=$(($(tput cols) - 32))
 ####################################################################################################
 ####################################################################################################
 ####################################################################################################
@@ -583,39 +583,45 @@ echo_Verbose "ArgumentWaitAfterStep=false     : $ArgumentWaitAfterStep"
 echo_Verbose "Log directory is set to $FolderPath_Logs..."
 ####################################################################################################
 
+preStart_CheckRoot() {
+    #Check if the script is ran by root
+    echo_Verbose "Check if the current user has root privileges..."
+    SYSTEM_USER_NAME=$(id -u -n) # Used -u -n to make it compatible with macOS.
+    if [ ! $SYSTEM_USER_NAME == "root" ]; then
+        echo "\x1B[1;31mYou are not running this script as root. Script will exit.\x1B[0m"
+        echo
+        exit 1
+    fi
+    clear
+}
+
+preStart_PrintTimer() {
+    if ! $ArgumentSkipWaitTimer; then
+        for i in {5..1}; do
+            echo "Waiting $i seconds before the script starts... Cancel script by pressing 'Control + C' (^C)."
+            sleep 1
+        done
+    fi
+    echo "Starting Script."
+    sleep 1
+
+    # Clearing the terminal output before showing anything that is script related.
+    clear
+}
+
 ####################################################################################################
 ####################################################################################################
 ####################################################################################################
 ####################################################################################################
 # ACTUAL START OF THE SCRIPT!                     ##################################################
 
-#Check if the script is ran by root
-echo_Verbose "Check if the current user has root privileges..."
-SYSTEM_USER_NAME=$(id -u -n) # Used -u -n to make it compatible with macOS.
-if [ ! $SYSTEM_USER_NAME == "root" ]; then
-    echo "\x1B[1;31mYou are not running this script as root. Script will exit.\x1B[0m"
-    echo
-    exit
-fi
-clear
-
-##### Check for script updates...
+# Step 1 - Check if user is 'root'.
+preStart_CheckRoot
+# Step 2 - Check for script updates.
 Check_Script_Update $@
+# Step 3 - Print wait timer.
+preStart_PrintTimer
 
-####################################################################################################
-# Prepare the start of the script by clearing the terminal.                #########################
-# Before doing anything, clear the terminal.
-if ! $ArgumentSkipWaitTimer; then
-    for i in {5..1}; do
-        echo "Waiting $i seconds before the script starts... Cancel script by pressing 'Control + C' (^C)."
-        sleep 1
-    done
-fi
-echo "Starting Script."
-sleep 1
-
-# Clearing the terminal output before showing anything that is script related.
-clear
 ####################################################################################################
 
 ####################################################################################################
