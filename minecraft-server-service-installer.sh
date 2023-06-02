@@ -11,7 +11,7 @@ ScriptName="Mitchell's Minecraft Server Service Installation Script"
 ScriptDescription="Bash script that helps installing a Minecraft Server on Linux as a system service."
 ScriptDeveloper="Mitchell van Bijleveld"
 ScriptDeveloperWebsite="https://mitchellvanbijleveld.dev/"
-Script_Version="2023.06.02-16.35-beta"
+Script_Version="2023.06.02-16.38-beta"
 ScriptCopyright="© 2023"
 ##### Mitchell van Bijleveld's Script Updater.    ##################################################
 Internal_ScriptName="Minecraft-Server-Service" #So I want to get rid of this.
@@ -331,7 +331,7 @@ Check_Package() {
             fi
 
             if $Boolean_InstallPackage; then
-                install_package &
+                install_package $1 &
                 echo -n "Installing $1..."
                 # Get the process ID of the package installation
                 pid=$!
