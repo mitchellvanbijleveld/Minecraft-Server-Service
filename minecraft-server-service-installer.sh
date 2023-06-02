@@ -11,7 +11,7 @@ ScriptName="Mitchell's Minecraft Server Service Installation Script"
 ScriptDescription="Bash script that helps installing a Minecraft Server on Linux as a system service."
 ScriptDeveloper="Mitchell van Bijleveld"
 ScriptDeveloperWebsite="https://mitchellvanbijleveld.dev/"
-Script_Version="2023.06.02-16.15-beta"
+Script_Version="2023.06.02-16.29-beta"
 ScriptCopyright="© 2023"
 ##### Mitchell van Bijleveld's Script Updater.    ##################################################
 Internal_ScriptName="Minecraft-Server-Service" #So I want to get rid of this.
@@ -243,6 +243,37 @@ Check_OS_Support() {
 }
 ####################################################################################################
 
+install_package() {
+    # Replace the package installation command with the actual command you need
+    # For example: sudo apt-get install <package_name>
+    # Here, we are using 'sleep' command as a placeholder
+    case $OS_ID in
+    debian | ubuntu) # Check for the required packages on Debian and Ubuntu.
+        if [[ $ScriptOption_LogLevel == "Verbose" ]]; then
+            apt-get install $1 --assume-yes | sed "s/^/$(date +'%Y-%m-%d %H:%M:%S') [DEBUG] : /"
+        else
+            LogFileTimeStamp=$(date +"D%Y%m%dT%H%M")
+            LogFileName="$LogFileTimeStamp.AptGetInstall_$1.log"
+            apt-get install $1 --assume-yes &>"$FolderPath_Logs/$LogFileName"
+        fi
+        ;;
+    almalinux | rocky | centos) # Check for the required packegs on Almalinux and Rocky.
+        if [[ $ScriptOption_LogLevel == "Verbose" ]]; then
+            yum install $1 --assumeyes | sed "s/^/$(date +'%Y-%m-%d %H:%M:%S') [DEBUG] : /"
+        else
+            LogFileTimeStamp=$(date +"D%Y%m%dT%H%M")
+            LogFileName="$LogFileTimeStamp.YumInstall_$1.log"
+            yum install $1 --assumeyes &>"$FolderPath_Logs/$LogFileName"
+        fi
+
+        ;;
+    *)
+        echo "Unable to find a way to install packages on your system."
+        exit 1
+        ;;
+    esac
+}
+
 ####################################################################################################
 ####################################################################################################
 ##### Check if requested packages is installed.   ##################################################
@@ -300,31 +331,17 @@ Check_Package() {
             fi
 
             if $Boolean_InstallPackage; then
-                case $OS_ID in
-                debian | ubuntu) # Check for the required packages on Debian and Ubuntu.
-                    if [[ $ScriptOption_LogLevel == "Verbose" ]]; then
-                        apt-get install $1 --assume-yes | sed "s/^/$(date +'%Y-%m-%d %H:%M:%S') [DEBUG] : /"
-                    else
-                        LogFileTimeStamp=$(date +"D%Y%m%dT%H%M")
-                        LogFileName="$LogFileTimeStamp.AptGetInstall_$1.log"
-                        apt-get install $1 --assume-yes &>"$FolderPath_Logs/$LogFileName"
-                    fi
-                    ;;
-                almalinux | rocky | centos) # Check for the required packegs on Almalinux and Rocky.
-                    if [[ $ScriptOption_LogLevel == "Verbose" ]]; then
-                        yum install $1 --assumeyes | sed "s/^/$(date +'%Y-%m-%d %H:%M:%S') [DEBUG] : /"
-                    else
-                        LogFileTimeStamp=$(date +"D%Y%m%dT%H%M")
-                        LogFileName="$LogFileTimeStamp.YumInstall_$1.log"
-                        yum install $1 --assumeyes &>"$FolderPath_Logs/$LogFileName"
-                    fi
+                install_package &
+                # Get the process ID of the package installation
+                pid=$!
 
-                    ;;
-                *)
-                    echo "Unable to find a way to install packages on your system."
-                    exit 1
-                    ;;
-                esac
+                # Loop to print a dot after every second
+                while kill -0 "$pid" 2>/dev/null; do
+                    echo -n "."
+                    sleep 1
+                done
+
+                echo "Package installation completed."
             fi
         fi
         # Checking if installation was successful
@@ -697,13 +714,6 @@ Check_Packages
 ####################################################################################################
 ####################################################################################################
 ####################################################################################################
-
-
-
-
-
-
-
 
 Check_SELinux() {
     if cat /etc/selinux/config | grep "SELINUX=enforcing" &>/dev/null; then
