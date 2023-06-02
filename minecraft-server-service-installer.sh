@@ -447,6 +447,7 @@ for ArgumentX in $@; do
     "--remove")
         ScriptOption_Remove=true
         ;;
+    "--testing") ;;
     "--verbose") ;;
     "--version")
         ArgumentShowVersionInfo=true
