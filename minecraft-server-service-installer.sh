@@ -271,7 +271,6 @@ Check_Package() {
         echo
     else
         echo "\x1B[1;33mThe requested package '$1' has not been installed yet.\x1B[0m"
-        echo
 
         # Check if this is a check-only or not.
         if ! $ScriptOption_CheckPackagesOnly; then
@@ -299,10 +298,23 @@ Check_Package() {
             if $Boolean_InstallPackage; then
                 case $OS_ID in
                 debian | ubuntu) # Check for the required packages on Debian and Ubuntu.
-                    apt-get install $1 --assume-yes
+                    if [[ $ScriptOption_LogLevel == "Verbose" ]]; then
+                        apt-get install $1 --assume-yes | sed "s/^/$(date +'%Y-%m-%d %H:%M:%S') [DEBUG] : /"
+                    else
+                        LogFileTimeStamp=$(date +"D%Y%m%dT%H%M")
+                        LogFileName="$LogFileTimeStamp.AptGetInstall_$1.log"
+                        apt-get install $1 --assume-yes &>"$FolderPath_Logs/$LogFileName"
+                    fi
                     ;;
                 almalinux | rocky | centos) # Check for the required packegs on Almalinux and Rocky.
-                    yum install $1 --assumeyes
+                    if [[ $ScriptOption_LogLevel == "Verbose" ]]; then
+                        yum install $1 --assumeyes | sed "s/^/$(date +'%Y-%m-%d %H:%M:%S') [DEBUG] : /"
+                    else
+                        LogFileTimeStamp=$(date +"D%Y%m%dT%H%M")
+                        LogFileName="$LogFileTimeStamp.YumInstall_$1.log"
+                        yum install $1 --assumeyes &>"$FolderPath_Logs/$LogFileName"
+                    fi
+
                     ;;
                 *)
                     echo "Unable to find a way to install packages on your system."
