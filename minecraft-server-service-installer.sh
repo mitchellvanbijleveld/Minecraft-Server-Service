@@ -114,6 +114,7 @@ Show_Help() {
 # Check the OS Name and OS Version. Return if the OS is supported.         #########################
 ####################################################################################################
 Check_OS_Support() {
+    print_Banner "Step 1 - Check if your operating system and version are supported by the script."
     # Set Supported OS to false.
     SupportedOS=false
 
@@ -236,6 +237,9 @@ Check_OS_Support() {
         fi
     fi
     echo
+    if $ArgumentWaitAfterStep; then # 8 #
+        Print_Next_Step_Confirmation_Question "Your OS and OS Version are supported."
+    fi
 }
 ####################################################################################################
 
@@ -325,7 +329,7 @@ Check_Package() {
         fi
         # Checking if installation was successful
         if [[ $? == 0 ]]; then
-            echo "Package '$1' installed successfully!"
+            echo_Verbose "Package '$1' installed successfully!"
             echo
         else
             echo "Unable to install $1! Your base system has a problem; please check your default OS's package repositories because $1 should work."
@@ -345,6 +349,8 @@ Check_Packages() {
     if $ScriptOption_CheckPackagesOnly; then
         Check_OS_Support
     fi
+
+    print_Banner "Step 2 - Checking if the required packages are installed and if not, install the packages."
 
     case $OS_ID in
     debian | ubuntu) # Check for the required packages on Debian and Ubuntu.
@@ -374,6 +380,9 @@ Check_Packages() {
         echo
         ;;
     esac
+    if $ArgumentWaitAfterStep; then # 8 #
+        Print_Next_Step_Confirmation_Question "Your system has the required packages installed."
+    fi
 }
 
 ####################################################################################################
@@ -628,21 +637,6 @@ preStart_PrintTimer() {
 }
 
 ####################################################################################################
-####################################################################################################
-####################################################################################################
-####################################################################################################
-# ACTUAL START OF THE SCRIPT!                     ##################################################
-
-# Step 1 - Check if user is 'root'.
-preStart_CheckRoot
-# Step 2 - Check for script updates.
-Check_Script_Update $@
-# Step 3 - Print wait timer.
-preStart_PrintTimer
-
-####################################################################################################
-
-####################################################################################################
 # Function that enables a check before contuing to the next step.          #########################
 Print_Next_Step_Confirmation_Question() {
     while true; do
@@ -665,61 +659,51 @@ Print_Next_Step_Confirmation_Question() {
     done
 }
 
-#sleep 1
-####################################################################################################
-####################################################################################################
-####################################################################################################
+print_ActualStartOfScript() {
+    echo "####################################################################################################"
+    print_ScriptInfo
+    echo "####################################################################################################"
+    echo "Welcome to the Minecraft Server As A Service Installation Script."
+    echo "This script will help you to install the Minecraft Server with an easy to follow step-by-step installation wizard."
+    mkdir -p $FolderPath_Logs
 
-####################################################################################################
-####################################################################################################
-##### Step 00 - Check OS Name and OS Version.     ##################################################
-####################################################################################################
-echo "####################################################################################################"
-print_ScriptInfo
-echo "####################################################################################################"
-echo "Welcome to the Minecraft Server As A Service Installation Script."
-echo "This script will help you to install the Minecraft Server with an easy to follow step-by-step installation wizard."
-mkdir -p $FolderPath_Logs
+    echo
 
-echo
-
-if $ArgumentWaitAfterStep; then # 8 #
-    Print_Next_Step_Confirmation_Question "The script has been successfully initialized."
-fi
+    if $ArgumentWaitAfterStep; then # 8 #
+        Print_Next_Step_Confirmation_Question "The script has been successfully initialized."
+    fi
+}
 
 ####################################################################################################
 ####################################################################################################
 ####################################################################################################
-#sleep 0.5
-
+# ACTUAL START OF THE SCRIPT!                     ##################################################
 ####################################################################################################
-####################################################################################################
-##### Step 1 - Check OS Name and OS Version.      ##################################################
-####################################################################################################
-print_Banner "Step 1 - Check if your operating system and version are supported by the script."
+# Step 1 - Check if user is 'root'.
+preStart_CheckRoot
+# Step 2 - Check for script updates.
+Check_Script_Update $@
+# Step 3 - Print wait timer.
+preStart_PrintTimer
+# Step 4 - Print actual start of script banner.
+print_ActualStartOfScript
+# Step 5 - Check OS.
 Check_OS_Support
-
-if $ArgumentWaitAfterStep; then # 8 #
-    Print_Next_Step_Confirmation_Question "Your OS and OS Version are supported."
-fi
-####################################################################################################
-#sleep 0.5
-
-####################################################################################################
-####################################################################################################
-##### Step 02 - Check for required packages.      ##################################################
-####################################################################################################
-print_Banner "Step 2 - Checking if the required packages are installed and if not, install the packages."
-
+# Step 6 - Check Installation of Packages.
 Check_Packages
 
-if $ArgumentWaitAfterStep; then # 8 #
-    Print_Next_Step_Confirmation_Question "Your system has the required packages installed."
-fi
 ####################################################################################################
 ####################################################################################################
 ####################################################################################################
-#sleep 0.5
+####################################################################################################
+####################################################################################################
+
+
+
+
+
+
+
 
 Check_SELinux() {
     if cat /etc/selinux/config | grep "SELINUX=enforcing" &>/dev/null; then
@@ -1016,7 +1000,3 @@ if $ConnectToScreenAfterExit; then
 fi
 echo "The Script Finished."
 echo
-
-####################################################################################################
-####################################################################################################
-####################################################################################################
