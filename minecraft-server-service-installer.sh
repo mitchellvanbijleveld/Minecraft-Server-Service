@@ -324,7 +324,10 @@ Check_Package() {
             fi
         fi
         # Checking if installation was successful
-        if [[ ! $? == 0 ]]; then
+        if [[ $? == 0 ]]; then
+            echo "Package '$1' installed successfully!"
+            echo
+        else
             echo "Unable to install $1! Your base system has a problem; please check your default OS's package repositories because $1 should work."
             exit 1
         fi
