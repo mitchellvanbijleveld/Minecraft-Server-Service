@@ -30,7 +30,7 @@ FolderPath_BaseLogs="/var/log/mitchellvanbijleveld"
 FolderPath_Logs="$FolderPath_BaseLogs/Minecraft-Server" #
 FolderPath_BaseProgramFiles="/opt/mitchellvanbijleveld"
 FolderPath_ProgramFiles="$FolderPath_BaseProgramFiles/Minecraft-Server"
-PackagesDPKG="jq screen openjdk-17-jdk"              #
+PackagesDPKG="jq screen openjdk-17-jre"              #
 PackagesRPM="jq epel-release screen java-17-openjdk" #
 Banner_TerminalWidth=$(($(tput cols) - 32))
 ####################################################################################################
@@ -158,7 +158,7 @@ Check_OS_Support() {
         case $OS_ID in
         debian)
             case $OS_VersionID in
-            "9"* | "10"* | "11"*)
+            "9"* | "10"* | "11"* | "12"*)
                 echo_Verbose "Your version '$OS_VersionID' of $OS_ID is supported!"
                 SupportedOS=true
                 ;;
