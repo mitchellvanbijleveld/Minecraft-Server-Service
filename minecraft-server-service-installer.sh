@@ -302,7 +302,7 @@ Check_Package() {
 
     # Check if package is insatlled with exit code = 0
     if [[ $? == 0 ]]; then
-        if [[ $2 !== '--silent' ]]; then
+        if [[ $2 != '--silent' ]]; then
         echo "\x1B[1;32mThe requested package '$1' is already installed!\x1B[0m"
         echo
         fi
