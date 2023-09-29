@@ -413,6 +413,7 @@ manifest=$(curl -s https://git.mitchellvanbijleveld.dev/Minecraft-Server-Service
 # Get Latest 10 Available Minecraft Server Versions    #############################################
 Get_MostRecentMinecraftVersions() {
     # We need jq in order to do this.
+    Check_OS_Support
     Check_Package 'jq'
     # Fetch the 10 most recent release versions
     echo_Verbose "Getting latest 10 versions of Minecraft Servers..."
