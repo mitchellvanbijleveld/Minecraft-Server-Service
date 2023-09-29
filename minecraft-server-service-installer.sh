@@ -302,8 +302,10 @@ Check_Package() {
 
     # Check if package is insatlled with exit code = 0
     if [[ $? == 0 ]]; then
+        if [[ $2 !== '--silent' ]]; then
         echo "\x1B[1;32mThe requested package '$1' is already installed!\x1B[0m"
         echo
+        fi
     else
         echo "\x1B[1;33mThe requested package '$1' has not been installed yet.\x1B[0m"
 
@@ -413,8 +415,8 @@ manifest=$(curl -s https://git.mitchellvanbijleveld.dev/Minecraft-Server-Service
 # Get Latest 10 Available Minecraft Server Versions    #############################################
 Get_MostRecentMinecraftVersions() {
     # We need jq in order to do this.
-    Check_OS_Support
-    Check_Package 'jq'
+    Check_OS_Support --silent
+    Check_Package 'jq' --silent
     # Fetch the 10 most recent release versions
     echo_Verbose "Getting latest 10 versions of Minecraft Servers..."
     versions=$(printf "%s" "$manifest" | jq -r '.versions | .[] | select(.type=="release") | .id' | head -n 10)
