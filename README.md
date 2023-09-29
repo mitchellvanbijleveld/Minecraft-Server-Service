@@ -8,7 +8,7 @@ To make things easy, I created an automatic install script for you.
 
 ### Download Script
 ```
-curl -O https://github.mitchellvanbijleveld.dev/Minecraft-Server-Service/minecraft-server-service-installer.sh
+curl -O https://git.mitchellvanbijleveld.dev/Minecraft-Server-Service/minecraft-server-service-installer.sh
 ```
 
 ### Run Script
@@ -53,7 +53,7 @@ mkdir -p /etc/mitchellvanbijleveld/minecraft-server
 #### Download the Minecraft Server Jar and Minecraft Server Service Files
 ```
 wget -O /etc/mitchellvanbijleveld/minecraft-server/minecraft-server.jar https://[latest server url]/server.jar
-wget -O /etc/systemd/system/minecraft-server.service https://github.mitchellvanbijleveld.dev/Minecraft-Server-Service/minecraft-server.service
+wget -O /etc/systemd/system/minecraft-server.service https://git.mitchellvanbijleveld.dev/Minecraft-Server-Service/minecraft-server.service
 ```
 
 #### Enable Server on system boot

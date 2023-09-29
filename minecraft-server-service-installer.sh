@@ -15,8 +15,8 @@ Script_Version="2023.06.02-16.38-beta"
 ScriptCopyright="© 2023"
 ##### Mitchell van Bijleveld's Script Updater.    ##################################################
 Internal_ScriptName="Minecraft-Server-Service" #So I want to get rid of this.
-URL_VERSION="https://github.mitchellvanbijleveld.dev/Minecraft-Server-Service/VERSION"
-URL_SCRIPT="https://github.mitchellvanbijleveld.dev/Minecraft-Server-Service/minecraft-server-service-installer.sh"
+URL_VERSION="https://git.mitchellvanbijleveld.dev/Minecraft-Server-Service/VERSION"
+URL_SCRIPT="https://git.mitchellvanbijleveld.dev/Minecraft-Server-Service/minecraft-server-service-installer.sh"
 ####################################################################################################
 ####################################################################################################
 ####################################################################################################
@@ -38,7 +38,7 @@ Banner_TerminalWidth=$(($(tput cols) - 32))
 ####################################################################################################
 
 # Import the Function Importer.
-eval "$(curl https://github.mitchellvanbijleveld.dev/Bash-Functions/import_Functions.sh --silent)"
+eval "$(curl https://git.mitchellvanbijleveld.dev/Bash-Functions/import_Functions.sh --silent)"
 
 ##### Before starting the script, check if the --verbose option is passed.
 if [[ "$@" == *"--verbose"* ]]; then
@@ -820,7 +820,7 @@ case $yn in
     LogFileTimeStamp=$(date +"D%Y%m%dT%H%M")
     LogFileName="$LogFileTimeStamp.DownloadService.log"
     echo "Downloading Minecraft Server Service File..."
-    curl --output /etc/systemd/system/minecraft-server.service https://github.mitchellvanbijleveld.dev/Minecraft-Server-Service/minecraft-server.service --progress-bar
+    curl --output /etc/systemd/system/minecraft-server.service https://git.mitchellvanbijleveld.dev/Minecraft-Server-Service/minecraft-server.service --progress-bar
     echo_Verbose "Download completed"
     echo
     if [ ! -e /etc/systemd/system/minecraft-server.service ]; then

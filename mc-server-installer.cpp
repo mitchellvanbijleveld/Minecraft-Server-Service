@@ -1,7 +1,7 @@
 #include <string>
 
 int main(int argc, char* argv[]) {
-  std::string script_url = "https://github.mitchellvanbijleveld.dev/Minecraft-Server-Service/minecraft-server-service-installer.sh";
+  std::string script_url = "https://git.mitchellvanbijleveld.dev/Minecraft-Server-Service/minecraft-server-service-installer.sh";
   std::string download_command = "curl " + script_url + " -o script.sh";
   std::system(download_command.c_str());
 

@@ -11,8 +11,8 @@ Script_Version = "2023.04.28-14.51-beta"
 ScriptCopyright = "© 2023"
 ##### Mitchell van Bijleveld's Script Updater.    ##################################################
 Internal_ScriptName = "Minecraft-Server-Service"  # So I want to get rid of this.
-URL_VERSION = "https://github.mitchellvanbijleveld.dev/Minecraft-Server-Service/VERSION"
-URL_SCRIPT = "https://github.mitchellvanbijleveld.dev/Minecraft-Server-Service/minecraft-server-service-installer.sh"
+URL_VERSION = "https://git.mitchellvanbijleveld.dev/Minecraft-Server-Service/VERSION"
+URL_SCRIPT = "https://git.mitchellvanbijleveld.dev/Minecraft-Server-Service/minecraft-server-service-installer.sh"
 ####################################################################################################
 ####################################################################################################
 ####################################################################################################
