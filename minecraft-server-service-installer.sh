@@ -407,11 +407,13 @@ Check_Packages() {
 # Print Latest 10 Available Minecraft Server Versions    ###########################################
 echo_Verbose "Downloading the Minecraft Version Manifest JSON File..."
 # Download the Minecraft Version Manifest JSON.
-manifest=$(curl -s https://launchermeta.mojang.com/mc/game/version_manifest.json)
+manifest=$(curl -s https://git.mitchellvanbijleveld.dev/Minecraft-Server-Service/Minecraft-Version-Manifest.json)
 
 ####################################################################################################
 # Get Latest 10 Available Minecraft Server Versions    #############################################
 Get_MostRecentMinecraftVersions() {
+    # We need jq in order to do this.
+    Check_Package 'jq'
     # Fetch the 10 most recent release versions
     echo_Verbose "Getting latest 10 versions of Minecraft Servers..."
     versions=$(printf "%s" "$manifest" | jq -r '.versions | .[] | select(.type=="release") | .id' | head -n 10)
