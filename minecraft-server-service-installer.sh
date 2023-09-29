@@ -114,7 +114,10 @@ Show_Help() {
 # Check the OS Name and OS Version. Return if the OS is supported.         #########################
 ####################################################################################################
 Check_OS_Support() {
-    print_Banner "Step 1 - Check if your operating system and version are supported by the script."
+    if [[ $1 != '--silent' ]]; then
+        print_Banner "Step 1 - Check if your operating system and version are supported by the script."
+    fi
+
     # Set Supported OS to false.
     SupportedOS=false
 
@@ -220,12 +223,15 @@ Check_OS_Support() {
         echo_Verbose "OS Not Supported..."
         ;;
     esac
-
-    echo "Detected OS: $OS_Name $OS_Version."
+    if [[ $1 != '--silent' ]]; then
+        echo "Detected OS: $OS_Name $OS_Version."
+    fi
 
     echo_Verbose "Printing information about OS Support..."
     if $SupportedOS; then
-        echo "\x1B[1;32mYour OS and Version are supported.\x1B[0m"
+        if [[ $1 != '--silent' ]]; then
+            echo "\x1B[1;32mYour OS and Version are supported.\x1B[0m"
+        fi
     else
         echo "\x1B[1;31m  Unfortunately, your OS is not supported.\x1B[0m"
         if $ArgumentAllowUnsupportedOS; then
@@ -303,8 +309,8 @@ Check_Package() {
     # Check if package is insatlled with exit code = 0
     if [[ $? == 0 ]]; then
         if [[ $2 != '--silent' ]]; then
-        echo "\x1B[1;32mThe requested package '$1' is already installed!\x1B[0m"
-        echo
+            echo "\x1B[1;32mThe requested package '$1' is already installed!\x1B[0m"
+            echo
         fi
     else
         echo "\x1B[1;33mThe requested package '$1' has not been installed yet.\x1B[0m"
