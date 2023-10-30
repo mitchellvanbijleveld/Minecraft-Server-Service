@@ -155,7 +155,7 @@ Check_OS_Support() {
 
     echo_Verbose "Checking if OS matches list of supported operating systems..."
     case $OS_ID in
-    debian | ubuntu | almalinux | rocky | centos) #List of supported operating systems / distributions.
+    debian | ubuntu | almalinux | rocky | centos | rhel) #List of supported operating systems / distributions.
         echo_Verbose "Your OS '$OS_ID' is supported. Checking if your OS version is supported as well..."
 
         case $OS_ID in
@@ -183,7 +183,7 @@ Check_OS_Support() {
                 ;;
             esac
             ;;
-        almalinux | rocky)
+        almalinux | rocky | rhel)
             case $OS_VersionID in
             "8."* | "9."*)
                 echo_Verbose "Your version '$OS_VersionID' of $OS_ID is supported!"
