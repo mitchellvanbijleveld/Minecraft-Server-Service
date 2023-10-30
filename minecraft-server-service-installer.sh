@@ -11,7 +11,7 @@ ScriptName="Mitchell's Minecraft Server Service Installation Script"
 ScriptDescription="Bash script that helps installing a Minecraft Server on Linux as a system service."
 ScriptDeveloper="Mitchell van Bijleveld"
 ScriptDeveloperWebsite="https://mitchellvanbijleveld.dev/"
-Script_Version="2023.10.30-10.32-beta"
+Script_Version="2023.10.30-11.04-beta"
 ScriptCopyright="© 2023"
 ##### Mitchell van Bijleveld's Script Updater.    ##################################################
 Internal_ScriptName="Minecraft-Server-Service" #So I want to get rid of this.
@@ -263,7 +263,7 @@ install_package() {
             apt-get install $1 --assume-yes &>"$FolderPath_Logs/$LogFileName"
         fi
         ;;
-    almalinux | rocky | centos) # Check for the required packegs on Almalinux and Rocky.
+    almalinux | rocky | centos | rhel) # Check for the required packegs on Almalinux and Rocky.
         if [[ $ScriptOption_LogLevel == "Verbose" ]]; then
             yum install $1 --assumeyes | sed "s/^/$(date +'%Y-%m-%d %H:%M:%S') [DEBUG] : /"
         else
@@ -296,7 +296,7 @@ Check_Package() {
         echo_Verbose "Checking Package Status via 'dpkg' for '$1'..."
         dpkg --status $1 &>/dev/null
         ;;
-    almalinux | rocky | centos) # Check for the required packegs on Almalinux and Rocky.
+    almalinux | rocky | centos | rhel) # Check for the required packegs on Almalinux and Rocky.
         echo_Verbose "Checking Package Status via 'rpm' for '$1'..."
         rpm --query $1 &>/dev/null
         ;;
@@ -395,7 +395,7 @@ Check_Packages() {
         done
         ;;
 
-    almalinux | rocky | centos) # Check for the required packegs on Almalinux and Rocky.
+    almalinux | rocky | centos | rhel) # Check for the required packegs on Almalinux and Rocky.
         for ApplicationX in $PackagesRPM; do
             Check_Package $ApplicationX
         done
