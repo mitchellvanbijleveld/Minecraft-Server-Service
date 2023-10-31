@@ -710,6 +710,7 @@ print_ActualStartOfScript() {
 ####################################################################################################
 # Step 1 - Check if user is 'root'.
 preStart_CheckRoot
+Check_SELinux
 # Step 2 - Check for script updates.
 Check_Script_Update $@
 # Step 3 - Print wait timer.
