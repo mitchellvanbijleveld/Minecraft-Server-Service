@@ -552,7 +552,7 @@ if $ScriptOption_Remove; then
         echo
 
         echo "Removing all other files and directories..."
-        /usr/bin/rm -drv $FolderPath_Temp
+        # /usr/bin/rm -drv $FolderPath_Temp # not used in script
         /usr/bin/rmdir -v --ignore-fail-on-non-empty $FolderPath_BaseTemp
         /usr/bin/rm -drv $FolderPath_Logs
         /usr/bin/rmdir -v --ignore-fail-on-non-empty $FolderPath_BaseLogs
@@ -703,6 +703,14 @@ print_ActualStartOfScript() {
     fi
 }
 
+Check_SELinux() {
+    if cat /etc/selinux/config | grep "SELINUX=enforcing" &>/dev/null; then
+        echo "SELinux is enabled. Please set SELinux to 'permissive' or 'disabled'."
+        echo
+        exit 1
+    fi
+}
+
 ####################################################################################################
 ####################################################################################################
 ####################################################################################################
@@ -727,14 +735,6 @@ Check_Packages
 ####################################################################################################
 ####################################################################################################
 ####################################################################################################
-
-Check_SELinux() {
-    if cat /etc/selinux/config | grep "SELINUX=enforcing" &>/dev/null; then
-        echo "SELinux is enabled. Please set SELinux to 'permissive' or 'disabled'."
-        echo
-        exit 1
-    fi
-}
 
 download_ServerJAR() {
 
