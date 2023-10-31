@@ -173,7 +173,7 @@ Check_OS_Support() {
             ;;
         ubuntu)
             case $OS_VersionID in
-            "20.04"* | "22.04"*)
+            "20.04"* | "22.04"* | "22.10"* | "23.10"*)
                 echo_Verbose "Your version '$OS_VersionID' of $OS_ID is supported!"
                 SupportedOS=true
                 ;;
