@@ -30,8 +30,8 @@ FolderPath_BaseLogs="/var/log/mitchellvanbijleveld"
 FolderPath_Logs="$FolderPath_BaseLogs/Minecraft-Server" #
 FolderPath_BaseProgramFiles="/opt/mitchellvanbijleveld"
 FolderPath_ProgramFiles="$FolderPath_BaseProgramFiles/Minecraft-Server"
-PackagesDPKG="jq screen openjdk-17-jre"              #
-PackagesRPM="jq epel-release screen java-17-openjdk" #
+PackagesDPKG="jq screen openjdk-17-jdk-headless"              #
+PackagesRPM="jq epel-release screen java-17-openjdk-headless" #
 Banner_TerminalWidth=$(($(tput cols) - 32))
 ####################################################################################################
 ####################################################################################################
