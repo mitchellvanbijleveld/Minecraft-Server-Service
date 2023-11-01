@@ -727,9 +727,11 @@ Check_SELinux() {
 ####################################################################################################
 # Step 1 - Check if user is 'root'.
 preStart_CheckRoot
-Check_SELinux
 # Step 2 - Check for script updates.
 Check_Script_Update $@
+
+Check_SELinux
+
 # Step 3 - Print wait timer.
 preStart_PrintTimer
 # Step 4 - Print actual start of script banner.
