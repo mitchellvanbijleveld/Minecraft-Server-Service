@@ -706,7 +706,7 @@ print_ActualStartOfScript() {
 Check_SELinux() {
     which sestatus &> /dev/null
     
-    if [[ $@ == 0 ]]; then
+    if [[ $? == 0 ]]; then
     
     SELinux_Status=$(sestatus | grep 'enforcing')
     
