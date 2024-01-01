@@ -38,7 +38,7 @@ Banner_TerminalWidth=$(($(tput cols) - 32))
 ####################################################################################################
 
 # Import the Function Importer.
-eval "$(curl https://git.mitchellvanbijleveld.dev/Bash-Script-Extensions/import_Functions.sh --silent)"
+eval "$(curl https://git.mitchellvanbijleveld.dev/Bash-Script-Extensions/import_Functions.bash --silent)"
 
 ##### Before starting the script, check if the --verbose option is passed.
 if [[ "$@" == *"--verbose"* ]]; then
